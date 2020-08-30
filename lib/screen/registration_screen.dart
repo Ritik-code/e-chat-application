@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:comperio/screen/chat_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +12,11 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final _auth = FirebaseAuth.instance;
+  String email;
+  String username;
+  String password;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -101,9 +109,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   ),
                                   labelText: 'Email *',
                                 ),
-                                onSaved: (String value) {
+                                onChanged: (String value) {
                                   // This optional block of code can be used to run
                                   // code when the user saves the form.
+                                  email = value;
                                 },
                               ),
                               TextFormField(
@@ -115,9 +124,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   ),
                                   labelText: 'Username *',
                                 ),
-                                onSaved: (String value) {
+                                onChanged: (String value) {
                                   // This optional block of code can be used to run
                                   // code when the user saves the form.
+                                  username = value;
                                 },
                               ),
                               TextFormField(
@@ -130,9 +140,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   labelText: 'Password *',
                                 ),
                                 obscureText: true,
-                                onSaved: (String value) {
+                                onChanged: (String value) {
                                   // This optional block of code can be used to run
                                   // code when the user saves the form.
+                                  password = value;
                                 },
                               ),
                               SizedBox(
@@ -146,7 +157,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   elevation: 10.0,
                                   shape: StadiumBorder(),
                                   color: Colors.lightBlueAccent,
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    try {
+                                      final newUser = await _auth
+                                          .createUserWithEmailAndPassword(
+                                              email: email, password: password);
+                                      FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc()
+                                          .set({'username': username});
+                                      if (newUser != null) {
+                                        Navigator.pushNamed(
+                                            context, ChatScreen().id);
+                                      }
+                                    } catch (e) {
+                                      print(e);
+                                    }
+                                  },
                                   child: Text(
                                     'Sign up',
                                     style: TextStyle(

@@ -1,3 +1,5 @@
+import 'package:comperio/screen/chat_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +11,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _auth = FirebaseAuth.instance;
+  String email;
+  String username;
+  String password;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -101,9 +108,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   labelText: 'Username *',
                                 ),
-                                onSaved: (String value) {
+                                onChanged: (String value) {
                                   // This optional block of code can be used to run
                                   // code when the user saves the form.
+                                  email = value;
                                 },
                               ),
                               TextFormField(
@@ -116,9 +124,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   labelText: 'Password *',
                                 ),
                                 obscureText: true,
-                                onSaved: (String value) {
+                                onChanged: (String value) {
                                   // This optional block of code can be used to run
                                   // code when the user saves the form.
+                                  password = value;
                                 },
                               ),
                               SizedBox(
@@ -132,7 +141,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                   elevation: 10.0,
                                   shape: StadiumBorder(),
                                   color: Colors.lightBlueAccent,
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    try {
+                                      final user = await _auth
+                                          .signInWithEmailAndPassword(
+                                              email: email, password: password);
+                                      if (user != null) {
+                                        Navigator.pushNamed(
+                                            context, ChatScreen().id);
+                                      }
+                                    } catch (e) {
+                                      print(e);
+                                    }
+                                  },
                                   child: Text(
                                     'Log in',
                                     style: TextStyle(

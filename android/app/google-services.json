@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "131235990524",
+    "firebase_url": "https://comperio-1071d.firebaseio.com",
+    "project_id": "comperio-1071d",
+    "storage_bucket": "comperio-1071d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131235990524:android:34c3f7e2a50ddc922ec079",
+        "android_client_info": {
+          "package_name": "com.Comperio.comperio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131235990524-3gni4j2jmkut1dtph4mhb6esf2p9a41g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCa2t04AX2_SbXttLz4Hp3Klbi0kKCPFE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131235990524-3gni4j2jmkut1dtph4mhb6esf2p9a41g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

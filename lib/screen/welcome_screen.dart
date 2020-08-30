@@ -27,14 +27,10 @@ class WelcomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    CircleAvatar(
-                      child: Image(
-                        image: AssetImage('images/comperio-logo.png'),
-                        height: 90.0,
-                        width: 90.0,
-                      ),
-                      backgroundColor: Colors.white,
-                      radius: 60.0,
+                    Image(
+                      image: AssetImage('images/comperio-logo.png'),
+                      height: 90.0,
+                      width: 90.0,
                     ),
                     SizedBox(
                       height: 50.0,

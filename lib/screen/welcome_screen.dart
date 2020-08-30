@@ -39,8 +39,10 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     Center(
                       child: Text(
-                        'welcome to'.toUpperCase(),
+                        'Welcome to',
                         style: TextStyle(
+                          fontFamily: 'Lobster',
+                          letterSpacing: 1.5,
                           color: Color(0xFFB2EBF2),
                           fontSize: 28.0,
                           fontWeight: FontWeight.w700,
@@ -49,8 +51,10 @@ class WelcomeScreen extends StatelessWidget {
                     ),
                     Center(
                       child: Text(
-                        'comperio!'.toUpperCase(),
+                        'Comperio!',
                         style: TextStyle(
+                          fontFamily: 'Lobster',
+                          letterSpacing: 1.5,
                           color: Colors.cyanAccent,
                           fontSize: 28.0,
                           fontWeight: FontWeight.w700,

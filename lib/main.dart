@@ -5,8 +5,6 @@ import 'package:comperio/screen/registration_screen.dart';
 import 'package:comperio/screen/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'screen/feedback_screen.dart';
-
 void main() => runApp(Comperio());
 
 class Comperio extends StatelessWidget {

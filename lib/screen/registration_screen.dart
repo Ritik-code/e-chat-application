@@ -41,6 +41,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     Text(
                       'Comperio',
                       style: TextStyle(
+                        fontFamily: 'Lobster',
                         color: Colors.white,
                         fontSize: 30.0,
                         fontWeight: FontWeight.w700,

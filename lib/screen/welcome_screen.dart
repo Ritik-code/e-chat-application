@@ -11,7 +11,7 @@ class WelcomeScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.lightBlueAccent,
         image: DecorationImage(
-          image: AssetImage('images/app-background-2.jpg'),
+          image: AssetImage('images/welcome-page-bg1.jpg'),
           fit: BoxFit.cover,
         ),
       ),
@@ -25,70 +25,88 @@ class WelcomeScreen extends StatelessWidget {
               Container(
                 padding: EdgeInsets.only(left: 30.0, right: 30.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Image(
-                      image: AssetImage('images/comperio-logo.png'),
-                      height: 90.0,
-                      width: 90.0,
+                      image: AssetImage(
+                        'images/comperio-logo.png',
+                      ),
+                      height: 110.0,
+                      width: 110.0,
                     ),
                     SizedBox(
-                      height: 50.0,
+                      height: 30.0,
                     ),
                     Center(
                       child: Text(
-                        'welcome to comperio!'.toUpperCase(),
+                        'welcome to'.toUpperCase(),
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Color(0xFFB2EBF2),
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        'comperio!'.toUpperCase(),
+                        style: TextStyle(
+                          color: Colors.cyanAccent,
                           fontSize: 28.0,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
                     SizedBox(
-                      height: 120.0,
+                      height: 100.0,
                     ),
-                    RaisedButton(
-                      elevation: 10.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()),
-                        );
-                      },
-                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      color: Colors.lightBlueAccent,
-                      textColor: Colors.white,
-                      child: Text(
-                        'Login'.toUpperCase(),
-                        style: TextStyle(fontSize: 20),
+                    ButtonTheme(
+                      minWidth: 350.0,
+                      child: RaisedButton(
+                        elevation: 10.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()),
+                          );
+                        },
+                        padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                        color: Color(0xff5e35b1),
+                        textColor: Colors.white,
+                        child: Text(
+                          'Login'.toUpperCase(),
+                          style: TextStyle(fontSize: 20),
+                        ),
                       ),
                     ),
                     SizedBox(
-                      height: 20.0,
+                      height: 30.0,
                     ),
-                    RaisedButton(
-                      elevation: 10.0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RegistrationScreen()),
-                        );
-                      },
-                      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      color: Colors.blueAccent,
-                      textColor: Colors.white,
-                      child: Text(
-                        'Register'.toUpperCase(),
-                        style: TextStyle(fontSize: 20),
+                    ButtonTheme(
+                      minWidth: 350.0,
+                      child: RaisedButton(
+                        elevation: 10.0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegistrationScreen()),
+                          );
+                        },
+                        padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                        color: Color(0xff311b92),
+                        textColor: Colors.white,
+                        child: Text(
+                          'Register'.toUpperCase(),
+                          style: TextStyle(fontSize: 20),
+                        ),
                       ),
                     ),
                   ],

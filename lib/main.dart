@@ -5,6 +5,8 @@ import 'package:comperio/screen/registration_screen.dart';
 import 'package:comperio/screen/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'screen/feedback_screen.dart';
+
 void main() => runApp(Comperio());
 
 class Comperio extends StatelessWidget {
@@ -17,7 +19,7 @@ class Comperio extends StatelessWidget {
         RegistrationScreen().id: (context) => RegistrationScreen(),
         LoginScreen().id: (context) => LoginScreen(),
         WelcomeScreen().id: (context) => WelcomeScreen(),
-        'FeedbackScreen': (context) => FeedbackScreen(),
+        FeedbackScreen().id: (context) => FeedbackScreen(),
       },
     );
   }

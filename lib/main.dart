@@ -1,7 +1,5 @@
 import 'package:comperio/screen/chat_screen.dart';
 import 'package:comperio/screen/feedback_screen.dart';
-import 'package:comperio/screen/login_screen.dart';
-import 'package:comperio/screen/registration_screen.dart';
 import 'package:comperio/screen/welcome_screen.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:flutter/material.dart';

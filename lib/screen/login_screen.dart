@@ -1,4 +1,4 @@
-import 'package:comperio/screen/chat_screen.dart';
+import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                               email: email, password: password);
                                       if (user != null) {
                                         Navigator.pushNamed(
-                                            context, ChatScreen().id);
+                                            context, ContactedPersonScreen().id);
                                       }
                                     } catch (e) {
                                       print(e);

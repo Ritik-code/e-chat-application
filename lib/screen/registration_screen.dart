@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:comperio/screen/chat_screen.dart';
+import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -166,9 +166,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                           .collection('users')
                                           .doc()
                                           .set({'username': username});
+                                        FirebaseFirestore.instance.collection('users').getDocuments().then((querySnapshot) {
+                                          querySnapshot.documents.forEach((result) {
+                                            print(result.data);
+                                          });
+                                        });
                                       if (newUser != null) {
                                         Navigator.pushNamed(
-                                            context, ChatScreen().id);
+                                            context, ContactedPersonScreen().id);
                                       }
                                     } catch (e) {
                                       print(e);

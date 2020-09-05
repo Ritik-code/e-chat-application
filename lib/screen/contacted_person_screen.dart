@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:comperio/screen/registration_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ContactedPersonScreen extends StatefulWidget {
   final String id = 'ContactedPersonScreen';
@@ -9,10 +11,12 @@ class ContactedPersonScreen extends StatefulWidget {
 }
 
 class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
+  final user = FirebaseAuth.instance.currentUser;
+
   List<Choice> choices = const <Choice>[
-    const Choice(title: 'Profile', icon: Icons.person),
+    const Choice(title: 'Profile', icon: FontAwesomeIcons.user),
     const Choice(title: 'Change Password', icon: FontAwesomeIcons.key),
-    const Choice(title: 'Log out', icon: Icons.exit_to_app),
+    const Choice(title: 'Log out', icon: FontAwesomeIcons.signOutAlt),
   ];
 
   @override

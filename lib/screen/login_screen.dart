@@ -15,7 +15,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool showSpinner = false;
   final _auth = FirebaseAuth.instance;
   String email;
-  String username;
   String password;
 
   @override
@@ -106,11 +105,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                 TextFormField(
                                   decoration: const InputDecoration(
                                     icon: Icon(Icons.person),
-                                    hintText: 'Enter Username',
+                                    hintText: 'Enter the Email',
                                     hintStyle: TextStyle(
                                       color: Colors.grey,
                                     ),
-                                    labelText: 'Username *',
+                                    labelText: 'Email *',
                                   ),
                                   onChanged: (String value) {
                                     // This optional block of code can be used to run

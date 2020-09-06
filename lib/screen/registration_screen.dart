@@ -173,20 +173,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         FirebaseFirestore.instance
                                             .collection('users')
                                             .doc()
-                                            .set({'username': username});
-                                        FirebaseFirestore.instance
-                                            .collection('users')
-                                            .getDocuments()
-                                            .then((querySnapshot) {
-                                          querySnapshot.documents
-                                              .forEach((result) {
-                                            print(result.data);
-                                          });
+                                            .set({
+                                          'username': username,
                                         });
+
                                         if (newUser != null) {
                                           Navigator.pushNamed(context,
                                               ContactedPersonScreen().id);
                                         }
+
                                         setState(() {
                                           showSpinner = false;
                                         });

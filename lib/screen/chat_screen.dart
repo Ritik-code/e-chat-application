@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -8,6 +9,27 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final _auth = FirebaseAuth.instance;
+  User loggedInUser;
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser;
+      if (user != null) {
+        loggedInUser = user;
+        print(loggedInUser.email);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -69,8 +91,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 child: ListView(
-                    //all the message will be added here.
-                    ),
+                  //all the message will be added here.
+                ),
               ),
             ),
             Container(
@@ -95,16 +117,16 @@ class _ChatScreenState extends State<ChatScreen> {
                             hintText: 'Type your message here...',
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0)),
+                              BorderRadius.all(Radius.circular(12.0)),
                               borderSide: BorderSide(
                                 color: Colors.grey,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
+                              BorderRadius.all(Radius.circular(10.0)),
                               borderSide:
-                                  BorderSide(color: Colors.lightBlueAccent),
+                              BorderSide(color: Colors.lightBlueAccent),
                             ),
                           ),
                         ),

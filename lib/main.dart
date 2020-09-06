@@ -1,4 +1,5 @@
 import 'package:comperio/screen/chat_screen.dart';
+import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:comperio/screen/feedback_screen.dart';
 import 'package:comperio/screen/login_screen.dart';
 import 'package:comperio/screen/registration_screen.dart';
@@ -23,6 +24,7 @@ class Comperio extends StatelessWidget {
         LoginScreen().id: (context) => LoginScreen(),
         WelcomeScreen().id: (context) => WelcomeScreen(),
         FeedbackScreen().id: (context) => FeedbackScreen(),
+        ContactedPersonScreen().id: (context) => ContactedPersonScreen(),
       },
     );
   }

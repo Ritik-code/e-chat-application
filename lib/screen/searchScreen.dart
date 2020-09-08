@@ -80,48 +80,48 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: StreamBuilder<QuerySnapshot>(
                   stream: (name != "" && name != null)
                       ? FirebaseFirestore.instance
-                      .collection('users')
-                      .where("searchKeywords", arrayContains: name)
-                      .snapshots()
+                          .collection('users')
+                          .where("searchKeywords", arrayContains: name)
+                          .snapshots()
                       : FirebaseFirestore.instance
-                      .collection("users")
-                      .snapshots(),
+                          .collection("users")
+                          .snapshots(),
                   builder: (context, snapshot) {
                     return (snapshot.connectionState == ConnectionState.waiting)
                         ? Center(child: CircularProgressIndicator())
                         : ListView.builder(
-                      itemCount: snapshot.data.docs.length,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot data = snapshot.data.docs[index];
-                        return Card(
-                          child: Row(
-                            children: <Widget>[
-                              // Image.network(
-                              //   data['imageUrl'],
-                              //   width: 150,
-                              //   height: 100,
-                              //   fit: BoxFit.fill,
-                              // ),
-                              SizedBox(
-                                width: 25,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  print('taped');
-                                },
-                                child: Text(
-                                  data.data()['username'],
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 20,
-                                  ),
+                            itemCount: snapshot.data.docs.length,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot data = snapshot.data.docs[index];
+                              return Card(
+                                child: Row(
+                                  children: <Widget>[
+                                    // Image.network(
+                                    //   data['imageUrl'],
+                                    //   width: 150,
+                                    //   height: 100,
+                                    //   fit: BoxFit.fill,
+                                    // ),
+                                    SizedBox(
+                                      width: 25,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        print('taped');
+                                      },
+                                      child: Text(
+                                        data.data()['username'],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
+                              );
+                            },
+                          );
                   },
                 ),
               ),

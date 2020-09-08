@@ -170,11 +170,30 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             .createUserWithEmailAndPassword(
                                                 email: email,
                                                 password: password);
+
+                                        List<String> splitList =
+                                            username.split(" ");
+                                        List<String> indexList = [];
+
+                                        for (int i = 0;
+                                            i < splitList.length;
+                                            i++) {
+                                          for (int y = 1;
+                                              y < splitList[i].length + 1;
+                                              y++) {
+                                            indexList.add(splitList[i]
+                                                .substring(0, y)
+                                                .toLowerCase());
+                                          }
+                                        }
+
+                                        print(indexList);
                                         FirebaseFirestore.instance
                                             .collection('users')
                                             .doc()
                                             .set({
                                           'username': username,
+                                          'searchKeywords': indexList
                                         });
 
                                         if (newUser != null) {

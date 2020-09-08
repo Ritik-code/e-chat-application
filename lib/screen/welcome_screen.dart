@@ -2,6 +2,8 @@ import 'package:comperio/screen/login_screen.dart';
 import 'package:comperio/screen/registration_screen.dart';
 import 'package:flutter/material.dart';
 
+
+
 class WelcomeScreen extends StatelessWidget {
   final String id = 'WelcomeScreen';
 
@@ -25,7 +27,6 @@ class WelcomeScreen extends StatelessWidget {
               Container(
                 padding: EdgeInsets.only(left: 30.0, right: 30.0),
                 child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Image(
                       image: AssetImage(

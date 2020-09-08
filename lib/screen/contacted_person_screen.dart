@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:comperio/screen/searchScreen.dart';
 // import 'package:comperio/screen/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -72,12 +73,7 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
                       IconButton(
                         icon: Icon(Icons.search, color: Colors.white,size: 35.0,),
                         onPressed: (){
-                          // return TextField(
-                          //   decoration: InputDecoration(
-                          //     hintText: 'search...',
-                          //   ),
-                          //
-                          // );
+                          Navigator.pushNamed(context, SearchScreen().id);
                         },
                       ),
 

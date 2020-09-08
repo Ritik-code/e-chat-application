@@ -25,7 +25,6 @@ class WelcomeScreen extends StatelessWidget {
               Container(
                 padding: EdgeInsets.only(left: 30.0, right: 30.0),
                 child: Column(
-                  // crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Image(
                       image: AssetImage(

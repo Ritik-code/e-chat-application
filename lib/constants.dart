@@ -30,3 +30,9 @@ const KSearchDisplayNameTextStyle = TextStyle(
   fontSize: 20,
   color: Colors.indigo,
 );
+
+const KUserTextStyle = TextStyle(
+  color: Colors.white,
+  fontSize: 25.0,
+  fontWeight: FontWeight.w700,
+);

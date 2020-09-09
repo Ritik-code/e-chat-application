@@ -45,20 +45,20 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       decoration: InputDecoration(
                         prefixIcon:
-                        Icon(FontAwesomeIcons.search, color: Colors.indigo),
+                            Icon(FontAwesomeIcons.search, color: Colors.indigo),
                         suffixIcon: name.length > 0
                             ? IconButton(
-                          icon: Icon(
-                            FontAwesomeIcons.times,
-                            color: Colors.blueGrey,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              searchText.clear();
-                              name = "";
-                            });
-                          },
-                        )
+                                icon: Icon(
+                                  FontAwesomeIcons.times,
+                                  color: Colors.blueGrey,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    searchText.clear();
+                                    name = "";
+                                  });
+                                },
+                              )
                             : null,
                         hintText: 'Search...',
                         hintStyle: TextStyle(

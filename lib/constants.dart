@@ -36,3 +36,15 @@ const KUserTextStyle = TextStyle(
   fontSize: 25.0,
   fontWeight: FontWeight.w700,
 );
+
+const KFeedbackHintTextStyle = TextStyle(
+  color: Color(0xFFf2fcfe),
+  fontSize: 22.0,
+  fontWeight: FontWeight.bold,
+);
+
+const KFeedbackTextStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  color: Colors.black,
+  fontSize: 25.0,
+);

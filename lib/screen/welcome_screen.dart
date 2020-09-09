@@ -1,6 +1,7 @@
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen/login_screen.dart';
 import 'package:comperio/screen/registration_screen.dart';
+import 'package:comperio/welcome_screen_button.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -52,55 +53,17 @@ class WelcomeScreen extends StatelessWidget {
                     SizedBox(
                       height: 100.0,
                     ),
-                    ButtonTheme(
-                      minWidth: 350.0,
-                      child: RaisedButton(
-                        elevation: 10.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginScreen()),
-                          );
-                        },
-                        padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                        color: Color(0xff5e35b1),
-                        textColor: Colors.white,
-                        child: Text(
-                          'Login'.toUpperCase(),
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                    ),
+                    WelcomeScreenButtons(
+                        buttonText: 'Login',
+                        redirectionScreen: LoginScreen().id,
+                        colour: Color(0xff5e35b1)),
                     SizedBox(
                       height: 30.0,
                     ),
-                    ButtonTheme(
-                      minWidth: 350.0,
-                      child: RaisedButton(
-                        elevation: 10.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RegistrationScreen()),
-                          );
-                        },
-                        padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                        color: Color(0xff311b92),
-                        textColor: Colors.white,
-                        child: Text(
-                          'Register'.toUpperCase(),
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                    ),
+                    WelcomeScreenButtons(
+                        buttonText: 'Register',
+                        redirectionScreen: RegistrationScreen().id,
+                        colour: Color(0xff311b92)),
                   ],
                 ),
               ),

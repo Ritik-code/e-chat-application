@@ -1,6 +1,7 @@
-import 'package:comperio/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:comperio/screen/contacted_person_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
@@ -35,11 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.lightBlueAccent,
-        image: DecorationImage(
-          image: AssetImage('images/app-background-2.jpg'),
-          fit: BoxFit.cover,
-        ),
+        color: Color(0xFF1d2d50),
       ),
       constraints: BoxConstraints.expand(),
       child: Scaffold(
@@ -52,27 +49,34 @@ class _ChatScreenState extends State<ChatScreen> {
             Container(
               padding: EdgeInsets.only(
                   top: 40.0, left: 20.0, right: 20.0, bottom: 20.0),
+
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                    size: 30.0,
-                  ),
-                  SizedBox(
-                    width: 5.0,
+                  IconButton(
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                    onPressed: (){
+                      Navigator.pushNamed(context, ContactedPersonScreen().id);
+                    },
                   ),
                   CircleAvatar(
                     radius: 17.0,
                     backgroundColor: Colors.white,
                   ),
                   SizedBox(
-                    width: 7.0,
+                    width: 10.0,
                   ),
                   Text(
                     'username',
-                    style: KUserTextStyle,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
@@ -82,6 +86,12 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
+
+                  image: DecorationImage(
+                    image: AssetImage('images/chat_bg8.jpeg'),
+                    fit: BoxFit.cover,
+                  ),
+
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20.0),
                     topRight: Radius.circular(20.0),
@@ -109,6 +119,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             //do something when pressed
                           },
                           decoration: InputDecoration(
+                            prefixIcon: IconButton(icon: Icon(FontAwesomeIcons.paperclip),onPressed: (){},),
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 20.0),
                             hintText: 'Type your message here...',
@@ -130,7 +141,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       RaisedButton(
                         padding: EdgeInsets.all(15.0),
-                        color: Colors.lightBlueAccent,
+                        color: Color(0xFF1d2d50),
                         onPressed: () {
                           //Implement send functionality.
                         },
@@ -151,3 +162,4 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
+

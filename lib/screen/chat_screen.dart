@@ -1,3 +1,4 @@
+import 'package:comperio/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -71,11 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   Text(
                     'username',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: KUserTextStyle,
                   ),
                 ],
               ),
@@ -91,8 +88,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 child: ListView(
-                    //all the message will be added here.
-                    ),
+                  //all the message will be added here.
+                ),
               ),
             ),
             Container(
@@ -117,16 +114,16 @@ class _ChatScreenState extends State<ChatScreen> {
                             hintText: 'Type your message here...',
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0)),
+                              BorderRadius.all(Radius.circular(12.0)),
                               borderSide: BorderSide(
                                 color: Colors.grey,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
+                              BorderRadius.all(Radius.circular(10.0)),
                               borderSide:
-                                  BorderSide(color: Colors.lightBlueAccent),
+                              BorderSide(color: Colors.lightBlueAccent),
                             ),
                           ),
                         ),

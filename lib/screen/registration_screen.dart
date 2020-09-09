@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
+import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +19,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String email;
   String username;
   String password;
+
+  void _addToDatabase(String userName) {
+    List<String> splitList = username.split(" ");
+    List<String> indexList = [];
+
+    for (int i = 0; i < splitList.length; i++) {
+      for (int y = 1; y < splitList[i].length + 1; y++) {
+        indexList.add(splitList[i].substring(0, y).toLowerCase());
+      }
+    }
+    // print(indexList);
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc()
+        .set({'username': userName, 'searchKeywords': indexList});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,20 +98,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         children: <Widget>[
                           Text(
                             'New',
-                            style: TextStyle(
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: KCardTextStyle,
                           ),
                           SizedBox(
                             height: 5.0,
                           ),
                           Text(
                             'Account',
-                            style: TextStyle(
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: KCardTextStyle,
                           ),
                           SizedBox(
                             height: 10.0,
@@ -171,30 +182,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                 email: email,
                                                 password: password);
 
-                                        List<String> splitList =
-                                            username.split(" ");
-                                        List<String> indexList = [];
-
-                                        for (int i = 0;
-                                            i < splitList.length;
-                                            i++) {
-                                          for (int y = 1;
-                                              y < splitList[i].length + 1;
-                                              y++) {
-                                            indexList.add(splitList[i]
-                                                .substring(0, y)
-                                                .toLowerCase());
-                                          }
-                                        }
-
-                                        print(indexList);
-                                        FirebaseFirestore.instance
-                                            .collection('users')
-                                            .doc()
-                                            .set({
-                                          'username': username,
-                                          'searchKeywords': indexList
-                                        });
+                                        _addToDatabase(username);
 
                                         if (newUser != null) {
                                           Navigator.pushNamed(context,
@@ -210,10 +198,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                     },
                                     child: Text(
                                       'Sign up',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15.0,
-                                      ),
+                                      style: KLoginRegistrationButtonStyle,
                                     ),
                                     padding: EdgeInsets.symmetric(
                                       vertical: 15.0,

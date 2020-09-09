@@ -1,3 +1,4 @@
+import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -80,20 +81,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: <Widget>[
                           Text(
                             'Welcome',
-                            style: TextStyle(
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: KCardTextStyle,
                           ),
                           SizedBox(
                             height: 5.0,
                           ),
                           Text(
                             'Back',
-                            style: TextStyle(
-                              fontSize: 30.0,
-                              fontWeight: FontWeight.w700,
-                            ),
+                            style: KCardTextStyle,
                           ),
                           SizedBox(
                             height: 10.0,
@@ -151,8 +146,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       try {
                                         final user = await _auth
                                             .signInWithEmailAndPassword(
-                                                email: email,
-                                                password: password);
+                                            email: email,
+                                            password: password);
                                         if (user != null) {
                                           Navigator.pushNamed(context,
                                               ContactedPersonScreen().id);
@@ -166,10 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     },
                                     child: Text(
                                       'Log in',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15.0,
-                                      ),
+                                      style: KLoginRegistrationButtonStyle,
                                     ),
                                     padding: EdgeInsets.symmetric(
                                       vertical: 15.0,

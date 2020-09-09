@@ -1,7 +1,8 @@
+import 'package:comperio/constants.dart';
+import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:comperio/screen/contacted_person_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
@@ -49,7 +50,6 @@ class _ChatScreenState extends State<ChatScreen> {
             Container(
               padding: EdgeInsets.only(
                   top: 40.0, left: 20.0, right: 20.0, bottom: 20.0),
-
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -59,7 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       color: Colors.white,
                       size: 30.0,
                     ),
-                    onPressed: (){
+                    onPressed: () {
                       Navigator.pushNamed(context, ContactedPersonScreen().id);
                     },
                   ),
@@ -72,11 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   Text(
                     'username',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: KUserTextStyle,
                   ),
                 ],
               ),
@@ -86,20 +82,18 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 20.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
-
                   image: DecorationImage(
                     image: AssetImage('images/chat_bg8.jpeg'),
                     fit: BoxFit.cover,
                   ),
-
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20.0),
                     topRight: Radius.circular(20.0),
                   ),
                 ),
                 child: ListView(
-                  //all the message will be added here.
-                ),
+                    //all the message will be added here.
+                    ),
               ),
             ),
             Container(
@@ -119,7 +113,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             //do something when pressed
                           },
                           decoration: InputDecoration(
-                            prefixIcon: IconButton(icon: Icon(FontAwesomeIcons.paperclip),onPressed: (){},),
+                            prefixIcon: IconButton(
+                              icon: Icon(FontAwesomeIcons.paperclip),
+                              onPressed: () {},
+                            ),
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 20.0),
                             hintText: 'Type your message here...',
@@ -162,4 +159,3 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
-

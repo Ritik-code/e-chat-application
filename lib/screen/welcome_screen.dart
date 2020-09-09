@@ -1,3 +1,4 @@
+import 'package:comperio/constants.dart';
 import 'package:comperio/screen/login_screen.dart';
 import 'package:comperio/screen/registration_screen.dart';
 import 'package:flutter/material.dart';
@@ -39,25 +40,13 @@ class WelcomeScreen extends StatelessWidget {
                     Center(
                       child: Text(
                         'Welcome to',
-                        style: TextStyle(
-                          fontFamily: 'Lobster',
-                          letterSpacing: 1.5,
-                          color: Color(0xFFB2EBF2),
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style: KWelcomeTextStyle,
                       ),
                     ),
                     Center(
                       child: Text(
                         'Comperio!',
-                        style: TextStyle(
-                          fontFamily: 'Lobster',
-                          letterSpacing: 1.5,
-                          color: Colors.cyanAccent,
-                          fontSize: 28.0,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style: KWelcomeTextStyle,
                       ),
                     ),
                     SizedBox(

@@ -49,12 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ScreenAppLogo(),
                       Text(
                         'Comperio',
-                        style: TextStyle(
-                          fontFamily: 'Lobster',
-                          color: Colors.white,
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.w700,
-                        ),
+                        style: KAppNameTextStyle,
                       ),
                     ],
                   ),

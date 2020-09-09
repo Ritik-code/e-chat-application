@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
@@ -5,6 +7,8 @@ import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -20,6 +24,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String email;
   String username;
   String password;
+  File _image;
+
+  Future getImages() async {
+    PickedFile pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    var image = File(pickedFile.path);
+
+    setState(() {
+      _image = image;
+      print('Image path $_image');
+    });
+  }
 
   void _addToDatabase(String userName) {
     List<String> splitList = username.split(" ");
@@ -31,10 +47,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       }
     }
     // print(indexList);
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc()
-        .set({'username': userName, 'searchKeywords': indexList});
+    FirebaseFirestore.instance.collection('users').doc().set({
+      'username': userName,
+      'searchKeywords': indexList,
+    });
   }
 
   @override
@@ -88,16 +104,73 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          Text(
-                            'New',
-                            style: KCardTextStyle,
-                          ),
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                          Text(
-                            'Account',
-                            style: KCardTextStyle,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'New',
+                                    style: KCardTextStyle,
+                                  ),
+                                  SizedBox(
+                                    height: 5.0,
+                                  ),
+                                  Text(
+                                    'Account',
+                                    style: KCardTextStyle,
+                                  ),
+                                ],
+                              ),
+                              Container(
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  overflow: Overflow.visible,
+                                  children: [
+                                    Container(
+                                      width: 80.0,
+                                      height: 80.0,
+                                      child: CircleAvatar(
+                                        radius: 40.0,
+                                        backgroundColor: Colors.black12,
+                                        child: ClipOval(
+                                          child: SizedBox(
+                                            width: 80.0,
+                                            height: 80.0,
+                                            child: (_image != null)
+                                                ? Image.file(
+                                              _image,
+                                              fit: BoxFit.fill,
+                                            )
+                                                : Image.asset(
+                                              'images/default-profile.jpg',
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: -1,
+                                      right: -30,
+                                      bottom: -40,
+                                      left: 40,
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.camera,
+                                          color: Colors.pinkAccent,
+                                          size: 20,
+                                        ),
+                                        onPressed: () {
+                                          getImages();
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(
                             height: 10.0,
@@ -171,8 +244,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                       try {
                                         final newUser = await _auth
                                             .createUserWithEmailAndPassword(
-                                                email: email,
-                                                password: password);
+                                            email: email,
+                                            password: password);
 
                                         _addToDatabase(username);
 

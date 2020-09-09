@@ -122,7 +122,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             hintText: 'Type your message here...',
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(12.0)),
+                                  BorderRadius.all(Radius.circular(12.0)),
                               borderSide: BorderSide(
                                 color: Colors.grey,
                               ),

@@ -18,7 +18,7 @@ class Comperio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: ChatScreen().id,
+      initialRoute: ContactedPersonScreen().id,
       routes: {
         ChatScreen().id: (context) => ChatScreen(),
         RegistrationScreen().id: (context) => RegistrationScreen(),

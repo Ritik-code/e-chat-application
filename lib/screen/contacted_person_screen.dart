@@ -1,8 +1,11 @@
+import 'package:comperio/app_icons.dart';
+import 'package:comperio/choice.dart';
+import 'package:comperio/constants.dart';
+import 'package:comperio/contact_popup_menu.dart';
+import 'package:comperio/screen/searchScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:comperio/screen/searchScreen.dart';
-// import 'package:comperio/screen/registration_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class ContactedPersonScreen extends StatefulWidget {
   final String id = 'ContactedPersonScreen';
@@ -36,9 +39,12 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
           onPressed: () {
             // Add your onPressed code here!
           },
-          child: Icon(Icons.group_add, size: 30.0,),
+          child: AppIcons(
+            iconName: Icons.group_add,
+            iconSize: 30.0,
+            colour: Colors.white,
+          ),
           backgroundColor: Color(0xff0d47a1),
-
         ),
         resizeToAvoidBottomInset: false,
         resizeToAvoidBottomPadding: false,
@@ -61,53 +67,23 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
                   // ),
                   Text(
                     'Comperio',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: KAppNameTextStyle,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
-                        icon: Icon(Icons.search, color: Colors.white,size: 35.0,),
-                        onPressed: (){
+                        icon: AppIcons(
+                            iconName: Icons.search,
+                            colour: Colors.white,
+                            iconSize: 35.0),
+                        onPressed: () {
                           Navigator.pushNamed(context, SearchScreen().id);
                         },
                       ),
-
-
-                      PopupMenuButton<Choice>(
-                        padding: EdgeInsets.all(10.0),
-                        itemBuilder: (BuildContext context) {
-                          return choices.map((Choice choice) {
-                            return PopupMenuItem<Choice>(
-                              value: choice,
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    choice.icon,
-                                    color: Colors.black,
-                                  ),
-                                  Container(
-                                    width: 10.0,
-                                  ),
-                                  Text(
-                                    choice.title,
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList();
-                        },
-                        icon: Icon(FontAwesomeIcons.ellipsisV,color:Colors.white,),
-                      ),
-
+                      ContactPopupMenu(choices: choices),
                     ],
                   ),
-
                 ],
               ),
             ),
@@ -122,8 +98,8 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
                   ),
                 ),
                 child: ListView(
-                  //all the message will be added here.
-                ),
+                    //all the message will be added here.
+                    ),
               ),
             ),
           ],
@@ -132,12 +108,3 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
     );
   }
 }
-
-class Choice {
-
-  final String title;
-  final IconData icon;
-
-  const Choice({this.title, this.icon});
-}
-

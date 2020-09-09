@@ -82,7 +82,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       ? FirebaseFirestore.instance
                           .collection('users')
                           .where("searchKeywords", arrayContains: name)
-                          .snapshots()
+                          .snapshots()   //TODO: Recent searches to be added here
                       : FirebaseFirestore.instance
                           .collection("users")
                           .snapshots(),

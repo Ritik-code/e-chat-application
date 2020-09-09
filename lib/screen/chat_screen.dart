@@ -93,8 +93,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 child: ListView(
-                  //all the message will be added here.
-                ),
+                    //all the message will be added here.
+                    ),
               ),
             ),
             Container(

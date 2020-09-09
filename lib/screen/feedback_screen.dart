@@ -1,4 +1,5 @@
 import 'package:comperio/app_icons.dart';
+import 'package:comperio/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -52,15 +53,12 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 padding: EdgeInsets.all(15.0),
                 child: Container(
                     child: Center(
-                      child: Text(
-                        "On a scale of 1 to 5, rate our app",
-                        style: TextStyle(
-                            color: Color(0xFFf2fcfe),
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                    )),
+                  child: Text(
+                    "On a scale of 1 to 5, rate our app",
+                    style: KFeedbackHintTextStyle,
+                    textAlign: TextAlign.center,
+                  ),
+                )),
               ),
             ),
             SizedBox(height: 30.0),
@@ -79,13 +77,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Container(
-                              child: Text(
-                                myFeedbackText,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    fontSize: 25.0),
-                              )),
+                            child: Text(
+                              myFeedbackText,
+                              style: KFeedbackTextStyle,
+                            ),
+                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.all(10.0),
@@ -153,13 +149,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         Padding(
                           padding: EdgeInsets.all(15.0),
                           child: Container(
-                              child: Text(
-                                "Your Rating: $sliderValue",
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.bold),
-                              )),
+                            child: Text(
+                              "Your Rating: $sliderValue",
+                              style: KFeedbackTextStyle,
+                            ),
+                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.all(10.0),

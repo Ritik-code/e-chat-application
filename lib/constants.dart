@@ -24,3 +24,9 @@ const KWelcomeTextStyle = TextStyle(
   fontSize: 28.0,
   fontWeight: FontWeight.w700,
 );
+
+const KSearchDisplayNameTextStyle = TextStyle(
+  fontWeight: FontWeight.w700,
+  fontSize: 20,
+  color: Colors.indigo,
+);

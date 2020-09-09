@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:comperio/search_stream_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -77,67 +77,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
               Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: (name != "" && name != null)
-                      ? FirebaseFirestore.instance
-                          .collection('users')
-                          .where("searchKeywords", arrayContains: name)
-                          .snapshots()   //TODO: Recent searches to be added here
-                      : FirebaseFirestore.instance
-                          .collection("users")
-                          .snapshots(),
-                  builder: (context, snapshot) {
-                    return (snapshot.connectionState == ConnectionState.waiting)
-                        ? Center(child: CircularProgressIndicator())
-                        : ListView.builder(
-                            itemCount: snapshot.data.docs.length,
-                            itemBuilder: (context, index) {
-                              DocumentSnapshot data = snapshot.data.docs[index];
-                              return Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: <Widget>[
-                                      // Image.network(
-                                      //   data['imageUrl'],
-                                      //   width: 150,
-                                      //   height: 100,
-                                      //   fit: BoxFit.fill,
-                                      // ),
-                                      SizedBox(
-                                        width: 25,
-                                      ),
-                                      GestureDetector(
-                                        onTap: () {
-                                          print('taped');
-                                        },
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              data.data()['username'],
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 20,
-                                                color: Colors.indigo,
-                                              ),
-                                            ),
-                                            Text('Faculty',
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                  },
-                ),
+                child: SearchStreamBuilder(name: name),
               ),
             ],
           ),

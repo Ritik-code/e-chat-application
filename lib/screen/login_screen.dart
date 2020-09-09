@@ -1,5 +1,6 @@
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
+import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,11 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Image.asset(
-                        'images/comperio-logo.png',
-                        height: 70.0,
-                        width: 70.0,
-                      ),
+                      ScreenAppLogo(),
                       Text(
                         'Comperio',
                         style: TextStyle(
@@ -146,8 +143,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       try {
                                         final user = await _auth
                                             .signInWithEmailAndPassword(
-                                            email: email,
-                                            password: password);
+                                                email: email,
+                                                password: password);
                                         if (user != null) {
                                           Navigator.pushNamed(context,
                                               ContactedPersonScreen().id);

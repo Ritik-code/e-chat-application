@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
+import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,11 +63,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Image.asset(
-                        'images/comperio-logo.png',
-                        height: 70.0,
-                        width: 70.0,
-                      ),
+                      ScreenAppLogo(),
                       Text(
                         'Comperio',
                         style: TextStyle(

@@ -1,3 +1,4 @@
+import 'package:comperio/app_icons.dart';
 import 'package:comperio/search_stream_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -23,10 +24,10 @@ class _SearchScreenState extends State<SearchScreen> {
               Row(
                 children: [
                   IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.indigo,
-                      size: 30.0,
+                    icon: AppIcons(
+                      iconName: Icons.arrow_back,
+                      iconSize: 30.0,
+                      colour: Colors.indigo,
                     ),
                     onPressed: () {
                       Navigator.pop(context);
@@ -44,20 +45,20 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       decoration: InputDecoration(
                         prefixIcon:
-                            Icon(FontAwesomeIcons.search, color: Colors.indigo),
+                        Icon(FontAwesomeIcons.search, color: Colors.indigo),
                         suffixIcon: name.length > 0
                             ? IconButton(
-                                icon: Icon(
-                                  FontAwesomeIcons.times,
-                                  color: Colors.blueGrey,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    searchText.clear();
-                                    name = "";
-                                  });
-                                },
-                              )
+                          icon: Icon(
+                            FontAwesomeIcons.times,
+                            color: Colors.blueGrey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              searchText.clear();
+                              name = "";
+                            });
+                          },
+                        )
                             : null,
                         hintText: 'Search...',
                         hintStyle: TextStyle(

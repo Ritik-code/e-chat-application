@@ -1,3 +1,4 @@
+import 'package:comperio/app_icons.dart';
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -54,10 +55,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 30.0,
+                    icon: AppIcons(
+                      iconName: Icons.arrow_back,
+                      iconSize: 30.0,
+                      colour: Colors.white,
                     ),
                     onPressed: () {
                       Navigator.pushNamed(context, ContactedPersonScreen().id);
@@ -92,8 +93,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                 ),
                 child: ListView(
-                    //all the message will be added here.
-                    ),
+                  //all the message will be added here.
+                ),
               ),
             ),
             Container(
@@ -122,16 +123,16 @@ class _ChatScreenState extends State<ChatScreen> {
                             hintText: 'Type your message here...',
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0)),
+                              BorderRadius.all(Radius.circular(12.0)),
                               borderSide: BorderSide(
                                 color: Colors.grey,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
+                              BorderRadius.all(Radius.circular(10.0)),
                               borderSide:
-                                  BorderSide(color: Colors.lightBlueAccent),
+                              BorderSide(color: Colors.lightBlueAccent),
                             ),
                           ),
                         ),
@@ -143,9 +144,10 @@ class _ChatScreenState extends State<ChatScreen> {
                           //Implement send functionality.
                         },
                         shape: CircleBorder(),
-                        child: Icon(
-                          Icons.send,
-                          color: Colors.white,
+                        child: AppIcons(
+                          iconName: Icons.send,
+                          iconSize: 20.0,
+                          colour: Colors.white,
                         ),
                       ),
                     ],

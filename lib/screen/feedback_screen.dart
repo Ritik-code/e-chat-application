@@ -1,3 +1,4 @@
+import 'package:comperio/app_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -21,7 +22,11 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
         leading: IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: AppIcons(
+              iconName: Icons.arrow_back,
+              iconSize: 25.0,
+              colour: Colors.white,
+            ),
             onPressed: () {
               //
             }),
@@ -47,15 +52,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 padding: EdgeInsets.all(15.0),
                 child: Container(
                     child: Center(
-                  child: Text(
-                    "On a scale of 1 to 5, rate our app",
-                    style: TextStyle(
-                        color: Color(0xFFf2fcfe),
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                )),
+                      child: Text(
+                        "On a scale of 1 to 5, rate our app",
+                        style: TextStyle(
+                            color: Color(0xFFf2fcfe),
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    )),
               ),
             ),
             SizedBox(height: 30.0),
@@ -75,21 +80,22 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                           padding: EdgeInsets.all(16.0),
                           child: Container(
                               child: Text(
-                            myFeedbackText,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontSize: 25.0),
-                          )),
+                                myFeedbackText,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                    fontSize: 25.0),
+                              )),
                         ),
                         Padding(
                           padding: EdgeInsets.all(10.0),
                           child: Container(
-                              child: Icon(
-                            myFeedback,
-                            color: myFeedbackColor,
-                            size: 120.0,
-                          )),
+                            child: AppIcons(
+                              iconName: myFeedback,
+                              iconSize: 120.0,
+                              colour: myFeedbackColor,
+                            ),
+                          ),
                         ),
                         Padding(
                           padding: EdgeInsets.all(10.0),
@@ -148,12 +154,12 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                           padding: EdgeInsets.all(15.0),
                           child: Container(
                               child: Text(
-                            "Your Rating: $sliderValue",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.bold),
-                          )),
+                                "Your Rating: $sliderValue",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 25.0,
+                                    fontWeight: FontWeight.bold),
+                              )),
                         ),
                         Padding(
                           padding: EdgeInsets.all(10.0),

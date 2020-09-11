@@ -4,6 +4,7 @@ import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:comperio/attach_file_components.dart';
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
@@ -50,7 +51,7 @@ class _ChatScreenState extends State<ChatScreen> {
           children: <Widget>[
             Container(
               padding: EdgeInsets.only(
-                  top: 40.0, left: 20.0, right: 20.0, bottom: 20.0),
+                  top: 40.0, left: 10.0, right: 20.0, bottom: 20.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -102,22 +103,33 @@ class _ChatScreenState extends State<ChatScreen> {
               color: Colors.white,
               child: SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.only(bottom: 5.0, left: 10.0),
+                  margin: EdgeInsets.only(bottom: 5.0, left: 3.0),
                   padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).viewInsets.bottom),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
+
+
+                      IconButton(
+                        icon: Icon(FontAwesomeIcons.paperclip),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context){
+                              return AttachFileBottomSheet();
+                            },
+                          );
+                        },
+                      ),
+
+
                       Expanded(
                         child: TextField(
                           onChanged: (value) {
                             //do something when pressed
                           },
                           decoration: InputDecoration(
-                            prefixIcon: IconButton(
-                              icon: Icon(FontAwesomeIcons.paperclip),
-                              onPressed: () {},
-                            ),
                             contentPadding: EdgeInsets.symmetric(
                                 vertical: 10.0, horizontal: 20.0),
                             hintText: 'Type your message here...',

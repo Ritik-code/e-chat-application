@@ -10,18 +10,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class ContactedPersonScreen extends StatefulWidget {
   final String id = 'ContactedPersonScreen';
 
+
   @override
   _ContactedPersonScreenState createState() => _ContactedPersonScreenState();
 }
-
-class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
-  final user = FirebaseAuth.instance.currentUser;
-
   List<Choice> choices = const <Choice>[
     const Choice(title: 'Profile', icon: FontAwesomeIcons.user),
     const Choice(title: 'Change Password', icon: FontAwesomeIcons.key),
     const Choice(title: 'Log out', icon: FontAwesomeIcons.signOutAlt),
   ];
+
+class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {

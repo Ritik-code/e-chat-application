@@ -5,11 +5,13 @@ import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:path/path.dart';
 
 class RegistrationScreen extends StatefulWidget {
   final String id = 'RegistrationScreen';
@@ -25,6 +27,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String username;
   String password;
   File _image;
+  String url;
 
   Future getImages() async {
     PickedFile pickedFile =
@@ -37,7 +40,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     });
   }
 
-  void _addToDatabase(String userName) {
+  void _addToDatabase(String userName, String dpUrl) {
     List<String> splitList = username.split(" ");
     List<String> indexList = [];
 
@@ -50,6 +53,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     FirebaseFirestore.instance.collection('users').doc().set({
       'username': userName,
       'searchKeywords': indexList,
+      'profileURL': dpUrl,
+    });
+  }
+
+  Future uploadPic(BuildContext context) async {
+    String fileName = basename(_image.path);
+    StorageReference firebaseStorageRef =
+    FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    var dowUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    url = dowUrl.toString();
+    print(url);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    setState(() {
+      print("Profile Picture uploaded");
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
     });
   }
 
@@ -247,7 +267,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             email: email,
                                             password: password);
 
-                                        _addToDatabase(username);
+                                        uploadPic(context);
+                                        _addToDatabase(username, url);
 
                                         if (newUser != null) {
                                           Navigator.pushNamed(context,

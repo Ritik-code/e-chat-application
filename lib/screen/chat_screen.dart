@@ -8,6 +8,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+final _firestore = FirebaseFirestore.instance;
+User loggedInUser;
+
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
 
@@ -16,9 +19,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final _firestore = FirebaseFirestore.instance;
+  final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
-  User loggedInUser;
   String messageText;
 
   @override
@@ -108,39 +110,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    StreamBuilder<QuerySnapshot>(
-                      stream: _firestore.collection('messages').snapshots(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              backgroundColor: Colors.lightBlueAccent,
-                            ),
-                          );
-                        }
-                        final messages = snapshot.data.docs.reversed;
-                        List<MessageBubble> messageBubbles = [];
-                        for (var message in messages) {
-                          final messageText = message.data()['message'];
-                          final messageSender = message.data()['sender'];
-
-                          final messageBubble = MessageBubble(
-                            sender: messageSender,
-                            text: messageText,
-                          );
-                          messageBubbles.add(messageBubble);
-                        }
-                        return Expanded(
-                          child: ListView(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.0,
-                              vertical: 20.0,
-                            ),
-                            children: messageBubbles,
-                          ),
-                        );
-                      },
-                    ),
+                    MessagesStream(),
                   ],
                 ),
               ),
@@ -169,6 +139,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       Expanded(
                         child: TextField(
+                          controller: messageTextController,
                           onChanged: (value) {
                             //do something when pressed
                             messageText = value;
@@ -179,7 +150,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             hintText: 'Type your message here...',
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
-                              BorderRadius.all(Radius.circular(12.0)),
+                                  BorderRadius.all(Radius.circular(12.0)),
                               borderSide: BorderSide(
                                 color: Colors.grey,
                               ),
@@ -197,6 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         padding: EdgeInsets.all(15.0),
                         color: Color(0xFF1d2d50),
                         onPressed: () {
+                          messageTextController.clear();
                           //Implement send functionality.
                           _firestore.collection('messages').add({
                             'message': messageText,
@@ -222,28 +194,97 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
+class MessagesStream extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: _firestore.collection('messages').snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.lightBlueAccent,
+            ),
+          );
+        }
+        final messages = snapshot.data.docs.reversed;
+        List<MessageBubble> messageBubbles = [];
+        for (var message in messages) {
+          final messageText = message.data()['message'];
+          final messageSender = message.data()['sender'];
+
+          final currentUser = loggedInUser.email;
+
+          final messageBubble = MessageBubble(
+            sender: messageSender,
+            text: messageText,
+            isMe: currentUser == messageSender,
+          );
+          messageBubbles.add(messageBubble);
+        }
+        return Expanded(
+          child: ListView(
+            reverse: true,
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.0,
+              vertical: 20.0,
+            ),
+            children: messageBubbles,
+          ),
+        );
+      },
+    );
+  }
+}
+
 class MessageBubble extends StatelessWidget {
   final String sender;
   final String text;
+  final bool isMe;
 
-  MessageBubble({this.sender, this.text});
+  MessageBubble({this.sender, this.text, this.isMe});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(10.0),
-      child: Material(
-        color: Colors.lightBlueAccent,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-          child: Text(
-            '$text from $sender',
+      child: Column(
+        crossAxisAlignment:
+        isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            sender,
             style: TextStyle(
-              fontSize: 15.0,
-              color: Colors.white,
+              fontSize: 12.0,
+              color: Colors.black54,
             ),
           ),
-        ),
+          Material(
+            borderRadius: isMe
+                ? BorderRadius.only(
+              topLeft: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0),
+            )
+                : BorderRadius.only(
+              topRight: Radius.circular(30.0),
+              bottomLeft: Radius.circular(30.0),
+              bottomRight: Radius.circular(30.0),
+            ),
+            elevation: 10.0,
+            color: isMe ? Colors.lightBlueAccent : Colors.white,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 15.0,
+                  color: isMe ? Colors.white : Colors.black54,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

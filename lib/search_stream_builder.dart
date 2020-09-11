@@ -21,21 +21,21 @@ class SearchStreamBuilder extends StatelessWidget {
         return (snapshot.connectionState == ConnectionState.waiting)
             ? Center(child: CircularProgressIndicator())
             : ListView.builder(
-          itemCount: snapshot.data.docs.length,
-          itemBuilder: (context, index) {
-            DocumentSnapshot data = snapshot.data.docs[index];
-            return Card(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8.0,
-                  horizontal: 16.0,
-                ),
-                child: Row(
-                  children: <Widget>[
-                    (data.data()['profileURL'] != null)
-                        ? CircleAvatar(
-                      radius: 25.0,
-                      child: ClipOval(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  DocumentSnapshot data = snapshot.data.docs[index];
+                  return Card(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 16.0,
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          (data.data()['profileURL'] != null)
+                              ? CircleAvatar(
+                                  radius: 25.0,
+                                  child: ClipOval(
                                     child: SizedBox(
                                       width: 50.0,
                                       height: 50.0,
@@ -62,10 +62,10 @@ class SearchStreamBuilder extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                ),
-                          SizedBox(
-                            width: 25.0,
-                          ),
+                    ),
+                    SizedBox(
+                      width: 25.0,
+                    ),
                     GestureDetector(
                       onTap: () {
                         print('taped');

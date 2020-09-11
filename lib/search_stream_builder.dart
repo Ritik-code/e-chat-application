@@ -3,12 +3,11 @@ import 'package:comperio/constants.dart';
 import 'package:flutter/material.dart';
 
 class SearchStreamBuilder extends StatelessWidget {
-  const SearchStreamBuilder({
-    Key key,
-    @required this.name,
-  }) : super(key: key);
+  SearchStreamBuilder({this.name});
 
   final String name;
+
+  // final File image;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class SearchStreamBuilder extends StatelessWidget {
                       child: Row(
                         children: <Widget>[
                           // Image.network(
-                          //   data['imageUrl'],
+                          //   data.data()[image],
                           //   width: 150,
                           //   height: 100,
                           //   fit: BoxFit.fill,

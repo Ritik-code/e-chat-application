@@ -60,7 +60,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Future uploadPic(BuildContext context) async {
     String fileName = basename(_image.path);
     StorageReference firebaseStorageRef =
-    FirebaseStorage.instance.ref().child(fileName);
+        FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
     var dowUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
     url = dowUrl.toString();
@@ -160,13 +160,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             height: 80.0,
                                             child: (_image != null)
                                                 ? Image.file(
-                                              _image,
-                                              fit: BoxFit.fill,
-                                            )
+                                                    _image,
+                                                    fit: BoxFit.fill,
+                                                  )
                                                 : Image.asset(
-                                              'images/default-profile.jpg',
-                                              fit: BoxFit.fill,
-                                            ),
+                                                    'images/default-profile.jpg',
+                                                    fit: BoxFit.fill,
+                                                  ),
                                           ),
                                         ),
                                       ),
@@ -264,8 +264,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                       try {
                                         final newUser = await _auth
                                             .createUserWithEmailAndPassword(
-                                            email: email,
-                                            password: password);
+                                                email: email,
+                                                password: password);
 
                                         uploadPic(context);
                                         _addToDatabase(username, url);

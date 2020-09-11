@@ -1,10 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/app_icons.dart';
+import 'package:comperio/attach_file_components.dart';
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:comperio/attach_file_components.dart';
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
@@ -14,8 +16,10 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   User loggedInUser;
+  String messageText;
 
   @override
   void initState() {
@@ -32,6 +36,14 @@ class _ChatScreenState extends State<ChatScreen> {
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  void messageStream() async {
+    await for (var snapshot in _firestore.collection('messages').snapshots()) {
+      for (var message in snapshot.docs) {
+        print(message.data());
+      }
     }
   }
 
@@ -81,7 +93,6 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   image: DecorationImage(
@@ -93,9 +104,45 @@ class _ChatScreenState extends State<ChatScreen> {
                     topRight: Radius.circular(20.0),
                   ),
                 ),
-                child: ListView(
-                    //all the message will be added here.
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    StreamBuilder<QuerySnapshot>(
+                      stream: _firestore.collection('messages').snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              backgroundColor: Colors.lightBlueAccent,
+                            ),
+                          );
+                        }
+                        final messages = snapshot.data.docs.reversed;
+                        List<MessageBubble> messageBubbles = [];
+                        for (var message in messages) {
+                          final messageText = message.data()['message'];
+                          final messageSender = message.data()['sender'];
+
+                          final messageBubble = MessageBubble(
+                            sender: messageSender,
+                            text: messageText,
+                          );
+                          messageBubbles.add(messageBubble);
+                        }
+                        return Expanded(
+                          child: ListView(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.0,
+                              vertical: 20.0,
+                            ),
+                            children: messageBubbles,
+                          ),
+                        );
+                      },
                     ),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -109,25 +156,22 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-
-
                       IconButton(
                         icon: Icon(FontAwesomeIcons.paperclip),
                         onPressed: () {
                           showModalBottomSheet(
                             context: context,
-                            builder: (context){
+                            builder: (context) {
                               return AttachFileBottomSheet();
                             },
                           );
                         },
                       ),
-
-
                       Expanded(
                         child: TextField(
                           onChanged: (value) {
                             //do something when pressed
+                            messageText = value;
                           },
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.symmetric(
@@ -135,16 +179,16 @@ class _ChatScreenState extends State<ChatScreen> {
                             hintText: 'Type your message here...',
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0)),
+                              BorderRadius.all(Radius.circular(12.0)),
                               borderSide: BorderSide(
                                 color: Colors.grey,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
+                              BorderRadius.all(Radius.circular(10.0)),
                               borderSide:
-                                  BorderSide(color: Colors.lightBlueAccent),
+                              BorderSide(color: Colors.lightBlueAccent),
                             ),
                           ),
                         ),
@@ -154,6 +198,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         color: Color(0xFF1d2d50),
                         onPressed: () {
                           //Implement send functionality.
+                          _firestore.collection('messages').add({
+                            'message': messageText,
+                            'sender': loggedInUser.email,
+                          });
                         },
                         shape: CircleBorder(),
                         child: AppIcons(
@@ -168,6 +216,33 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class MessageBubble extends StatelessWidget {
+  final String sender;
+  final String text;
+
+  MessageBubble({this.sender, this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Material(
+        color: Colors.lightBlueAccent,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+          child: Text(
+            '$text from $sender',
+            style: TextStyle(
+              fontSize: 15.0,
+              color: Colors.white,
+            ),
+          ),
         ),
       ),
     );

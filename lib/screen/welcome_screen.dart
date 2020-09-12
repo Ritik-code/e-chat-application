@@ -56,6 +56,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       tag: 'logo',
                       child: Container(
                         height: controller.value * 100,
+                        
                         child: Image(
                           image: AssetImage(
                             'images/comperio-logo.png',

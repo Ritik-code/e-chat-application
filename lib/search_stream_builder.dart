@@ -62,37 +62,37 @@ class SearchStreamBuilder extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                    ),
-                    SizedBox(
-                      width: 25.0,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        print('taped');
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            StringUtils.capitalize(
-                                data.data()['username']),
-                            style: KSearchDisplayNameTextStyle,
+                                ),
+                          SizedBox(
+                            width: 25.0,
                           ),
-                          Text(
-                            'Faculty',
-                            style: TextStyle(
-                              color: Colors.grey,
+                          GestureDetector(
+                            onTap: () {
+                              print('taped');
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  StringUtils.capitalize(
+                                      data.data()['username']),
+                                  style: KSearchDisplayNameTextStyle,
+                                ),
+                                Text(
+                                  'Faculty',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
+                  );
+                },
+              );
       },
     );
   }

@@ -10,7 +10,7 @@ class WelcomeScreenButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ButtonTheme(
-      minWidth: 350.0,
+      minWidth: 300.0,
       child: RaisedButton(
         elevation: 10.0,
         shape: RoundedRectangleBorder(

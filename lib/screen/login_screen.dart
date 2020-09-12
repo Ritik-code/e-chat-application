@@ -1,10 +1,11 @@
 import 'package:comperio/constants.dart';
-import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+
+import 'chat_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final String id = 'LoginScreen';
@@ -90,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 TextFormField(
+                                  keyboardType: TextInputType.emailAddress,
                                   decoration: const InputDecoration(
                                     icon: Icon(Icons.person),
                                     hintText: 'Enter the Email',
@@ -141,8 +143,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 email: email,
                                                 password: password);
                                         if (user != null) {
-                                          Navigator.pushNamed(context,
-                                              ContactedPersonScreen().id);
+                                          Navigator.pushNamed(
+                                              context, ChatScreen().id);
                                         }
                                         setState(() {
                                           showSpinner = false;

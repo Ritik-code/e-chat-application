@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:comperio/constants.dart';
-import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -12,6 +11,8 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
+
+import 'chat_screen.dart';
 
 class RegistrationScreen extends StatefulWidget {
   final String id = 'RegistrationScreen';
@@ -36,11 +37,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
     setState(() {
       _image = image;
-      print('Image path $_image');
+      // print('Image path $_image');
     });
   }
 
   void _addToDatabase(String userName, String dpUrl) {
+    print('dpurl is: $dpUrl');
     List<String> splitList = username.split(" ");
     List<String> indexList = [];
 
@@ -68,8 +70,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     setState(() {
       print("Profile Picture uploaded");
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
+      // Scaffold.of(context)
+      //     .showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
     });
   }
 
@@ -267,12 +269,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                 email: email,
                                                 password: password);
 
-                                        uploadPic(context);
+                                        await uploadPic(context);
+
                                         _addToDatabase(username, url);
 
                                         if (newUser != null) {
-                                          Navigator.pushNamed(context,
-                                              ContactedPersonScreen().id);
+                                          Navigator.pushNamed(
+                                              context, ChatScreen().id);
                                         }
 
                                         setState(() {

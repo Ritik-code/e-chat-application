@@ -25,9 +25,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     controller.forward();
     controller.addListener(() {
       setState(() {});
-//  print(controller.value);
+
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       tag: 'logo',
                       child: Container(
                         height: controller.value * 100,
-                        
+
                         child: Image(
                           image: AssetImage(
                             'images/comperio-logo.png',

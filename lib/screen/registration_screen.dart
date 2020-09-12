@@ -14,6 +14,7 @@ import 'package:path/path.dart';
 
 import 'chat_screen.dart';
 
+
 class RegistrationScreen extends StatefulWidget {
   final String id = 'RegistrationScreen';
 

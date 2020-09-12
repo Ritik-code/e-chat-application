@@ -14,7 +14,6 @@ import 'package:path/path.dart';
 
 import 'chat_screen.dart';
 
-
 class RegistrationScreen extends StatefulWidget {
   final String id = 'RegistrationScreen';
 
@@ -106,15 +105,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       return null;
   }
 
-  void _validateInputs() {
+  bool _validateInputs() {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
       _formKey.currentState.save();
+      return true;
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {
         _autoValidate = true;
       });
+      return false;
     }
   }
 
@@ -241,123 +242,128 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             height: 10.0,
                           ),
                           Expanded(
-                            child: Form(
-                              key: _formKey,
-                              autovalidate: _autoValidate,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  TextFormField(
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: const InputDecoration(
-                                      icon: Icon(Icons.email),
-                                      hintText: 'Enter your Email',
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey,
+                            child: SingleChildScrollView(
+                              child: Form(
+                                key: _formKey,
+                                autovalidate: _autoValidate,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    TextFormField(
+                                      keyboardType: TextInputType.emailAddress,
+                                      decoration: const InputDecoration(
+                                        icon: Icon(Icons.email),
+                                        hintText: 'Enter your Email',
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                        labelText: 'Email *',
                                       ),
-                                      labelText: 'Email *',
-                                    ),
-                                    validator: validateEmail,
-                                    onSaved: (String value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                      email = value;
-                                    },
-                                    // onChanged: (String value) {
-                                    //   // This optional block of code can be used to run
-                                    //   // code when the user saves the form.
-                                    //   email = value;
-                                    // },
-                                  ),
-                                  TextFormField(
-                                    decoration: const InputDecoration(
-                                      icon: Icon(Icons.person),
-                                      hintText: 'Enter Username',
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                      labelText: 'Username *',
-                                    ),
-                                    validator: validateUserName,
-                                    onSaved: (String value) {
-                                      username = value;
-                                    },
-                                    // onChanged: (String value) {
-                                    //   // This optional block of code can be used to run
-                                    //   // code when the user saves the form.
-                                    //   username = value;
-                                    // },
-                                  ),
-                                  TextFormField(
-                                    decoration: const InputDecoration(
-                                      icon: Icon(Icons.lock),
-                                      hintText: 'Enter the password',
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                      labelText: 'Password *',
-                                    ),
-                                    obscureText: true,
-                                    validator: validatePassword,
-                                    onSaved: (String value) {
-                                      password = value;
-                                    },
-                                    // onChanged: (String value) {
-                                    //   // This optional block of code can be used to run
-                                    //   // code when the user saves the form.
-                                    //   password = value;
-                                    // },
-                                  ),
-                                  SizedBox(
-                                    height: 15.0,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 30.0,
-                                    ),
-                                    child: RaisedButton(
-                                      elevation: 10.0,
-                                      shape: StadiumBorder(),
-                                      color: Colors.lightBlueAccent,
-                                      onPressed: () async {
-                                        _validateInputs();
-                                        setState(() {
-                                          showSpinner = true;
-                                        });
-                                        try {
-                                          final newUser = await _auth
-                                              .createUserWithEmailAndPassword(
-                                                  email: email,
-                                                  password: password);
-
-                                          await uploadPic(context);
-
-                                          _addToDatabase(username, url);
-
-                                          if (newUser != null) {
-                                            Navigator.pushNamed(
-                                                context, ChatScreen().id);
-                                          }
-
-                                          setState(() {
-                                            showSpinner = false;
-                                          });
-                                        } catch (e) {
-                                          print(e);
-                                        }
+                                      validator: validateEmail,
+                                      onSaved: (String value) {
+                                        // This optional block of code can be used to run
+                                        // code when the user saves the form.
+                                        email = value;
                                       },
-                                      child: Text(
-                                        'Sign up',
-                                        style: KLoginRegistrationButtonStyle,
+                                      // onChanged: (String value) {
+                                      //   // This optional block of code can be used to run
+                                      //   // code when the user saves the form.
+                                      //   email = value;
+                                      // },
+                                    ),
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                        icon: Icon(Icons.person),
+                                        hintText: 'Enter Username',
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                        labelText: 'Username *',
                                       ),
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 15.0,
-                                        horizontal: 60.0,
+                                      validator: validateUserName,
+                                      onSaved: (String value) {
+                                        username = value;
+                                      },
+                                      // onChanged: (String value) {
+                                      //   // This optional block of code can be used to run
+                                      //   // code when the user saves the form.
+                                      //   username = value;
+                                      // },
+                                    ),
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                        icon: Icon(Icons.lock),
+                                        hintText: 'Enter the password',
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                        labelText: 'Password *',
+                                      ),
+                                      obscureText: true,
+                                      validator: validatePassword,
+                                      onSaved: (String value) {
+                                        password = value;
+                                      },
+                                      // onChanged: (String value) {
+                                      //   // This optional block of code can be used to run
+                                      //   // code when the user saves the form.
+                                      //   password = value;
+                                      // },
+                                    ),
+                                    SizedBox(
+                                      height: 15.0,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 30.0,
+                                      ),
+                                      child: RaisedButton(
+                                        elevation: 10.0,
+                                        shape: StadiumBorder(),
+                                        color: Colors.lightBlueAccent,
+                                        onPressed: () async {
+                                          bool isShowSpinner =
+                                              _validateInputs();
+                                          setState(() {
+                                            showSpinner = isShowSpinner;
+                                          });
+                                          try {
+                                            final newUser = await _auth
+                                                .createUserWithEmailAndPassword(
+                                                    email: email,
+                                                    password: password);
+
+                                            if (_image != null) {
+                                              await uploadPic(context);
+                                            }
+
+                                            _addToDatabase(username, url);
+
+                                            if (newUser != null) {
+                                              Navigator.pushNamed(
+                                                  context, ChatScreen().id);
+                                            }
+
+                                            setState(() {
+                                              showSpinner = false;
+                                            });
+                                          } catch (e) {
+                                            print(e);
+                                          }
+                                        },
+                                        child: Text(
+                                          'Sign up',
+                                          style: KLoginRegistrationButtonStyle,
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 15.0,
+                                          horizontal: 60.0,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),

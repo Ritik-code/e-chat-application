@@ -18,13 +18,18 @@ const KAppNameTextStyle = TextStyle(
 );
 
 const KWelcomeTextStyle = TextStyle(
-  fontFamily: 'Lobster',
-  letterSpacing: 1.5,
-  color: Colors.cyanAccent,
-  fontSize: 28.0,
-  fontWeight: FontWeight.w700,
-);
-
+    fontFamily: 'Lobster',
+    letterSpacing: 1.5,
+    color: Color(0xFF27A0E6),
+    fontSize: 30.0,
+    fontWeight: FontWeight.w700,
+    shadows: [
+      Shadow(
+        color: Color(0xFF81d4fa),
+        blurRadius: 4.0,
+        offset: Offset(4, 1),
+      )
+    ]);
 const KSearchDisplayNameTextStyle = TextStyle(
   fontWeight: FontWeight.w500,
   fontSize: 20,

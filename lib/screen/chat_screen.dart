@@ -9,10 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
-
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
-
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
@@ -25,7 +23,6 @@ class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   String messageText;
-
 
   @override
   void initState() {
@@ -180,7 +177,10 @@ class _ChatScreenState extends State<ChatScreen> {
                           _firestore.collection('Messages').add({
                             'message': messageText,
                             'sender': loggedInUser.email,
-                            'Date': DateFormat('dd-MMM-yy  ').add_jm().format(DateTime.now()).toString(),
+                            'Date': DateFormat('dd-MMM-yy  ')
+                                .add_jm()
+                                .format(DateTime.now())
+                                .toString(),
                           });
                         },
                         shape: CircleBorder(),
@@ -206,7 +206,10 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('Messages').orderBy('Date').snapshots(),
+      stream: _firestore
+          .collection('Messages')
+          .orderBy(DateTime.now().toIso8601String().toString())
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -227,7 +230,7 @@ class MessagesStream extends StatelessWidget {
           final messageBubble = MessageBubble(
             sender: messageSender,
             text: messageText,
-            dateTime : messageDateTime,
+            dateTime: messageDateTime,
             isMe: currentUser == messageSender,
           );
           messageBubbles.add(messageBubble);
@@ -272,20 +275,20 @@ class MessageBubble extends StatelessWidget {
           ),
           Container(
             constraints: BoxConstraints(
-              maxWidth: 2*(MediaQuery.of(context).size.width)/3,
+              maxWidth: 2 * (MediaQuery.of(context).size.width) / 3,
             ),
             child: Material(
-              borderRadius:isMe
+              borderRadius: isMe
                   ? BorderRadius.only(
-                      topLeft: Radius.circular(30.0),
-                      bottomLeft: Radius.circular(30.0),
-                      bottomRight: Radius.circular(30.0),
-                    )
+                topLeft: Radius.circular(30.0),
+                bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0),
+              )
                   : BorderRadius.only(
-                      topRight: Radius.circular(30.0),
-                      bottomLeft: Radius.circular(30.0),
-                      bottomRight: Radius.circular(30.0),
-                    ),
+                topRight: Radius.circular(30.0),
+                bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0),
+              ),
               elevation: 10.0,
               color: isMe ? Color(0xff81d4fa) : Colors.white,
               child: Padding(

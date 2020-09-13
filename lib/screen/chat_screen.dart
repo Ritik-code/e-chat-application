@@ -132,6 +132,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: <Widget>[
                       IconButton(
                         icon: Icon(FontAwesomeIcons.paperclip),
+                        color: Colors.blueGrey,
                         onPressed: () {
                           showModalBottomSheet(
                             context: context,
@@ -177,7 +178,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           _firestore.collection('Messages').add({
                             'message': messageText,
                             'sender': loggedInUser.email,
-                            'Date': DateFormat.jm('dd-MMM-yy  kk:mm').format(DateTime.now()).toString(),
+                            'Date': DateFormat('dd-MMM-yy  ').add_jm().format(DateTime.now()).toString(),
                           });
                         },
                         shape: CircleBorder(),
@@ -290,7 +291,7 @@ class MessageBubble extends StatelessWidget {
                 child: Text(
                   text,
                   style: TextStyle(
-                    fontSize: 16.0,
+                    fontSize: 15.0,
                     color: Colors.black,
                   ),
                 ),

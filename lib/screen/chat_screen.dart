@@ -144,6 +144,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       Expanded(
                         child: TextField(
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
                           controller: messageTextController,
                           onChanged: (value) {
                             //do something when pressed

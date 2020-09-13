@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen_app_logo.dart';
@@ -100,7 +99,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(value))
-      return 'Invalid password';
+      return 'Invalid Password, include letters and numbers';
     else
       return null;
   }

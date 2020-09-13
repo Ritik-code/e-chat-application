@@ -7,9 +7,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+
 
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
+
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
@@ -22,6 +25,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   String messageText;
+
 
   @override
   void initState() {
@@ -42,7 +46,7 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void messageStream() async {
-    await for (var snapshot in _firestore.collection('messages').snapshots()) {
+    await for (var snapshot in _firestore.collection('Messages').snapshots()) {
       for (var message in snapshot.docs) {
         print(message.data());
       }
@@ -170,9 +174,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         onPressed: () {
                           messageTextController.clear();
                           //Implement send functionality.
-                          _firestore.collection('messages').add({
+                          _firestore.collection('Messages').add({
                             'message': messageText,
                             'sender': loggedInUser.email,
+                            'Date': DateFormat('yyyy-MM-dd  kk:mm').format(DateTime.now()).toString(),
                           });
                         },
                         shape: CircleBorder(),
@@ -198,7 +203,7 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').snapshots(),
+      stream: _firestore.collection('Messages').orderBy('Date').snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -212,12 +217,14 @@ class MessagesStream extends StatelessWidget {
         for (var message in messages) {
           final messageText = message.data()['message'];
           final messageSender = message.data()['sender'];
+          final messageDateTime = message.data()['Date'];
 
           final currentUser = loggedInUser.email;
 
           final messageBubble = MessageBubble(
             sender: messageSender,
             text: messageText,
+            dateTime : messageDateTime,
             isMe: currentUser == messageSender,
           );
           messageBubbles.add(messageBubble);
@@ -241,8 +248,9 @@ class MessageBubble extends StatelessWidget {
   final String sender;
   final String text;
   final bool isMe;
+  final String dateTime;
 
-  MessageBubble({this.sender, this.text, this.isMe});
+  MessageBubble({this.sender, this.text, this.isMe, this.dateTime});
 
   @override
   Widget build(BuildContext context) {
@@ -260,7 +268,7 @@ class MessageBubble extends StatelessWidget {
             ),
           ),
           Material(
-            borderRadius: isMe
+            borderRadius:isMe
                 ? BorderRadius.only(
                     topLeft: Radius.circular(30.0),
                     bottomLeft: Radius.circular(30.0),
@@ -272,16 +280,23 @@ class MessageBubble extends StatelessWidget {
                     bottomRight: Radius.circular(30.0),
                   ),
             elevation: 10.0,
-            color: isMe ? Colors.lightBlueAccent : Colors.white,
+            color: isMe ? Colors.indigoAccent : Colors.white,
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Text(
                 text,
                 style: TextStyle(
-                  fontSize: 15.0,
+                  fontSize: 17.0,
                   color: isMe ? Colors.white : Colors.black54,
                 ),
               ),
+            ),
+          ),
+          Text(
+            dateTime,
+            style: TextStyle(
+              fontSize: 10.0,
+              color: Colors.black54,
             ),
           ),
         ],

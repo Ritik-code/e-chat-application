@@ -67,8 +67,8 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       constraints: BoxConstraints.expand(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomPadding: true,
         backgroundColor: Colors.transparent,
         body: ModalProgressHUD(
           inAsyncCall: showSpinner,
@@ -90,7 +90,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-                Expanded(
+                Flexible(
+                  fit: FlexFit.tight,
                   child: Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -103,112 +104,119 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          left: 16.0, right: 16.0, top: 25, bottom: 16.0),
+                          left: 16.0, right: 16.0, top: 35, bottom: 16.0),
                       child: Form(
                         key: _formKey,
                         autovalidate: _autoValidate,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            Text(
-                              'Welcome',
-                              style: KCardTextStyle,
-                            ),
-                            SizedBox(
-                              height: 5.0,
-                            ),
-                            Text(
-                              'Back',
-                              style: KCardTextStyle,
-                            ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  TextFormField(
-                                    keyboardType: TextInputType.emailAddress,
-                                    decoration: const InputDecoration(
-                                      icon: Icon(Icons.person),
-                                      hintText: 'Enter the Email',
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                      labelText: 'Email *',
-                                    ),
-                                    validator: validateEmail,
-                                    onSaved: (String value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                      email = value;
-                                    },
-                                  ),
-                                  TextFormField(
-                                    decoration: const InputDecoration(
-                                      icon: Icon(Icons.lock),
-                                      hintText: 'Enter the password',
-                                      hintStyle: TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                      labelText: 'Password *',
-                                    ),
-                                    obscureText: true,
-                                    validator: validatePassword,
-                                    onSaved: (String value) {
-                                      // This optional block of code can be used to run
-                                      // code when the user saves the form.
-                                      password = value;
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: 15.0,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 30.0,
-                                    ),
-                                    child: RaisedButton(
-                                      elevation: 10.0,
-                                      shape: StadiumBorder(),
-                                      color: Colors.lightBlueAccent,
-                                      onPressed: () async {
-                                        bool isShowSpinner = _validateInputs();
-                                        setState(() {
-                                          showSpinner = isShowSpinner;
-                                        });
-                                        try {
-                                          final user = await _auth
-                                              .signInWithEmailAndPassword(
-                                                  email: email,
-                                                  password: password);
-                                          if (user != null) {
-                                            Navigator.pushNamed(
-                                                context, ChatScreen().id);
-                                          }
-                                          setState(() {
-                                            showSpinner = false;
-                                          });
-                                        } catch (e) {
-                                          print(e);
-                                        }
-                                      },
-                                      child: Text(
-                                        'Log in',
-                                        style: KLoginRegistrationButtonStyle,
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 15.0,
-                                        horizontal: 60.0,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Text(
+                                'Welcome',
+                                style: KCardTextStyle,
                               ),
-                            ),
-                          ],
+                              SizedBox(
+                                height: 5.0,
+                              ),
+                              Text(
+                                'Back',
+                                style: KCardTextStyle,
+                              ),
+                              SizedBox(
+                                height: 30.0,
+                              ),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    TextFormField(
+                                      keyboardType: TextInputType.emailAddress,
+                                      decoration: const InputDecoration(
+                                        icon: Icon(Icons.person),
+                                        hintText: 'Enter the Email',
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                        labelText: 'Email *',
+                                      ),
+                                      validator: validateEmail,
+                                      onSaved: (String value) {
+                                        // This optional block of code can be used to run
+                                        // code when the user saves the form.
+                                        email = value;
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 30.0,
+                                    ),
+                                    TextFormField(
+                                      decoration: const InputDecoration(
+                                        icon: Icon(Icons.lock),
+                                        hintText: 'Enter the password',
+                                        hintStyle: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                        labelText: 'Password *',
+                                      ),
+                                      obscureText: true,
+                                      validator: validatePassword,
+                                      onSaved: (String value) {
+                                        // This optional block of code can be used to run
+                                        // code when the user saves the form.
+                                        password = value;
+                                      },
+                                    ),
+                                    SizedBox(
+                                      height: 50.0,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 30.0,
+                                      ),
+                                      child: RaisedButton(
+                                        elevation: 10.0,
+                                        shape: StadiumBorder(),
+                                        color: Colors.lightBlueAccent,
+                                        onPressed: () async {
+                                          bool isShowSpinner = _validateInputs();
+                                          setState(() {
+                                            showSpinner = isShowSpinner;
+                                          });
+                                          try {
+                                            final user = await _auth
+                                                .signInWithEmailAndPassword(
+                                                    email: email,
+                                                    password: password);
+                                            if (user != null) {
+                                              Navigator.pushNamed(
+                                                  context, ChatScreen().id);
+                                            }
+                                            setState(() {
+                                              showSpinner = false;
+                                            });
+                                          } catch (e) {
+                                            print(e);
+                                          }
+                                        },
+                                        child: Text(
+                                          'Log in',
+                                          style: KLoginRegistrationButtonStyle,
+                                        ),
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 15.0,
+                                          horizontal: 60.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

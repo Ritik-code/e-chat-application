@@ -132,6 +132,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: <Widget>[
                       IconButton(
                         icon: Icon(FontAwesomeIcons.paperclip),
+                        color: Colors.blueGrey,
                         onPressed: () {
                           showModalBottomSheet(
                             context: context,
@@ -143,6 +144,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       Expanded(
                         child: TextField(
+                          keyboardType: TextInputType.multiline,
+                          maxLines: null,
                           controller: messageTextController,
                           onChanged: (value) {
                             //do something when pressed
@@ -177,7 +180,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           _firestore.collection('Messages').add({
                             'message': messageText,
                             'sender': loggedInUser.email,
-                            'Date': DateFormat('yyyy-MM-dd  kk:mm').format(DateTime.now()).toString(),
+                            'Date': DateFormat('dd-MMM-yy  ').add_jm().format(DateTime.now()).toString(),
                           });
                         },
                         shape: CircleBorder(),
@@ -267,27 +270,32 @@ class MessageBubble extends StatelessWidget {
               color: Colors.black54,
             ),
           ),
-          Material(
-            borderRadius:isMe
-                ? BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    bottomLeft: Radius.circular(30.0),
-                    bottomRight: Radius.circular(30.0),
-                  )
-                : BorderRadius.only(
-                    topRight: Radius.circular(30.0),
-                    bottomLeft: Radius.circular(30.0),
-                    bottomRight: Radius.circular(30.0),
+          Container(
+            constraints: BoxConstraints(
+              maxWidth: 2*(MediaQuery.of(context).size.width)/3,
+            ),
+            child: Material(
+              borderRadius:isMe
+                  ? BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      bottomLeft: Radius.circular(30.0),
+                      bottomRight: Radius.circular(30.0),
+                    )
+                  : BorderRadius.only(
+                      topRight: Radius.circular(30.0),
+                      bottomLeft: Radius.circular(30.0),
+                      bottomRight: Radius.circular(30.0),
+                    ),
+              elevation: 10.0,
+              color: isMe ? Color(0xff81d4fa) : Colors.white,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    color: Colors.black,
                   ),
-            elevation: 10.0,
-            color: isMe ? Colors.indigoAccent : Colors.white,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-              child: Text(
-                text,
-                style: TextStyle(
-                  fontSize: 17.0,
-                  color: isMe ? Colors.white : Colors.black54,
                 ),
               ),
             ),

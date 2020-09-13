@@ -177,7 +177,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           _firestore.collection('Messages').add({
                             'message': messageText,
                             'sender': loggedInUser.email,
-                            'Date': DateFormat('yyyy-MM-dd  kk:mm').format(DateTime.now()).toString(),
+                            'Date': DateFormat('dd-MMM-yy  kk:mm').format(DateTime.now()).toString(),
                           });
                         },
                         shape: CircleBorder(),

@@ -8,12 +8,13 @@ class AttachFileBottomSheet extends StatelessWidget {
     Key key,
   }) : super(key: key);
 
-  // showFilePicker(FileType fileType) async {
-  //   File file = await FilePicker.getFile(type: fileType);
-  //   // chatBloc.dispatch(SendAttachmentEvent(chat.chatId,file,fileType));
-  //   // Navigator.pop(context);
-  //   // GradientSnackBar.showMessage(context, 'Sending attachment..');
-  // }
+  showFilePicker(FileType fileType) async {
+    File file = await FilePicker.getFile(type: fileType);
+    //TODO: Send files in the form of messages code.
+    // chatBloc.dispatch(SendAttachmentEvent(chat.chatId,file,fileType));
+    // Navigator.pop(context);
+    // GradientSnackBar.showMessage(context, 'Sending attachment..');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +25,9 @@ class AttachFileBottomSheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          AttachFileIcon(icon: Icons.image, color: Colors.deepOrange, text: 'Image', onPressed: () async {
-            File file = await FilePicker.getFile(
-              type: FileType.image,
-
-            );
-          },),
-          AttachFileIcon(icon: Icons.videocam, color: Colors.blue, text: 'Video', onPressed: (){}),
-          AttachFileIcon(icon: Icons.insert_drive_file, color: Colors.yellow, text: 'File', onPressed: (){}),
+          AttachFileIcon(icon: Icons.image, color: Colors.deepOrange, text: 'Image', onPressed: (){ showFilePicker(FileType.image); }),
+          AttachFileIcon(icon: Icons.videocam, color: Colors.blue, text: 'Video', onPressed: (){ showFilePicker(FileType.video); }),
+          AttachFileIcon(icon: Icons.insert_drive_file, color: Colors.yellow, text: 'File', onPressed: (){ showFilePicker(FileType.any); }),
         ],
       ),
     );

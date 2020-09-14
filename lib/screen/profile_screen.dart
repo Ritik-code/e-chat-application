@@ -22,46 +22,46 @@ import 'package:path/path.dart';
 import 'package:image_picker/image_picker.dart';
 //import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-final _firestore = FirebaseFirestore.instance;
-User loggedInUser;
+// final _firestore = FirebaseFirestore.instance;
+// User loggedInUser;
 class ProfileScreen extends StatefulWidget {
   final String id = 'ProfileScreen';
-  File _image;
+  // File _image;
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final _auth = FirebaseAuth.instance;
+  // final _auth = FirebaseAuth.instance;
 
 
   
-   Future getImages() async {
-    PickedFile pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-    var image = File(pickedFile.path);
+  //  Future getImages() async {
+  //   PickedFile pickedFile =
+  //       await ImagePicker().getImage(source: ImageSource.gallery);
+  //   var image = File(pickedFile.path);
 
-    setState(() {
-      _image = image;
-      // print('Image path $_image');
-    });
-  }
+  //   setState(() {
+  //     _image = image;
+  //     // print('Image path $_image');
+  //   });
+  // }
 
-   Future uploadPic(BuildContext context) async {
-    String fileName = basename(_image.path);
-    StorageReference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
-    var dowUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-    url = dowUrl.toString();
-    print(url);
-    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
-    setState(() {
-      print("Profile Picture uploaded");
-      // Scaffold.of(context)
-      //     .showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
-    });
-  }
+  //  Future uploadPic(BuildContext context) async {
+  //   String fileName = basename(_image.path);
+  //   StorageReference firebaseStorageRef =
+  //       FirebaseStorage.instance.ref().child(fileName);
+  //   StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+  //   var dowUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+  //   url = dowUrl.toString();
+  //   print(url);
+  //   StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+  //   setState(() {
+  //     print("Profile Picture uploaded");
+  //     // Scaffold.of(context)
+  //     //     .showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

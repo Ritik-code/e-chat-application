@@ -177,8 +177,11 @@ class _ChatScreenState extends State<ChatScreen> {
                           _firestore.collection('Messages').add({
                             'message': messageText,
                             'sender': loggedInUser.email,
-                            'Date': DateFormat('dd-MMM-yy  ')
-                                .add_jm()
+                            'Date': DateFormat('dd-MMM-yy hh:mm')
+                                .format(DateTime.now())
+                                .toString(),
+                            'fileUrl': " ",
+                            'orderDateFormat': DateFormat('dd-MMM-yy hh:mm:ss')
                                 .format(DateTime.now())
                                 .toString(),
                           });
@@ -208,7 +211,7 @@ class MessagesStream extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection('Messages')
-          .orderBy(DateTime.now().toIso8601String().toString())
+          .orderBy('orderDateFormat')
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -224,6 +227,7 @@ class MessagesStream extends StatelessWidget {
           final messageText = message.data()['message'];
           final messageSender = message.data()['sender'];
           final messageDateTime = message.data()['Date'];
+          final messageFile = message.data()['fileUrl'];
 
           final currentUser = loggedInUser.email;
 
@@ -232,6 +236,7 @@ class MessagesStream extends StatelessWidget {
             text: messageText,
             dateTime: messageDateTime,
             isMe: currentUser == messageSender,
+            messageFileUrl: messageFile,
           );
           messageBubbles.add(messageBubble);
         }
@@ -255,8 +260,10 @@ class MessageBubble extends StatelessWidget {
   final String text;
   final bool isMe;
   final String dateTime;
+  final String messageFileUrl;
 
-  MessageBubble({this.sender, this.text, this.isMe, this.dateTime});
+  MessageBubble(
+      {this.sender, this.text, this.isMe, this.dateTime, this.messageFileUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -273,36 +280,85 @@ class MessageBubble extends StatelessWidget {
               color: Colors.black54,
             ),
           ),
-          Container(
-            constraints: BoxConstraints(
-              maxWidth: 2 * (MediaQuery.of(context).size.width) / 3,
-            ),
-            child: Material(
-              borderRadius: isMe
-                  ? BorderRadius.only(
-                topLeft: Radius.circular(30.0),
-                bottomLeft: Radius.circular(30.0),
-                bottomRight: Radius.circular(30.0),
-              )
-                  : BorderRadius.only(
-                topRight: Radius.circular(30.0),
-                bottomLeft: Radius.circular(30.0),
-                bottomRight: Radius.circular(30.0),
-              ),
-              elevation: 10.0,
-              color: isMe ? Color(0xff81d4fa) : Colors.white,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    color: Colors.black,
+          (text != " ")
+              ? Container(
+                  constraints: BoxConstraints(
+                    maxWidth: 2 * (MediaQuery.of(context).size.width) / 3,
+                  ),
+                  child: Material(
+                    borderRadius: isMe
+                        ? BorderRadius.only(
+                            topLeft: Radius.circular(30.0),
+                            bottomLeft: Radius.circular(30.0),
+                            bottomRight: Radius.circular(30.0),
+                          )
+                        : BorderRadius.only(
+                            topRight: Radius.circular(30.0),
+                            bottomLeft: Radius.circular(30.0),
+                            bottomRight: Radius.circular(30.0),
+                          ),
+                    elevation: 10.0,
+                    color: isMe ? Color(0xff81d4fa) : Colors.white,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          vertical: 12.0, horizontal: 20.0),
+                      child: Text(
+                        text,
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: <Widget>[
+                          Container(
+                            width: 130,
+                            color: Colors.black87,
+                            height: 80,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.insert_drive_file,
+                                  color: Colors.lightBlueAccent,
+                                ),
+                                Text(
+                                  'File',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: isMe
+                                          ? Colors.lightBlueAccent
+                                          : Colors.lightBlueAccent),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        height: 40,
+                        width: 130.0,
+                        color: Colors.lightBlueAccent,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.file_download,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {},
+                        ),
+                      )
+                    ],
                   ),
                 ),
-              ),
-            ),
-          ),
           Text(
             dateTime,
             style: TextStyle(

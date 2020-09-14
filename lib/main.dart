@@ -5,6 +5,7 @@ import 'package:comperio/screen/login_screen.dart';
 import 'package:comperio/screen/registration_screen.dart';
 import 'package:comperio/screen/searchScreen.dart';
 import 'package:comperio/screen/welcome_screen.dart';
+import 'package:comperio/screen/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -27,6 +28,7 @@ class Comperio extends StatelessWidget {
         FeedbackScreen().id: (context) => FeedbackScreen(),
         ContactedPersonScreen().id: (context) => ContactedPersonScreen(),
         SearchScreen().id: (context) => SearchScreen(),
+        ProfileScreen().id: (context) => ProfileScreen(),
       },
     );
   }

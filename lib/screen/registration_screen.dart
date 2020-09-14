@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen_app_logo.dart';
@@ -156,7 +157,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   fit: FlexFit.tight,
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.only(left: 20.0, right:20.0),
+                    padding: EdgeInsets.only(left: 20.0, right: 20.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -331,7 +332,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         shape: StadiumBorder(),
                                         color: Colors.lightBlueAccent,
                                         onPressed: () async {
-                                          bool isShowSpinner = _validateInputs();
+                                          bool isShowSpinner =
+                                              _validateInputs();
                                           setState(() {
                                             showSpinner = isShowSpinner;
                                           });

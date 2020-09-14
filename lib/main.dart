@@ -2,10 +2,10 @@ import 'package:comperio/screen/chat_screen.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:comperio/screen/feedback_screen.dart';
 import 'package:comperio/screen/login_screen.dart';
+import 'package:comperio/screen/profile_screen.dart';
 import 'package:comperio/screen/registration_screen.dart';
 import 'package:comperio/screen/searchScreen.dart';
 import 'package:comperio/screen/welcome_screen.dart';
-import 'package:comperio/screen/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class Comperio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: WelcomeScreen().id,
+      initialRoute: ProfileScreen().id,
       routes: {
         ChatScreen().id: (context) => ChatScreen(),
         RegistrationScreen().id: (context) => RegistrationScreen(),

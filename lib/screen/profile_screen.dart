@@ -13,17 +13,38 @@
 
 // - show @professor when faculty and @student when student's profile
 
+import 'package:basic_utils/basic_utils.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:comperio/helper_functions.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String id = 'ProfileScreen';
+
   // File _image;
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  QuerySnapshot snapshotUserInfo;
+  String userName;
+  String emailId;
+  String picURL;
+
+  getUserInfo() async {
+    userName = await HelperFunctions.getUserNameSharedPreference();
+    emailId = await HelperFunctions.getUserEmailSharedPreference();
+    picURL = await HelperFunctions.getUserPhotoUrlSharedPreference();
+  }
+
+  @override
+  void initState() {
+    getUserInfo();
+    super.initState();
+  }
+
   //  Future getImages() async {
   //   PickedFile pickedFile =
   //       await ImagePicker().getImage(source: ImageSource.gallery);
@@ -81,12 +102,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: CircleAvatar(
                     radius: 50.0,
                     backgroundImage: NetworkImage(
-                        'https://www.vhv.rs/file/max/34/340444_avatar-png.jpg'),
+                      picURL,
+                    ),
                   ),
                 ),
-
+                SizedBox(
+                  height: 15.0,
+                ),
                 Text(
-                  'Rahul Verma',
+                  StringUtils.capitalize(userName),
                   style: TextStyle(
                     fontSize: 40.0,
                     color: Colors.white,
@@ -116,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     leading: Icon(Icons.email, color: Colors.teal),
                     title: Align(
                       child: Text(
-                        'abc@gmail.com',
+                        emailId,
                         style: TextStyle(
                           color: Colors.teal[900],
                           fontSize: 20.0,

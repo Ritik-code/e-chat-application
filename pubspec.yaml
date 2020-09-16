@@ -44,7 +44,6 @@ dependencies:
   flushbar: ^1.9.0
   dio: ^3.0.10
   shared_preferences: ^0.5.10
-  universal_html: ^1.2.1
 
 dev_dependencies:
   flutter_test:

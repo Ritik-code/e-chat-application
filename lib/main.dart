@@ -46,7 +46,7 @@ class _ComperioState extends State<Comperio> {
   Widget build(BuildContext context) {
 
     return MaterialApp(
-      initialRoute: !userIsLoggedIn ? WelcomeScreen().id : ContactedPersonScreen().id,
+      initialRoute: userIsLoggedIn ? ContactedPersonScreen().id: WelcomeScreen().id ,
       routes: {
         ChatScreen().id: (context) => ChatScreen(),
         RegistrationScreen().id: (context) => RegistrationScreen(),

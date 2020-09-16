@@ -8,6 +8,7 @@ import 'package:comperio/screen/searchScreen.dart';
 import 'package:comperio/screen/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'helper_functions.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,11 +16,37 @@ void main() async {
   runApp(Comperio());
 }
 
-class Comperio extends StatelessWidget {
+
+class Comperio extends StatefulWidget {
+  @override
+  _ComperioState createState() => _ComperioState();
+}
+
+class _ComperioState extends State<Comperio> {
+  bool userIsLoggedIn = false;
+
+  @override
+  void initState() {
+    getLoggedInState();
+    super.initState();
+  }
+
+   getLoggedInState() async {
+
+     bool value = await HelperFunctions.getUserLoggedInSharedPreference();
+      setState(() {
+       userIsLoggedIn  = value;
+      });
+    print(userIsLoggedIn);
+
+    }
+
+
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
-      initialRoute: ProfileScreen().id,
+      initialRoute: !userIsLoggedIn ? WelcomeScreen().id : ContactedPersonScreen().id,
       routes: {
         ChatScreen().id: (context) => ChatScreen(),
         RegistrationScreen().id: (context) => RegistrationScreen(),

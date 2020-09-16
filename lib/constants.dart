@@ -53,3 +53,9 @@ const KFeedbackTextStyle = TextStyle(
   color: Colors.black,
   fontSize: 25.0,
 );
+
+class Constants{
+ static String myName = "";
+}
+
+

@@ -6,8 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import '../helper_functions.dart';
 
+import '../helper_functions.dart';
 
 class LoginScreen extends StatefulWidget {
   final String id = 'LoginScreen';
@@ -184,7 +184,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         shape: StadiumBorder(),
                                         color: Colors.lightBlueAccent,
                                         onPressed: () async {
-                                          bool isShowSpinner = _validateInputs();
+                                          bool isShowSpinner =
+                                              _validateInputs();
                                           setState(() {
                                             showSpinner = isShowSpinner;
                                           });
@@ -195,25 +196,43 @@ class _LoginScreenState extends State<LoginScreen> {
                                             //         password: password);
 
                                             await _auth
-                                                .signInWithEmailAndPassword(email: email, password: password).
-                                            then((newUser) async {
+                                                .signInWithEmailAndPassword(
+                                                    email: email,
+                                                    password: password)
+                                                .then((newUser) async {
                                               if (newUser != null) {
                                                 var userInfoSnapshot =
-                                                    await FirebaseFirestore.instance
-                                                    .collection("users")
-                                                    .where('email', isEqualTo: email)
-                                                    .getDocuments()
-                                                    .catchError((e) {
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection("users")
+                                                        .where('email',
+                                                            isEqualTo: email)
+                                                        .getDocuments()
+                                                        .catchError((e) {
                                                   print(e.toString());
                                                 });
 
-                                                HelperFunctions.saveUserLoggedInSharedPreference(true);
-                                                HelperFunctions.saveUserNameSharedPreference(userInfoSnapshot.documents[0].get('username'));
-                                                HelperFunctions.saveUserEmailSharedPreference(userInfoSnapshot.documents[0].get('email'));
-                                                HelperFunctions.saveUserPhotoUrlSharedPreference(userInfoSnapshot.documents[0].get('profileURL'));
+                                                HelperFunctions
+                                                    .saveUserLoggedInSharedPreference(
+                                                        true);
+                                                HelperFunctions
+                                                    .saveUserNameSharedPreference(
+                                                        userInfoSnapshot
+                                                            .documents[0]
+                                                            .get('username'));
+                                                HelperFunctions
+                                                    .saveUserEmailSharedPreference(
+                                                        userInfoSnapshot
+                                                            .documents[0]
+                                                            .get('email'));
+                                                HelperFunctions
+                                                    .saveUserPhotoUrlSharedPreference(
+                                                        userInfoSnapshot
+                                                            .documents[0]
+                                                            .get('profileURL'));
 
-                                                Navigator.pushNamed(
-                                                    context, ContactedPersonScreen().id);
+                                                Navigator.pushNamed(context,
+                                                    ContactedPersonScreen().id);
                                               }
                                             });
                                             setState(() {

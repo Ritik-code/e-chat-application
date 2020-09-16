@@ -8,6 +8,7 @@ import 'package:comperio/screen/searchScreen.dart';
 import 'package:comperio/screen/welcome_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
 import 'helper_functions.dart';
 
 void main() async {
@@ -15,7 +16,6 @@ void main() async {
   await Firebase.initializeApp();
   runApp(Comperio());
 }
-
 
 class Comperio extends StatefulWidget {
   @override
@@ -31,23 +31,20 @@ class _ComperioState extends State<Comperio> {
     super.initState();
   }
 
-   getLoggedInState() async {
-
-     bool value = await HelperFunctions.getUserLoggedInSharedPreference();
-      setState(() {
-       userIsLoggedIn  = value;
-      });
+  getLoggedInState() async {
+    bool value = await HelperFunctions.getUserLoggedInSharedPreference();
+    setState(() {
+      userIsLoggedIn = value;
+    });
     print(userIsLoggedIn);
-
-    }
-
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-
-      home: userIsLoggedIn ? ContactedPersonScreen():  WelcomeScreen(),
+      home: userIsLoggedIn != null
+          ? userIsLoggedIn ? ContactedPersonScreen() : WelcomeScreen()
+          : WelcomeScreen(),
       // initialRoute: ,
       routes: {
         ChatScreen().id: (context) => ChatScreen(),

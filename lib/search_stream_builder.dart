@@ -4,11 +4,21 @@ import 'package:comperio/constants.dart';
 import 'package:comperio/screen/chat_screen.dart';
 import 'package:flutter/material.dart';
 
-class SearchStreamBuilder extends StatelessWidget {
+
+
+class SearchStreamBuilder extends StatefulWidget {
   SearchStreamBuilder({this.username});
+
 
   final String username;
 
+  @override
+  _SearchStreamBuilderState createState() => _SearchStreamBuilderState();
+}
+
+class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
+
+  bool showSpinner = false;
   createChatRoom(BuildContext context ,String username){
 
     List<String> users = [Constants.myName, username];
@@ -42,10 +52,10 @@ class SearchStreamBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: (username != "" && username != null)
+      stream: (widget.username != "" && widget.username != null)
           ? FirebaseFirestore.instance
               .collection('users')
-              .where("searchKeywords", arrayContains: username)
+              .where("searchKeywords", arrayContains: widget.username)
               .snapshots() //TODO: Recent searches to be added here
           : FirebaseFirestore.instance.collection("users").snapshots(),
       builder: (context, snapshot) {
@@ -99,9 +109,16 @@ class SearchStreamBuilder extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
+                              setState(() {
+                                showSpinner=true;
+                              });
                               String user = data.data()['username'];
                               createChatRoom(context, user);
+                              setState(() {
+                                showSpinner=false;
+                              });
                             },
+
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

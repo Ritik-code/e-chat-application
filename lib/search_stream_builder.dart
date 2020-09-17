@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/constants.dart';
 import 'package:comperio/helper_functions.dart';
 import 'package:comperio/screen/chat_screen.dart';
+import 'package:comperio/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class SearchStreamBuilder extends StatefulWidget {
@@ -164,10 +165,15 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                   ),
                                 )
                               : RaisedButton(
-                                  shape: RoundedRectangleBorder(
+                            shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(30.0)),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setState(() {
+                                      Navigator.pushNamed(
+                                          context, ProfileScreen().id);
+                                    });
+                                  },
                                   color: Colors.cyan,
                                   elevation: 5.0,
                                   child: Text(

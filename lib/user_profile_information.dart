@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
 class UserProfileInformation{
 
+final FirebaseAuth _auth = FirebaseAuth.instance;
+
+//check for current password when user wants to change password
  Future<bool> validatePassword(String password) async {
     var firebaseUser = await _auth.currentUser();
 

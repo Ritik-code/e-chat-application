@@ -13,7 +13,6 @@
 
 // - show @professor when faculty and @student when student's profile
 
-import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -41,8 +40,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    getUserInfo();
     super.initState();
+    getUserInfo();
   }
 
   //  Future getImages() async {
@@ -81,8 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             constraints: BoxConstraints.expand(),
             decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(
-                        "https://i.pinimg.com/564x/84/c0/19/84c019fbb489f4025ba4f2b8754582c3.jpg"),
+                    image: AssetImage('images/app-background-3.jpg'),
                     fit: BoxFit.cover)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,17 +98,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   child: CircleAvatar(
-                    radius: 50.0,
-                    backgroundImage: NetworkImage(
-                      picURL,
-                    ),
-                  ),
+                      radius: 50.0, backgroundImage: NetworkImage(picURL)),
                 ),
                 SizedBox(
                   height: 15.0,
                 ),
                 Text(
-                  StringUtils.capitalize(userName),
+                  userName != null ? userName : 'abc',
                   style: TextStyle(
                     fontSize: 40.0,
                     color: Colors.white,
@@ -140,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     leading: Icon(Icons.email, color: Colors.teal),
                     title: Align(
                       child: Text(
-                        emailId,
+                        emailId != null ? emailId : 'abc@gmail.com',
                         style: TextStyle(
                           color: Colors.teal[900],
                           fontSize: 20.0,

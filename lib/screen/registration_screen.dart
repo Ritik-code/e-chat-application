@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
@@ -11,8 +12,8 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
-import '../helper_functions.dart';
 
+import '../helper_functions.dart';
 
 class RegistrationScreen extends StatefulWidget {
   final String id = 'RegistrationScreen';
@@ -22,8 +23,6 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
   bool showSpinner = false;
@@ -32,7 +31,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String username;
   String password;
   File _image;
-  String url = 'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
+  String url =
+      'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
 
   Future getImages() async {
     PickedFile pickedFile =
@@ -60,7 +60,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       'username': userName,
       'searchKeywords': indexList,
       'profileURL': dpUrl,
-      'email' : email,
+      'email': email,
     });
   }
 
@@ -347,24 +347,35 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             //         email: email,
                                             //         password: password);
 
+                                            await _auth
+                                                .createUserWithEmailAndPassword(
+                                                    email: email,
+                                                    password: password)
+                                                .then((newUser) {
+                                              if (newUser != null) {
+                                                HelperFunctions
+                                                    .saveUserLoggedInSharedPreference(
+                                                        true);
+                                                HelperFunctions
+                                                    .saveUserNameSharedPreference(
+                                                        username);
+                                                HelperFunctions
+                                                    .saveUserEmailSharedPreference(
+                                                        email);
+                                                HelperFunctions
+                                                    .saveUserPhotoUrlSharedPreference(
+                                                        url);
+
+                                                Navigator.pushNamed(context,
+                                                    ContactedPersonScreen().id);
+                                              }
+                                            });
+
                                             if (_image != null) {
                                               await uploadPic(context);
                                             }
 
                                             _addToDatabase(username, url);
-                                            await _auth
-                                                  .createUserWithEmailAndPassword(email: email, password: password).
-                                            then((newUser) {
-                                            if (newUser != null) {
-                                              HelperFunctions.saveUserLoggedInSharedPreference(true);
-                                              HelperFunctions.saveUserNameSharedPreference(username);
-                                              HelperFunctions.saveUserEmailSharedPreference(email);
-                                              HelperFunctions.saveUserPhotoUrlSharedPreference(url);
-
-                                              Navigator.pushNamed(
-                                                  context, ContactedPersonScreen().id);
-                                            }
-                                            });
 
                                             setState(() {
                                               showSpinner = false;

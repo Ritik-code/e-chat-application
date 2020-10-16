@@ -13,7 +13,6 @@
 
 // - show @professor when faculty and @student when student's profile
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/helper_functions.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +26,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  QuerySnapshot snapshotUserInfo;
   String userName;
   String emailId;
   String picURL;
@@ -98,7 +96,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   child: CircleAvatar(
-                      radius: 50.0, backgroundImage: NetworkImage(picURL)),
+                      radius: 50.0,
+                      backgroundImage: NetworkImage((picURL != null)
+                          ? picURL
+                          : 'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae')),
                 ),
                 SizedBox(
                   height: 15.0,

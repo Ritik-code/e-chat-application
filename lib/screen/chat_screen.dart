@@ -10,7 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../database.dart';
+
 
 
 final _firestore = FirebaseFirestore.instance;
@@ -33,15 +33,19 @@ class _ChatScreenState extends State<ChatScreen> {
   String chatRoomId ;
   String username = "";
 
-
-
    getUserName() async{
-     chatRoomId = await HelperFunctions.getChatRoomIdSharedPreference();
+     String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
+     setState(() {
+       chatRoomId = chatId;
+     });
      print(chatRoomId);
-    var snapshot = await Firestore.instance
-        .collection("chatRoom")
-        .document('chatRoomId').get();
-    username =  snapshot.data()['users'][0];
+       var snapshot = await Firestore.instance
+           .collection("chatRoom")
+           .document('chatRoomId').get();
+     setState(() {
+       username =  snapshot.data()['users'][0];
+
+     });
      print(username);
 }
 
@@ -50,6 +54,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     getCurrentUser();
+    getUserName();
   }
 
   void getCurrentUser() async {
@@ -102,15 +107,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       Navigator.pushNamed(context, ContactedPersonScreen().id);
                     },
                   ),
-                  CircleAvatar(
-                    radius: 17.0,
-                    backgroundColor: Colors.white,
-                  ),
                   SizedBox(
                     width: 10.0,
                   ),
                   Text(
-                    username,
+                    chatRoomId,
                     style: KUserTextStyle,
                   ),
                 ],

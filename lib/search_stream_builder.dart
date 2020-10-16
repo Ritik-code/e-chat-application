@@ -165,7 +165,7 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                   ),
                                 )
                               : RaisedButton(
-                            shape: RoundedRectangleBorder(
+                                  shape: RoundedRectangleBorder(
                                       borderRadius:
                                           BorderRadius.circular(30.0)),
                                   onPressed: () {

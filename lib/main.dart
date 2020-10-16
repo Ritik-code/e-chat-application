@@ -6,6 +6,7 @@ import 'package:comperio/screen/profile_screen.dart';
 import 'package:comperio/screen/registration_screen.dart';
 import 'package:comperio/screen/searchScreen.dart';
 import 'package:comperio/screen/welcome_screen.dart';
+import 'package:comperio/screen/change_password_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ class Comperio extends StatefulWidget {
 }
 
 class _ComperioState extends State<Comperio> {
-  bool userIsLoggedIn = false;
+  bool userIsLoggedIn;
 
   @override
   void initState() {
@@ -55,7 +56,9 @@ class _ComperioState extends State<Comperio> {
         ContactedPersonScreen().id: (context) => ContactedPersonScreen(),
         SearchScreen().id: (context) => SearchScreen(),
         ProfileScreen().id: (context) => ProfileScreen(),
+        ChangePasswordScreen().id: (context) => ChangePasswordScreen(),
       },
+
     );
   }
 }

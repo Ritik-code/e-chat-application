@@ -1,6 +1,7 @@
 import 'package:comperio/app_icons.dart';
 import 'package:comperio/choice.dart';
 import 'package:comperio/helper_functions.dart';
+import 'package:comperio/screen/change_password_screen.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:comperio/screen/profile_screen.dart';
 import 'package:comperio/screen/welcome_screen.dart';
@@ -40,6 +41,7 @@ class _ContactPopupMenuState extends State<ContactPopupMenu> {
         _signOut();
         print('Log Out');
       } else if (_selectedChoice == 'Change Password') {
+        Navigator.pushNamed(context, ChangePasswordScreen().id);
         print('Change Password');
       } else if (_selectedChoice == 'Profile') {
         Navigator.pushNamed(context, ProfileScreen().id);

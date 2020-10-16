@@ -30,16 +30,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String emailId;
   String picURL;
 
-  getUserInfo() async {
-    userName = await HelperFunctions.getUserNameSharedPreference();
-    emailId = await HelperFunctions.getUserEmailSharedPreference();
-    picURL = await HelperFunctions.getUserPhotoUrlSharedPreference();
+  getUserInfo() async{
+      String username = await HelperFunctions.getUserNameSharedPreference();
+      String email = await HelperFunctions.getUserEmailSharedPreference();
+      String url = await HelperFunctions.getUserPhotoUrlSharedPreference();
+      setState(() {
+        userName = username;
+        emailId = email;
+        picURL = url;
+      });
   }
 
   @override
   void initState() {
     super.initState();
-    getUserInfo();
+      getUserInfo();
+
   }
 
   //  Future getImages() async {

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:comperio/constants.dart';
+import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,7 +12,8 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
-import 'chat_screen.dart';
+
+import '../helper_functions.dart';
 
 class RegistrationScreen extends StatefulWidget {
   final String id = 'RegistrationScreen';
@@ -29,7 +31,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String username;
   String password;
   File _image;
-  String url;
+  String url =
+      'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
 
   Future getImages() async {
     PickedFile pickedFile =
@@ -57,6 +60,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       'username': userName,
       'searchKeywords': indexList,
       'profileURL': dpUrl,
+      'email': email,
     });
   }
 
@@ -99,7 +103,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(value))
-      return 'Invalid password';
+      return 'Invalid Password, include letters and numbers';
     else
       return null;
   }
@@ -108,6 +112,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
       _formKey.currentState.save();
+
       return true;
     } else {
 //    If all data are not valid then start auto validation.
@@ -129,8 +134,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       ),
       constraints: BoxConstraints.expand(),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomPadding: true,
         backgroundColor: Colors.transparent,
         body: ModalProgressHUD(
           inAsyncCall: showSpinner,
@@ -152,10 +157,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ],
                   ),
                 ),
-                Expanded(
+                Flexible(
+                  fit: FlexFit.tight,
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: EdgeInsets.only(left: 20.0, right: 20.0),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -163,85 +169,87 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         topRight: Radius.circular(20.0),
                       ),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16.0, right: 16.0, top: 25, bottom: 16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'New',
-                                    style: KCardTextStyle,
-                                  ),
-                                  SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  Text(
-                                    'Account',
-                                    style: KCardTextStyle,
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  overflow: Overflow.visible,
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 16.0, right: 16.0, top: 25, bottom: 16.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      width: 80.0,
-                                      height: 80.0,
-                                      child: CircleAvatar(
-                                        radius: 40.0,
-                                        backgroundColor: Colors.black12,
-                                        child: ClipOval(
-                                          child: SizedBox(
-                                            width: 80.0,
-                                            height: 80.0,
-                                            child: (_image != null)
-                                                ? Image.file(
-                                                    _image,
-                                                    fit: BoxFit.fill,
-                                                  )
-                                                : Image.asset(
-                                                    'images/default-profile.jpg',
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                          ),
-                                        ),
-                                      ),
+                                    Text(
+                                      'New',
+                                      style: KCardTextStyle,
                                     ),
-                                    Positioned(
-                                      top: -1,
-                                      right: -30,
-                                      bottom: -40,
-                                      left: 40,
-                                      child: IconButton(
-                                        icon: Icon(
-                                          Icons.camera,
-                                          color: Colors.pinkAccent,
-                                          size: 20,
-                                        ),
-                                        onPressed: () {
-                                          getImages();
-                                        },
-                                      ),
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
+                                    Text(
+                                      'Account',
+                                      style: KCardTextStyle,
                                     ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Expanded(
-                            child: SingleChildScrollView(
+                                Container(
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    overflow: Overflow.visible,
+                                    children: [
+                                      Container(
+                                        width: 80.0,
+                                        height: 80.0,
+                                        child: CircleAvatar(
+                                          radius: 40.0,
+                                          backgroundColor: Colors.black12,
+                                          child: ClipOval(
+                                            child: SizedBox(
+                                              width: 80.0,
+                                              height: 80.0,
+                                              child: (_image != null)
+                                                  ? Image.file(
+                                                      _image,
+                                                      fit: BoxFit.fill,
+                                                    )
+                                                  : Image.asset(
+                                                      'images/default-profile.jpg',
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: -1,
+                                        right: -30,
+                                        bottom: -40,
+                                        left: 40,
+                                        child: IconButton(
+                                          icon: Icon(
+                                            Icons.camera,
+                                            color: Colors.blueAccent,
+                                            size: 20,
+                                          ),
+                                          onPressed: () {
+                                            getImages();
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 30.0,
+                            ),
+                            Flexible(
+                              fit: FlexFit.loose,
                               child: Form(
                                 key: _formKey,
                                 autovalidate: _autoValidate,
@@ -271,6 +279,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                       //   email = value;
                                       // },
                                     ),
+                                    SizedBox(
+                                      height: 20.0,
+                                    ),
                                     TextFormField(
                                       decoration: const InputDecoration(
                                         icon: Icon(Icons.person),
@@ -289,6 +300,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                       //   // code when the user saves the form.
                                       //   username = value;
                                       // },
+                                    ),
+                                    SizedBox(
+                                      height: 20.0,
                                     ),
                                     TextFormField(
                                       decoration: const InputDecoration(
@@ -311,7 +325,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                       // },
                                     ),
                                     SizedBox(
-                                      height: 15.0,
+                                      height: 50.0,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -328,21 +342,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             showSpinner = isShowSpinner;
                                           });
                                           try {
-                                            final newUser = await _auth
+                                            // final newUser = await _auth
+                                            //     .createUserWithEmailAndPassword(
+                                            //         email: email,
+                                            //         password: password);
+
+                                            await _auth
                                                 .createUserWithEmailAndPassword(
                                                     email: email,
-                                                    password: password);
+                                                    password: password)
+                                                .then((newUser) {
+                                              if (newUser != null) {
+                                                HelperFunctions
+                                                    .saveUserLoggedInSharedPreference(
+                                                        true);
+                                                HelperFunctions
+                                                    .saveUserNameSharedPreference(
+                                                        username);
+                                                HelperFunctions
+                                                    .saveUserEmailSharedPreference(
+                                                        email);
+                                                HelperFunctions
+                                                    .saveUserPhotoUrlSharedPreference(
+                                                        url);
+
+                                                Navigator.pushNamed(context,
+                                                    ContactedPersonScreen().id);
+                                              }
+                                            });
 
                                             if (_image != null) {
                                               await uploadPic(context);
                                             }
 
                                             _addToDatabase(username, url);
-
-                                            if (newUser != null) {
-                                              Navigator.pushNamed(
-                                                  context, ChatScreen().id);
-                                            }
 
                                             setState(() {
                                               showSpinner = false;
@@ -365,8 +398,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

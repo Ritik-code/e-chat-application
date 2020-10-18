@@ -1,15 +1,15 @@
 import 'package:comperio/app_icons.dart';
 import 'package:comperio/choice.dart';
+import 'package:comperio/helper_functions.dart';
+import 'package:comperio/screen/change_password_screen.dart';
+import 'package:comperio/screen/contacted_person_screen.dart';
+import 'package:comperio/screen/profile_screen.dart';
 import 'package:comperio/screen/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:comperio/screen/contacted_person_screen.dart';
-
-
 
 class ContactPopupMenu extends StatefulWidget {
-
   const ContactPopupMenu({
     Key key,
     @required this.choices,
@@ -24,29 +24,27 @@ class ContactPopupMenu extends StatefulWidget {
 class _ContactPopupMenuState extends State<ContactPopupMenu> {
   String _selectedChoice = choices[0].title;
 
-  Future<void> _signOut() async{
+  Future<void> _signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
+      HelperFunctions.saveUserLoggedInSharedPreference(false);
       Navigator.pushNamed(context, WelcomeScreen().id);
-    }
-    catch(e){
+    } catch (e) {
       print(e);
     }
-
   }
 
-  void _select(Choice choice){
+  void _select(Choice choice) {
     setState(() {
       _selectedChoice = choice.title;
-      if(_selectedChoice == 'Log out'){
+      if (_selectedChoice == 'Log out') {
         _signOut();
         print('Log Out');
-      }
-      else if(_selectedChoice == 'Change Password'){
+      } else if (_selectedChoice == 'Change Password') {
+        Navigator.pushNamed(context, ChangePasswordScreen().id);
         print('Change Password');
-      }
-      else if(_selectedChoice == 'Profile'){
-        print('Profile');
+      } else if (_selectedChoice == 'Profile') {
+        Navigator.pushNamed(context, ProfileScreen().id);
       }
     });
   }
@@ -86,7 +84,3 @@ class _ContactPopupMenuState extends State<ContactPopupMenu> {
     );
   }
 }
-
-
-
-

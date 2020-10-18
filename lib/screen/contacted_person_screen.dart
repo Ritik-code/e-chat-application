@@ -2,6 +2,7 @@ import 'package:comperio/app_icons.dart';
 import 'package:comperio/choice.dart';
 import 'package:comperio/constants.dart';
 import 'package:comperio/contact_popup_menu.dart';
+import 'package:comperio/helper_functions.dart';
 import 'package:comperio/screen/searchScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContactedPersonScreen extends StatefulWidget {
   final String id = 'ContactedPersonScreen';
-
 
   @override
   _ContactedPersonScreenState createState() => _ContactedPersonScreenState();
@@ -22,6 +22,15 @@ class ContactedPersonScreen extends StatefulWidget {
 
 class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
   final user = FirebaseAuth.instance.currentUser;
+
+
+  @override
+  void initState() {
+    getUserInfo();
+    super.initState();
+  }
+
+  getUserInfo() async => Constants.myName = await HelperFunctions.getUserNameSharedPreference();
 
   @override
   Widget build(BuildContext context) {
@@ -108,3 +117,4 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
     );
   }
 }
+

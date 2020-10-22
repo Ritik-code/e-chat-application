@@ -15,6 +15,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
+String chatRoomId ;
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
@@ -30,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   String messageText;
-  String chatRoomId ;
+
   String username = "";
 
    getUserName() async{
@@ -39,9 +40,9 @@ class _ChatScreenState extends State<ChatScreen> {
        chatRoomId = chatId;
      });
      print(chatRoomId);
-       var snapshot = await Firestore.instance
+       var snapshot = await Firestore.instance.collection('users').document(Constants.myName)
            .collection("chatRoom")
-           .document('chatRoomId').get();
+           .document(chatRoomId).get();
      setState(() {
        username =  snapshot.data()['users'][0];
 
@@ -70,7 +71,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void messageStream() async {
-    await for (var snapshot in _firestore.collection('Messages').snapshots()) {
+    await for (var snapshot in _firestore.collection('users').document(Constants.myName)
+        .collection("chatRoom").document(chatRoomId).collection('Messages').snapshots()) {
       for (var message in snapshot.docs) {
         print(message.data());
       }
@@ -197,7 +199,20 @@ class _ChatScreenState extends State<ChatScreen> {
                         onPressed: () {
                           messageTextController.clear();
                           //Implement send functionality.
-                          _firestore.collection('Messages').add({
+                          _firestore.collection('users').document(Constants.myName)
+                              .collection("chatRoom").document(chatRoomId).collection('Messages').add({
+                            'message': messageText,
+                            'sender': loggedInUser.email,
+                            'Date': DateFormat('dd-MMM-yy hh:mm')
+                                .format(DateTime.now())
+                                .toString(),
+                            'fileUrl': " ",
+                            'orderDateFormat': DateFormat('dd-MMM-yy hh:mm:ss')
+                                .format(DateTime.now())
+                                .toString(),
+                          });
+                          _firestore.collection('users').document(chatRoomId)
+                              .collection("chatRoom").document(Constants.myName).collection('Messages').add({
                             'message': messageText,
                             'sender': loggedInUser.email,
                             'Date': DateFormat('dd-MMM-yy hh:mm')
@@ -232,7 +247,9 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore
+      stream: _firestore.collection('users').document(Constants.myName)
+          .collection("chatRoom")
+          .document(chatRoomId)
           .collection('Messages')
           .orderBy('orderDateFormat')
           .snapshots(),

@@ -13,6 +13,7 @@
 
 // - show @professor when faculty and @student when student's profile
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/helper_functions.dart';
 import 'package:flutter/material.dart';
 
@@ -33,11 +34,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   getUserInfo() async{
       String username = await HelperFunctions.getUserNameSharedPreference();
       String email = await HelperFunctions.getUserEmailSharedPreference();
-      String url = await HelperFunctions.getUserPhotoUrlSharedPreference();
+      var url = await Firestore.instance.collection('users').document(username).get();
       setState(() {
         userName = username;
         emailId = email;
-        picURL = url;
+        picURL = url.data()['profileURL'];
       });
   }
 

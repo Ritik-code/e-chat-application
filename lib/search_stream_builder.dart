@@ -1,3 +1,4 @@
+
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/constants.dart';
@@ -33,30 +34,32 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
   createChatRoom(BuildContext context, String username) {
     List<String> users = [Constants.myName, username];
 
-    String chatRoomId = getChatRoomId(Constants.myName, username);
-
+    String chatRoomId = username;
+    HelperFunctions.saveChatRoomIdSharedPreference(chatRoomId);
     Map<String, dynamic> chatRoom = {
       "users": users,
       "chatRoomId": chatRoomId,
     };
 
-    Firestore.instance
+    Firestore.instance.collection('users').document(Constants.myName)
         .collection("chatRoom")
         .document(chatRoomId)
         .setData(chatRoom)
         .catchError((e) {
       print(e);
     });
+
+
     Navigator.pushNamed(context, ChatScreen().id);
   }
 
-  getChatRoomId(String a, String b) {
-    if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
-      return "$b\_$a";
-    } else {
-      return "$a\_$b";
-    }
-  }
+  // getChatRoomId(String a, String b) {
+  //   if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
+  //     return "$b\_$a";
+  //   } else {
+  //     return "$a\_$b";
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

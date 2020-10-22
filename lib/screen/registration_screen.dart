@@ -56,7 +56,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       }
     }
     // print(indexList);
-    FirebaseFirestore.instance.collection('users').doc().set({
+    FirebaseFirestore.instance.collection('users').doc(username).set({
       'username': userName,
       'searchKeywords': indexList,
       'profileURL': dpUrl,

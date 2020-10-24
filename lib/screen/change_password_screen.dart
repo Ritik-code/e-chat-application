@@ -183,7 +183,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     setState(() {
                       showSpinner = isShowSpinner;
                     });
-
+                    if(newPassword == oldPassword){   //condition if both the password are same
+                      _showDialog(text: 'Password is same as old password!!!',onPressed: (){Navigator.of(context).pop();});
+                    }
+                    changePassword(newPassword);
                     setState(() {
                       showSpinner = isShowSpinner;
                     });

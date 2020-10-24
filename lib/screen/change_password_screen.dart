@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:comperio/constants.dart';
-
+import 'login_screen.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String id = 'ChangePasswordScreen';
@@ -36,7 +36,33 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       },
     );
   }
+  void changePassword(String password) async{
+    var user =  await _auth.currentUser;
+    validateUserPassword(oldPassword).then((_) {
+      user.updatePassword(password).then((_) {    //this method updating the password
+        _showDialog(text:'Password Changed Successfully!!!', onPressed : (){Navigator.pushNamed(context,LoginScreen().id);});
+      }).catchError((e) {     //catching error for updatedPassword
+        print(e);
+        _showDialog(text: 'Password Not Changed!!!', onPressed: (){Navigator.of(context).pop();});
+      });
+    }).catchError((onError){  //catching error for validateUserPassword
+      print(onError);
+      _showDialog(text: 'Wrong Password!!!', onPressed: (){Navigator.of(context).pop();});
 
+    });
+
+  }
+  //checking the old password
+  validateUserPassword(String password) async{
+    var firebaseUser = await _auth.currentUser;
+
+    var authCredentials = EmailAuthProvider.credential(
+        email: firebaseUser.email, password: password);
+
+    return firebaseUser
+        .reauthenticateWithCredential(authCredentials);
+
+  }
 
 
 

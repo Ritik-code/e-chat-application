@@ -19,6 +19,27 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
 
+  void _showDialog({String text, Function onPressed}){
+    showDialog(
+      context:context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title:Text(text),
+          //     content: Text(e),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: onPressed,
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
+
   String validatePassword(String value) {
     Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
     RegExp regex = new RegExp(pattern);
@@ -136,7 +157,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     setState(() {
                       showSpinner = isShowSpinner;
                     });
-                    
+
                     setState(() {
                       showSpinner = isShowSpinner;
                     });

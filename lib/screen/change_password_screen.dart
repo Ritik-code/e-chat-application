@@ -29,29 +29,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
 //check for current password when user wants to change password
-  Future<void> validateUserPassword(String password) async {
-    var firebaseUser = await _auth.currentUser;
 
-    var authCredentials = EmailAuthProvider.getCredential(
-        email: firebaseUser.email, password: password);
-    try {
-      var authResult = await firebaseUser
-          .reauthenticateWithCredential(authCredentials);
-      print(authResult.user);
-        validateOldPassword =  authResult.user;
-
-    } catch (e) {
-      print(e);
-    }
-  }
-  String validateUserOldPassword(String Value){
-    if(validateOldPassword!=null ){
-      return 'Wrong Password';
-    }
-    else{
-      return null;
-    }
-  }
   bool _validateInputs() {
     if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
@@ -88,7 +66,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextFormField(
-                validator: validateUserOldPassword,
+
                 autofocus: false,
                 cursorColor: Colors.white,
                 style: TextStyle(fontSize: 18.0, color: Colors.white),
@@ -158,7 +136,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     setState(() {
                       showSpinner = isShowSpinner;
                     });
-                    validateUserPassword(oldPassword);
+                    
                     setState(() {
                       showSpinner = isShowSpinner;
                     });

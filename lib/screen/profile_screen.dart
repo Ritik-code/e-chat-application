@@ -18,10 +18,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userName;
   String emailId;
   String picURL;
+  File _image;
+  bool showSpinner=false;
+  String url;
+
+
+  getUserInfo() async{
+      String username = await HelperFunctions.getUserNameSharedPreference();
+      String email = await HelperFunctions.getUserEmailSharedPreference();
+      var Url = await Firestore.instance.collection('users').document(username).get();
+      setState(() {
+        userName = username;
+        emailId = email;
+        picURL = Url.data()['profileURL'];
+      });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+      getUserInfo();
+
+  }
+
+   Future getImages() async {
+    PickedFile pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    var image = File(pickedFile.path);
+
+    setState(() {
+      _image = image;
+      // print('Image path $_image');
+    });
+  }
+
+   Future uploadPic(BuildContext context) async {
+    String fileName = basename(_image.path);
+    StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
+    var dowUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+
+      url = dowUrl.toString();
+
+    // print(url);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    setState(() {
+      print("Profile Picture uploaded");
+      // Scaffold.of(context)
+      //     .showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.teal,
         body: SafeArea(
+          child: ModalProgressHUD(
             inAsyncCall: showSpinner,
+            child: Container(
+              constraints: BoxConstraints.expand(),
               decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage('images/app-background-3.jpg'),
                       fit: BoxFit.cover)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
@@ -95,44 +158,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
-=======
-          child: Container(
-            constraints: BoxConstraints.expand(),
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('images/app-background-3.jpg'),
-                    fit: BoxFit.cover)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 7.0,
-                        color: Colors.black,
-                      )
-                    ],
-                  ),
-                  child: CircleAvatar(
-                      radius: 50.0,
-                      backgroundImage: NetworkImage((picURL != null)
-                          ? picURL
-                          : 'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae')),
-                ),
-                SizedBox(
-                  height: 15.0,
-                ),
-                Text(
-                  userName != null ? userName : 'abc',
-                  style: TextStyle(
-                    fontSize: 40.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
->>>>>>> master
                   ),
                   Text(
                     '@Professor',
@@ -228,3 +253,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+

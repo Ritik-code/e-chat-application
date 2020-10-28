@@ -1,7 +1,12 @@
 # Comperio
 
 A Flutter application aimed at bridging the gap between teachers and students during e-learning.
-
+<br />
+<p align="center">
+  <a href="https://github.com/Ritik-code/e-chat-application" >
+    <img src="images/comperio-logo.png" alt="Logo" width="250" height="100">
+  </a>
+  </p>
 ## Getting Started
 
 

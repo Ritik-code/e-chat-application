@@ -4,7 +4,7 @@ A Flutter application aimed at bridging the gap between teachers and students du
 <br />
 <p align="center">
   <a href="https://github.com/Ritik-code/e-chat-application" >
-    <img src="images/comperio-logo.png" alt="Logo" width="250" height="100">
+    <img src="images/comperio-logo.png" alt="Logo" width="250" height="180">
   </a>
   </p>
 ## Getting Started

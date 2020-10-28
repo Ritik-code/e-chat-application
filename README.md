@@ -1,13 +1,18 @@
 
  <h1 align="center">Comperio</h1>
 
-A Flutter application aimed at bridging the gap between teachers and students during e-learning.
+
 <br />
 <p align="center">
   <a href="https://github.com/Ritik-code/e-chat-application" >
     <img src="images/comperio-logo.png" alt="Logo" width="250" height="180">
   </a>
   </p>
+  
+  
+  <br /> 
+A Flutter application aimed at bridging the gap between teachers and students during e-learning.
+
 ## Getting Started
 
 

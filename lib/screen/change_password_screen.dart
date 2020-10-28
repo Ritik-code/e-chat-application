@@ -123,6 +123,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               children: [
                 TextFormField(
                   autofocus: false,
+                  obscureText: true,
                   cursorColor: Colors.white,
                   style: TextStyle(fontSize: 18.0, color: Colors.white),
                   decoration: InputDecoration(
@@ -148,6 +149,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
                 TextFormField(
                   autofocus: false,
+                  obscureText: true,
                   cursorColor: Colors.white,
                   style: TextStyle(fontSize: 18.0, color: Colors.white),
                   decoration: InputDecoration(
@@ -181,7 +183,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     onPressed: () {
                       bool isShowSpinner = _validateInputs();
                       setState(() {
-                        showSpinner = isShowSpinner;
+                        showSpinner = true;
                       });
                       if (newPassword == oldPassword) {
                         //condition if both the password are same
@@ -191,9 +193,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               Navigator.of(context).pop();
                             });
                       }
-                      changePassword(newPassword);
+                      else{
+                      changePassword(newPassword);}
+
                       setState(() {
-                        showSpinner = isShowSpinner;
+                        showSpinner = false;
                       });
                       print('password changed');
                       //update the password with new value and navigate the user to login screen.

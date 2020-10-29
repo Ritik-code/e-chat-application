@@ -1,19 +1,3 @@
-// To-Do:
-// -when viewing own profile:
-// fetch current user name, email and profile photo, provide edit options,  don't show send message button
-// -when viewing other person profile:
-// fetch searched result's name, email and profile photo, show send message button
-
-// -when viewing faculty profile:
-// show rating
-// -when viewing student profile:
-// don't show rating
-
-// - adding rating mechanism
-
-// - show @professor when faculty and @student when student's profile
-
-
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/helper_functions.dart';
@@ -166,6 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   SizedBox(
                     height: 15.0,
+
                   ),
                   Text(
                     userName != null ? userName : 'abc',

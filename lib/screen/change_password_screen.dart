@@ -79,6 +79,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
     return firebaseUser.reauthenticateWithCredential(authCredentials);
   }
+  
 
 //validating newPassword
   String validatePassword(String value) {

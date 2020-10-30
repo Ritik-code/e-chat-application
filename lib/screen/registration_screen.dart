@@ -12,6 +12,7 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../helper_functions.dart';
 
@@ -30,6 +31,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String email;
   String username;
   String password;
+  String role = "professor";
   File _image;
   String url =
       'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
@@ -56,11 +58,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       }
     }
     // print(indexList);
-    FirebaseFirestore.instance.collection('users').doc().set({
+    FirebaseFirestore.instance.collection('users').doc(username).set({
       'username': userName,
       'searchKeywords': indexList,
       'profileURL': dpUrl,
       'email': email,
+      'role': role,
     });
   }
 
@@ -88,6 +91,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       return 'Enter Valid Email';
     else
       return null;
+  }
+
+  String assignRole() {
+    if (email.contains('_')) {
+      return "student";
+    } else
+      return "professor";
   }
 
   String validateUserName(String value) {
@@ -380,8 +390,41 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             setState(() {
                                               showSpinner = false;
                                             });
+                                            Alert(
+                                              context: context,
+                                              type: AlertType.info,
+                                              title:
+                                              "CONGRATS! YOUR ASSIGN ROLE IS",
+                                              desc: assignRole().toUpperCase(),
+                                              buttons: [
+                                                DialogButton(
+                                                  child: Text(
+                                                    "COOL",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20),
+                                                  ),
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  width: 120,
+                                                )
+                                              ],
+                                            ).show();
                                           } catch (e) {
                                             print(e);
+                                            //   AlertDialog(
+                                            //     title:Text('Alert'),
+                                            //     content: Text(e),
+                                            //     actions: <Widget>[
+                                            //       FlatButton(
+                                            //         child: Text('Ok'),
+                                            //         onPressed: (){
+                                            //           Navigator.of(context).pop();
+                                            //         },
+                                            //       ),
+                                            //     ],
+                                            //   );
+
                                           }
                                         },
                                         child: Text(

@@ -1,33 +1,68 @@
+
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/app_icons.dart';
 import 'package:comperio/attach_file_components.dart';
 import 'package:comperio/constants.dart';
+import 'package:comperio/helper_functions.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
+
+
 
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
+String chatRoomId ="";
+String username = "";
+String url="";
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
 
+
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
+    
+     
 
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   String messageText;
 
+
+   getUserName() async{
+     String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
+     String myUsername = await HelperFunctions.getUserNameSharedPreference();
+     var Url = await Firestore.instance.collection('users').document(chatId).get();
+     // String pUrl = ;
+     setState(() {
+       chatRoomId = chatId;
+       username = myUsername;
+       url = Url.data()['profileURL'];
+     });
+     print(url);
+     print(chatRoomId);
+     //   var snapshot = await Firestore.instance.collection('users').document(myUsername)
+     //       .collection("chatRoom")
+     //       .document(chatRoomId).get();
+     // setState(() {
+     //   username =  snapshot.data()['users'][0];
+     //
+     // });
+     // print(username);
+}
+
+
   @override
   void initState() {
     super.initState();
     getCurrentUser();
+    getUserName();
   }
 
   void getCurrentUser() async {
@@ -43,7 +78,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void messageStream() async {
-    await for (var snapshot in _firestore.collection('Messages').snapshots()) {
+    await for (var snapshot in _firestore.collection('users').document(username)
+        .collection("chatRoom").document(chatRoomId).collection('Messages').snapshots()) {
       for (var message in snapshot.docs) {
         print(message.data());
       }
@@ -80,15 +116,30 @@ class _ChatScreenState extends State<ChatScreen> {
                       Navigator.pushNamed(context, ContactedPersonScreen().id);
                     },
                   ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
                   CircleAvatar(
-                    radius: 17.0,
+                    radius: 20.0,
                     backgroundColor: Colors.white,
+                    child: ClipOval(
+                      child: SizedBox(
+                        width: 40.0,
+                        height: 40.0,
+                        child: Image.network(
+                          url,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
                   ),
                   SizedBox(
                     width: 10.0,
                   ),
                   Text(
-                    'username',
+                    chatRoomId,
                     style: KUserTextStyle,
                   ),
                 ],
@@ -174,7 +225,20 @@ class _ChatScreenState extends State<ChatScreen> {
                         onPressed: () {
                           messageTextController.clear();
                           //Implement send functionality.
-                          _firestore.collection('Messages').add({
+                          _firestore.collection('users').document(username)
+                              .collection("chatRoom").document(chatRoomId).collection('Messages').add({
+                            'message': messageText,
+                            'sender': loggedInUser.email,
+                            'Date': DateFormat('dd-MMM-yy hh:mm')
+                                .format(DateTime.now())
+                                .toString(),
+                            'fileUrl': " ",
+                            'orderDateFormat': DateFormat('dd-MMM-yy hh:mm:ss')
+                                .format(DateTime.now())
+                                .toString(),
+                          });
+                          _firestore.collection('users').document(chatRoomId)
+                              .collection("chatRoom").document(username).collection('Messages').add({
                             'message': messageText,
                             'sender': loggedInUser.email,
                             'Date': DateFormat('dd-MMM-yy hh:mm')
@@ -209,7 +273,9 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore
+      stream: _firestore.collection('users').document(username)
+          .collection("chatRoom")
+          .document(chatRoomId)
           .collection('Messages')
           .orderBy('orderDateFormat')
           .snapshots(),

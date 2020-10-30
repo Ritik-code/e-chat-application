@@ -45,13 +45,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _validateInputs() {
     if (_formKey.currentState.validate()) {
-//    If all data are correct then save data to out variables
+//    If all data are  _autoValidate = true;correct then save data to out variables
       _formKey.currentState.save();
       return true;
     } else {
 //    If all data are not valid then start auto validation.
       setState(() {
-        _autoValidate = true;
+
       });
       return false;
     }
@@ -240,6 +240,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                             });
                                           } catch (e) {
                                             print(e);
+                                            // AlertDialog(
+                                            //     title:Text('Alert'),
+                                            //     content: Text(e),
+                                            //     actions: <Widget>[
+                                            //       FlatButton(
+                                            //         child: Text('Ok'),
+                                            //         onPressed: (){
+                                            //           Navigator.of(context).pop();
+                                            //         },
+                                            //       ),
+                                            //     ],
+                                            // );
                                           }
                                         },
                                         child: Text(

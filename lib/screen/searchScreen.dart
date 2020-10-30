@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/app_icons.dart';
+import 'package:comperio/constants.dart';
 import 'package:comperio/search_stream_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../constants.dart';
+
 
 class SearchScreen extends StatefulWidget {
   final String id = 'SearchScreen';
@@ -83,8 +84,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
               Expanded(
-                child: SearchStreamBuilder(
-                  username: name,
+                child: Container(
+                  child: SearchStreamBuilder(
+                    username: name,
+                  ),
                 ),
               ),
             ],

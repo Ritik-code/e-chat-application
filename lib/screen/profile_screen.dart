@@ -19,29 +19,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String emailId;
   String picURL;
   File _image;
-  bool showSpinner=false;
+  bool showSpinner = false;
   String url;
 
-
-  getUserInfo() async{
-      String username = await HelperFunctions.getUserNameSharedPreference();
-      String email = await HelperFunctions.getUserEmailSharedPreference();
-      var Url = await Firestore.instance.collection('users').document(username).get();
-      setState(() {
-        userName = username;
-        emailId = email;
-        picURL = Url.data()['profileURL'];
-      });
+  getUserInfo() async {
+    String username = await HelperFunctions.getUserNameSharedPreference();
+    String email = await HelperFunctions.getUserEmailSharedPreference();
+    var Url =
+        await Firestore.instance.collection('users').document(username).get();
+    setState(() {
+      userName = username;
+      emailId = email;
+      picURL = Url.data()['profileURL'];
+    });
   }
 
   @override
   void initState() {
     super.initState();
-      getUserInfo();
-
+    getUserInfo();
   }
 
-   Future getImages() async {
+  Future getImages() async {
     PickedFile pickedFile =
         await ImagePicker().getImage(source: ImageSource.gallery);
     var image = File(pickedFile.path);
@@ -52,14 +51,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-   Future uploadPic(BuildContext context) async {
+  Future uploadPic(BuildContext context) async {
     String fileName = basename(_image.path);
     StorageReference firebaseStorageRef =
         FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
     var dowUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
 
-      url = dowUrl.toString();
+    url = dowUrl.toString();
 
     // print(url);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
@@ -69,6 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       //     .showSnackBar(SnackBar(content: Text('Profile Picture Uploaded')));
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -102,33 +102,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       alignment: Alignment.center,
                       overflow: Overflow.visible,
                       children: [
-                        _image!=null?
-                        CircleAvatar(
-                          radius: 50.0,
-                          backgroundColor: Colors.black12,
-                          child: ClipOval(
-                            child: SizedBox(
-                              width: 100.0,
-                              height: 100.0,
-                              child: (_image != null)
-                                  ? Image.file(
-                                _image,
-                                fit: BoxFit.fill,
+                        _image != null
+                            ? CircleAvatar(
+                                radius: 50.0,
+                                backgroundColor: Colors.black12,
+                                child: ClipOval(
+                                  child: SizedBox(
+                                    width: 100.0,
+                                    height: 100.0,
+                                    child: (_image != null)
+                                        ? Image.file(
+                                            _image,
+                                            fit: BoxFit.fill,
+                                          )
+                                        : Image.asset(
+                                            'images/default-profile.jpg',
+                                            fit: BoxFit.fill,
+                                          ),
+                                  ),
+                                ),
                               )
-                                  : Image.asset(
-                                'images/default-profile.jpg',
-                                fit: BoxFit.fill,
+                            : CircleAvatar(
+                                radius: 50.0,
+                                backgroundImage: NetworkImage((picURL != null)
+                                    ? picURL
+                                    : 'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae'),
                               ),
-                            ),
-                          ),
-                        ):
-                        CircleAvatar(
-                            radius: 50.0,
-                            backgroundImage:NetworkImage(
-                                (picURL != null)
-                                ? picURL
-                                : 'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae'),
-                        ),
                         Positioned(
                           top: -1,
                           right: -45,
@@ -150,7 +149,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   SizedBox(
                     height: 15.0,
-
                   ),
                   Text(
                     userName != null ? userName : 'abc',
@@ -161,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   Text(
-                    '@Professor',
+                    '@Student',
                     style: TextStyle(
                       color: Colors.teal[100],
                       fontSize: 20.0,
@@ -176,7 +174,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   Card(
                     color: Colors.white,
-                    margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
+                    margin:
+                        EdgeInsets.symmetric(vertical: 20.0, horizontal: 30.0),
                     child: ListTile(
                       visualDensity: VisualDensity(horizontal: 0, vertical: -4),
                       leading: Icon(Icons.email, color: Colors.teal),
@@ -227,8 +226,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               await uploadPic(context);
                             }
                             // print(url);
-                            FirebaseFirestore.instance.collection('users').doc(userName).set(
-                                {'profileURL': url,});
+                            FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(userName)
+                                .set({
+                              'profileURL': url,
+                            });
                             setState(() {
                               showSpinner = false;
                             });
@@ -254,4 +257,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-

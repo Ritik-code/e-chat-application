@@ -49,12 +49,12 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
       "profileUrl": url,
     };
 
-    Firestore.instance
+    FirebaseFirestore.instance
         .collection('users')
-        .document(username)
+        .doc(username)
         .collection("chatRoom")
-        .document(chatRoomId)
-        .setData(chatRoom)
+        .doc(chatRoomId)
+        .set(chatRoom)
         .catchError((e) {
       print(e);
     });
@@ -168,7 +168,7 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
                   child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('users')
-                        .document(username)
+                        .doc(username)
                         .collection('chatRoom')
                         .snapshots(),
                     builder: (context, snapshot) {

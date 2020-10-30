@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/helper_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -25,8 +26,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   getUserInfo() async {
     String username = await HelperFunctions.getUserNameSharedPreference();
     String email = await HelperFunctions.getUserEmailSharedPreference();
-    var Url =
-        await Firestore.instance.collection('users').document(username).get();
+    var Url = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(username)
+        .get();
     setState(() {
       userName = username;
       emailId = email;

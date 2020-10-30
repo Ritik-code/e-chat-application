@@ -84,8 +84,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 ],
               ),
               Expanded(
-                child: SearchStreamBuilder(
-                  username: name,
+                child: Container(
+                  child: SearchStreamBuilder(
+                    username: name,
+                  ),
                 ),
               ),
             ],

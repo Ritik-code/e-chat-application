@@ -110,7 +110,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   String validatePassword(String value) {
-    Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
+    Pattern pattern = r'^(?=.*[0-9@_]+.*)(?=.*[a-zA-Z@_]+.*)[0-9a-zA-Z@_]{6,}$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(value))
       return 'Invalid Password, include letters and numbers';
@@ -394,12 +394,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                               context: context,
                                               type: AlertType.info,
                                               title:
-                                              "CONGRATS! YOUR ASSIGN ROLE IS",
+                                                  "CONGRATS! YOUR ASSIGN ROLE IS",
                                               desc: assignRole().toUpperCase(),
                                               buttons: [
                                                 DialogButton(
                                                   child: Text(
-                                                    "COOL",
+                                                    "OK",
                                                     style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 20),

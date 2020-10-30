@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String validatePassword(String value) {
-    Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
+    Pattern pattern = r'^(?=.*[0-9@_]+.*)(?=.*[a-zA-Z@_]+.*)[0-9a-zA-Z@_]{6,}$';
     RegExp regex = new RegExp(pattern);
     if (!regex.hasMatch(value))
       return 'Invalid password';
@@ -50,9 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return true;
     } else {
 //    If all data are not valid then start auto validation.
-      setState(() {
-
-      });
+      setState(() {});
       return false;
     }
   }

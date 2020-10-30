@@ -205,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         .collection("users")
                                                         .where('email',
                                                             isEqualTo: email)
-                                                        .getDocuments()
+                                                        .get()
                                                         .catchError((e) {
                                                   print(e.toString());
                                                 });
@@ -215,18 +215,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         true);
                                                 HelperFunctions
                                                     .saveUserNameSharedPreference(
-                                                        userInfoSnapshot
-                                                            .documents[0]
+                                                    userInfoSnapshot.docs[0]
                                                             .get('username'));
                                                 HelperFunctions
                                                     .saveUserEmailSharedPreference(
-                                                        userInfoSnapshot
-                                                            .documents[0]
+                                                    userInfoSnapshot.docs[0]
                                                             .get('email'));
                                                 HelperFunctions
                                                     .saveUserPhotoUrlSharedPreference(
-                                                        userInfoSnapshot
-                                                            .documents[0]
+                                                    userInfoSnapshot.docs[0]
                                                             .get('profileURL'));
 
                                                 Navigator.pushNamed(context,

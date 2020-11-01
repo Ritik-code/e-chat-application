@@ -22,6 +22,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
   File _image;
   bool showSpinner = false;
   String url;
+  getUserInfo() async {
+    String username = await HelperFunctions.getUserNameSharedPreference();
+    String email = await HelperFunctions.getUserEmailSharedPreference();
+    String userRole = await HelperFunctions.getUserRoleSharedPreference();
+    var Url = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(username)
+        .get();
+    setState(() {
+      userName = username;
+      emailId = email;
+      role = userRole;
+      picURL = Url.data()['profileURL'];
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserInfo();
+  }
+
+  Future getImages() async {
+    PickedFile pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    var image = File(pickedFile.path);
 
     setState(() {
       _image = image;

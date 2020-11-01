@@ -24,7 +24,7 @@ class Comperio extends StatefulWidget {
 }
 
 class _ComperioState extends State<Comperio> {
-  bool userIsLoggedIn;
+  bool userIsLoggedIn = true;
 
   @override
   void initState() {

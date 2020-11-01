@@ -1,4 +1,3 @@
-
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/constants.dart';
@@ -19,11 +18,22 @@ class SearchStreamBuilder extends StatefulWidget {
 class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
   bool showSpinner = false;
   String isMe;
+  // String url;
 
   getUserName() async {
-    isMe = await HelperFunctions.getUserNameSharedPreference();
+    String me = await HelperFunctions.getUserNameSharedPreference();
+    setState(() {
+      isMe = me;
+    });
     print(isMe);
   }
+  // getUrl(String username) async{
+  //   var Url = await Firestore.instance.collection('users').document(username).get();
+  //   String pUrl = Url.data()['profileURL'];
+  //   setState(() {
+  //     url = pUrl;
+  //   });
+  // }
 
   @override
   void initState() {
@@ -31,25 +41,25 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
     super.initState();
   }
 
-  createChatRoom(BuildContext context, String username) {
-    List<String> users = [Constants.myName, username];
-
+  createChatRoom(BuildContext context, String username, String url) {
+    List<String> users = [isMe, username];
     String chatRoomId = username;
     HelperFunctions.saveChatRoomIdSharedPreference(chatRoomId);
     Map<String, dynamic> chatRoom = {
       "users": users,
       "chatRoomId": chatRoomId,
+      "profileUrl": url,
     };
 
-    Firestore.instance.collection('users').document(Constants.myName)
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(isMe)
         .collection("chatRoom")
-        .document(chatRoomId)
-        .setData(chatRoom)
+        .doc(chatRoomId)
+        .set(chatRoom)
         .catchError((e) {
       print(e);
     });
-
-
     Navigator.pushNamed(context, ChatScreen().id);
   }
 
@@ -64,12 +74,11 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: (widget.username != "" && widget.username != null)
-          ? FirebaseFirestore.instance
-              .collection('users')
-              .where("searchKeywords", arrayContains: widget.username)
-              .snapshots() //TODO: Recent searches to be added here
-          : FirebaseFirestore.instance.collection("users").snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .where("searchKeywords", arrayContains: widget.username)
+          .snapshots(), //TODO: Recent searches to be added here
+
       builder: (context, snapshot) {
         return (snapshot.connectionState == ConnectionState.waiting)
             ? Center(child: CircularProgressIndicator())
@@ -155,7 +164,8 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                       showSpinner = true;
                                     });
                                     String user = data.data()['username'];
-                                    createChatRoom(context, user);
+                                    String url = data.data()['profileURL'];
+                                    createChatRoom(context, user, url);
                                     setState(() {
                                       showSpinner = false;
                                     });
@@ -168,9 +178,9 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                   ),
                                 )
                               : RaisedButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30.0)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                BorderRadius.circular(30.0)),
                                   onPressed: () {
                                     setState(() {
                                       Navigator.pushNamed(

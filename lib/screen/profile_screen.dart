@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/helper_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -19,34 +18,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userName;
   String emailId;
   String picURL;
+  String role;
   File _image;
   bool showSpinner = false;
   String url;
-
-  getUserInfo() async {
-    String username = await HelperFunctions.getUserNameSharedPreference();
-    String email = await HelperFunctions.getUserEmailSharedPreference();
-    var Url = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(username)
-        .get();
-    setState(() {
-      userName = username;
-      emailId = email;
-      picURL = Url.data()['profileURL'];
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getUserInfo();
-  }
-
-  Future getImages() async {
-    PickedFile pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-    var image = File(pickedFile.path);
 
     setState(() {
       _image = image;
@@ -60,7 +35,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
     var dowUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-
     url = dowUrl.toString();
 
     // print(url);
@@ -162,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   Text(
-                    '@Student',
+                    role != null ? role : '@Student',
                     style: TextStyle(
                       color: Colors.teal[100],
                       fontSize: 20.0,
@@ -260,3 +234,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+

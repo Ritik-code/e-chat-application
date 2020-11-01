@@ -136,7 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   Text(
-                    '@Student',
+                    role != null ? role : '@Student',
                     style: TextStyle(
                       color: Colors.teal[100],
                       fontSize: 20.0,

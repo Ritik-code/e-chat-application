@@ -18,6 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userName;
   String emailId;
   String picURL;
+  String role;
   File _image;
   bool showSpinner = false;
   String url;

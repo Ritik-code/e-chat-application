@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/app_icons.dart';
 import 'package:comperio/attach_file_components.dart';
@@ -8,13 +9,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
 String chatRoomId = "";
 String username = "";
 String url = "";
+String myUrl = "";
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
@@ -31,24 +32,18 @@ class _ChatScreenState extends State<ChatScreen> {
   getUserName() async {
     String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
     String myUsername = await HelperFunctions.getUserNameSharedPreference();
-    var Url =
+    var url =
         await FirebaseFirestore.instance.collection('users').doc(chatId).get();
+    String myUrl = await HelperFunctions.getUserPhotoUrlSharedPreference();
     // String pUrl = ;
     setState(() {
       chatRoomId = chatId;
       username = myUsername;
-      url = Url.data()['profileURL'];
+      url = url.data()['profileURL'];
+      myUrl = myUrl;
     });
     print(url);
     print(chatRoomId);
-    //   var snapshot = await Firestore.instance.collection('users').document(myUsername)
-    //       .collection("chatRoom")
-    //       .document(chatRoomId).get();
-    // setState(() {
-    //   username =  snapshot.data()['users'][0];
-    //
-    // });
-    // print(username);
   }
 
   @override
@@ -225,9 +220,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           //Implement send functionality.
                           _firestore
                               .collection('users')
-                              .doc(username)
+                              .document(username)
                               .collection("chatRoom")
-                              .doc(chatRoomId)
+                              .document(chatRoomId)
                               .collection('Messages')
                               .add({
                             'message': messageText,
@@ -240,11 +235,22 @@ class _ChatScreenState extends State<ChatScreen> {
                                 .format(DateTime.now())
                                 .toString(),
                           });
+                          Firestore.instance
+                              .collection('users')
+                              .document(chatRoomId)
+                              .collection("chatRoom")
+                              .document(username)
+                              .set({
+                            "users": [chatRoomId, username],
+                            "chatRoomId": username,
+                            "profileUrl": myUrl,
+                          });
+
                           _firestore
                               .collection('users')
-                              .doc(chatRoomId)
+                              .document(chatRoomId)
                               .collection("chatRoom")
-                              .doc(username)
+                              .document(username)
                               .collection('Messages')
                               .add({
                             'message': messageText,
@@ -283,9 +289,9 @@ class MessagesStream extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection('users')
-          .doc(username)
+          .document(username)
           .collection("chatRoom")
-          .doc(chatRoomId)
+          .document(chatRoomId)
           .collection('Messages')
           .orderBy('orderDateFormat')
           .snapshots(),
@@ -349,13 +355,13 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            sender,
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Colors.black54,
-            ),
-          ),
+          // Text(
+          //   sender,
+          //   style: TextStyle(
+          //     fontSize: 12.0,
+          //     color: Colors.black54,
+          //   ),
+          // ),
           (text != " ")
               ? Container(
                   constraints: BoxConstraints(
@@ -439,7 +445,7 @@ class MessageBubble extends StatelessWidget {
             dateTime,
             style: TextStyle(
               fontSize: 10.0,
-              color: Colors.black54,
+              color: Colors.black,
             ),
           ),
         ],

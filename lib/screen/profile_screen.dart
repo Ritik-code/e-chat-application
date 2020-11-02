@@ -1,3 +1,18 @@
+// To-Do:
+// -when viewing own profile:
+// fetch current user name, email and profile photo, provide edit options,  don't show send message button
+// -when viewing other person profile:
+// fetch searched result's name, email and profile photo, show send message button
+
+// -when viewing faculty profile:
+// show rating
+// -when viewing student profile:
+// don't show rating
+
+// - adding rating mechanism
+
+// - show @professor when faculty and @student when student's profile
+
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/helper_functions.dart';
@@ -6,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
+import 'package:comperio/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String id = 'ProfileScreen';
@@ -18,23 +34,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userName;
   String emailId;
   String picURL;
-  String role;
   File _image;
   bool showSpinner = false;
   String url;
+
   getUserInfo() async {
     String username = await HelperFunctions.getUserNameSharedPreference();
     String email = await HelperFunctions.getUserEmailSharedPreference();
-    String userRole = await HelperFunctions.getUserRoleSharedPreference();
-    var Url = await FirebaseFirestore.instance
+    var url = await FirebaseFirestore.instance
         .collection('users')
         .doc(username)
         .get();
     setState(() {
       userName = username;
       emailId = email;
-      role = userRole;
-      picURL = Url.data()['profileURL'];
+      picURL = url.data()['profileURL'];
     });
   }
 
@@ -61,6 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
     var dowUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+
     url = dowUrl.toString();
 
     // print(url);
@@ -155,20 +170,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Text(
                     userName != null ? userName : 'abc',
-                    style: TextStyle(
-                      fontSize: 40.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: KProfileUsernameTextStyle,
                   ),
                   Text(
-                    role != null ? role : '@Student',
-                    style: TextStyle(
-                      color: Colors.teal[100],
-                      fontSize: 20.0,
-                      letterSpacing: 2.5,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    '@Professor',
+                    style: KProfileUserRoleTextStyle,
                   ),
 
                   SizedBox(
@@ -185,10 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       title: Align(
                         child: Text(
                           emailId != null ? emailId : 'abc@gmail.com',
-                          style: TextStyle(
-                            color: Colors.teal[900],
-                            fontSize: 20.0,
-                          ),
+                          style: KProfileEmailTextStyle,
                         ),
                         alignment: Alignment.bottomLeft,
                       ),
@@ -232,7 +235,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             FirebaseFirestore.instance
                                 .collection('users')
                                 .doc(userName)
-                                .set({
+                                .update({
                               'profileURL': url,
                             });
                             setState(() {
@@ -242,11 +245,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Center(
                             child: Text(
                               'Save',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: KProfileButtonTextStyle,
                             ),
                           ),
                         ),
@@ -260,4 +259,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-

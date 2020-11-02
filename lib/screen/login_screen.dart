@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
+import 'package:comperio/regexValidator.dart';
 import '../helper_functions.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -23,25 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   String email;
   String password;
-
-  String validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Enter Valid Email';
-    else
-      return null;
-  }
-
-  String validatePassword(String value) {
-    Pattern pattern = r'^(?=.*[0-9@_]+.*)(?=.*[a-zA-Z@_]+.*)[0-9a-zA-Z@_]{6,}$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Invalid password';
-    else
-      return null;
-  }
 
   bool _validateInputs() {
     if (_formKey.currentState.validate()) {
@@ -143,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                         labelText: 'Email *',
                                       ),
-                                      validator: validateEmail,
+                                      validator: RegexValidator.validateEmail,
                                       onSaved: (String value) {
                                         // This optional block of code can be used to run
                                         // code when the user saves the form.
@@ -163,7 +144,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         labelText: 'Password *',
                                       ),
                                       obscureText: true,
-                                      validator: validatePassword,
+                                      validator:
+                                          RegexValidator.validatePassword,
                                       onSaved: (String value) {
                                         // This optional block of code can be used to run
                                         // code when the user saves the form.
@@ -215,15 +197,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         true);
                                                 HelperFunctions
                                                     .saveUserNameSharedPreference(
-                                                    userInfoSnapshot.docs[0]
+                                                        userInfoSnapshot.docs[0]
                                                             .get('username'));
                                                 HelperFunctions
                                                     .saveUserEmailSharedPreference(
-                                                    userInfoSnapshot.docs[0]
+                                                        userInfoSnapshot.docs[0]
                                                             .get('email'));
                                                 HelperFunctions
                                                     .saveUserPhotoUrlSharedPreference(
-                                                    userInfoSnapshot.docs[0]
+                                                        userInfoSnapshot.docs[0]
                                                             .get('profileURL'));
 
                                                 Navigator.pushNamed(context,

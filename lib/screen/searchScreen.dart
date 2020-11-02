@@ -2,6 +2,7 @@ import 'package:comperio/app_icons.dart';
 import 'package:comperio/search_stream_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:comperio/constants.dart';
 
 class SearchScreen extends StatefulWidget {
   final String id = 'SearchScreen';
@@ -61,10 +62,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               )
                             : null,
                         hintText: 'Search...',
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 20.0,
-                        ),
+                        hintStyle: KSearchScreenHintTextStyle,
                         border: InputBorder.none,
                       ),
                       onChanged: (value) {

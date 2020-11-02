@@ -89,6 +89,11 @@ const KProfileButtonTextStyle = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
+const KSearchScreenHintTextStyle = TextStyle(
+  color: Colors.grey,
+  fontSize: 20.0,
+);
+
 class Constants {
   static String myName = "";
 }

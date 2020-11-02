@@ -242,7 +242,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               await uploadPic(context);
                             }
                             // print(url);
-                            FirebaseFirestore.instance.collection('users').doc(userName).set(
+                            FirebaseFirestore.instance.collection('users').doc(userName).update(
                                 {'profileURL': url,});
                             setState(() {
                               showSpinner = false;

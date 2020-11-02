@@ -1,4 +1,3 @@
-
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/app_icons.dart';
@@ -11,54 +10,49 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-
-
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
-String chatRoomId ="";
+String chatRoomId = "";
 String username = "";
-String url="";
+String url = "";
 String myUrl = "";
+
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
-
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
-    
-     
 
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   String messageText;
 
-
-   getUserName() async{
-     String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
-     String myUsername = await HelperFunctions.getUserNameSharedPreference();
-     var Url = await Firestore.instance.collection('users').document(chatId).get();
-     String Myurl = await HelperFunctions.getUserPhotoUrlSharedPreference();
-     // String pUrl = ;
-     setState(() {
-       chatRoomId = chatId;
-       username = myUsername;
-       url = Url.data()['profileURL'];
-      myUrl = Myurl;
-     });
-     print(url);
-     print(chatRoomId);
-     //   var snapshot = await Firestore.instance.collection('users').document(myUsername)
-     //       .collection("chatRoom")
-     //       .document(chatRoomId).get();
-     // setState(() {
-     //   username =  snapshot.data()['users'][0];
-     //
-     // });
-     // print(username);
-}
-
+  getUserName() async {
+    String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
+    String myUsername = await HelperFunctions.getUserNameSharedPreference();
+    var url =
+        await FirebaseFirestore.instance.collection('users').doc(chatId).get();
+    String myUrl = await HelperFunctions.getUserPhotoUrlSharedPreference();
+    // String pUrl = ;
+    setState(() {
+      chatRoomId = chatId;
+      username = myUsername;
+      url = url.data()['profileURL'];
+      myUrl = myUrl;
+    });
+    print(url);
+    print(chatRoomId);
+    //   var snapshot = await Firestore.instance.collection('users').document(myUsername)
+    //       .collection("chatRoom")
+    //       .document(chatRoomId).get();
+    // setState(() {
+    //   username =  snapshot.data()['users'][0];
+    //
+    // });
+    // print(username);
+  }
 
   @override
   void initState() {
@@ -80,8 +74,13 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void messageStream() async {
-    await for (var snapshot in _firestore.collection('users').document(username)
-        .collection("chatRoom").document(chatRoomId).collection('Messages').snapshots()) {
+    await for (var snapshot in _firestore
+        .collection('users')
+        .document(username)
+        .collection("chatRoom")
+        .document(chatRoomId)
+        .collection('Messages')
+        .snapshots()) {
       for (var message in snapshot.docs) {
         print(message.data());
       }
@@ -227,8 +226,13 @@ class _ChatScreenState extends State<ChatScreen> {
                         onPressed: () {
                           messageTextController.clear();
                           //Implement send functionality.
-                          _firestore.collection('users').document(username)
-                              .collection("chatRoom").document(chatRoomId).collection('Messages').add({
+                          _firestore
+                              .collection('users')
+                              .document(username)
+                              .collection("chatRoom")
+                              .document(chatRoomId)
+                              .collection('Messages')
+                              .add({
                             'message': messageText,
                             'sender': loggedInUser.email,
                             'Date': DateFormat('dd-MMM-yy hh:mm')
@@ -239,16 +243,24 @@ class _ChatScreenState extends State<ChatScreen> {
                                 .format(DateTime.now())
                                 .toString(),
                           });
-                          Firestore.instance.collection('users').document(chatRoomId)
+                          Firestore.instance
+                              .collection('users')
+                              .document(chatRoomId)
                               .collection("chatRoom")
-                              .document(username).set({
-                                  "users": [chatRoomId,username],
-                                  "chatRoomId": username,
-                                  "profileUrl": myUrl,
+                              .document(username)
+                              .set({
+                            "users": [chatRoomId, username],
+                            "chatRoomId": username,
+                            "profileUrl": myUrl,
                           });
 
-                          _firestore.collection('users').document(chatRoomId)
-                              .collection("chatRoom").document(username).collection('Messages').add({
+                          _firestore
+                              .collection('users')
+                              .document(chatRoomId)
+                              .collection("chatRoom")
+                              .document(username)
+                              .collection('Messages')
+                              .add({
                             'message': messageText,
                             'sender': loggedInUser.email,
                             'Date': DateFormat('dd-MMM-yy hh:mm')
@@ -283,7 +295,9 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('users').document(username)
+      stream: _firestore
+          .collection('users')
+          .document(username)
           .collection("chatRoom")
           .document(chatRoomId)
           .collection('Messages')

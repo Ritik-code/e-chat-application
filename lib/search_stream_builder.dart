@@ -1,4 +1,3 @@
-
 import 'package:basic_utils/basic_utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/constants.dart';
@@ -50,18 +49,18 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
       "users": users,
       "chatRoomId": chatRoomId,
       "profileUrl": url,
-
     };
 
-    Firestore.instance.collection('users').document(isMe)
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(isMe)
         .collection("chatRoom")
-        .document(chatRoomId)
-        .setData(chatRoom)
+        .doc(chatRoomId)
+        .set(chatRoom)
         .catchError((e) {
       print(e);
     });
     Navigator.pushNamed(context, ChatScreen().id);
-
   }
 
   // getChatRoomId(String a, String b) {
@@ -75,10 +74,10 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream:FirebaseFirestore.instance
-              .collection('users')
-              .where("searchKeywords", arrayContains: widget.username)
-              .snapshots(), //TODO: Recent searches to be added here
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .where("searchKeywords", arrayContains: widget.username)
+          .snapshots(), //TODO: Recent searches to be added here
 
       builder: (context, snapshot) {
         return (snapshot.connectionState == ConnectionState.waiting)
@@ -180,8 +179,8 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                 )
                               : RaisedButton(
                             shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30.0)),
+                                borderRadius:
+                                BorderRadius.circular(30.0)),
                                   onPressed: () {
                                     setState(() {
                                       Navigator.pushNamed(

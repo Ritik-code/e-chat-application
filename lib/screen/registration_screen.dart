@@ -33,7 +33,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String role;
   File _image;
   String url =
-      'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
+      'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=c737b18e-9625-4b0d-8d7c-8ef5794486f3';
 
   Future getImages() async {
     PickedFile pickedFile =
@@ -90,7 +90,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       });
     } else {
       setState(() {
-        role = "Faculty";
+        role = "Professor";
       });
     }
   }

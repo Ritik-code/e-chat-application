@@ -1,3 +1,4 @@
+import 'package:comperio/screen/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:comperio/constants.dart';
@@ -46,7 +47,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         _showDialog(
             text: 'Password Changed Successfully!!!',
             onPressed: () {
-              Navigator.pushNamed(context, LoginScreen().id);
+              Navigator.pushNamed(context, WelcomeScreen().id);
             });
       }).catchError((e) {
         //catching error for updatedPassword

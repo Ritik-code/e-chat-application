@@ -13,7 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
+import 'package:comperio/regexValidator.dart';
 import '../helper_functions.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -83,39 +83,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     });
   }
 
-  String validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Enter Valid Email';
-    else
-      return null;
-  }
-
   String assignRole() {
     if (email.contains('_')) {
       return "student";
     } else
       return "professor";
-  }
-
-  String validateUserName(String value) {
-    Pattern pattern = r'^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Invalid username';
-    else
-      return null;
-  }
-
-  String validatePassword(String value) {
-    Pattern pattern = r'^(?=.*[0-9@_]+.*)(?=.*[a-zA-Z@_]+.*)[0-9a-zA-Z@_]{6,}$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Invalid Password, include letters and numbers';
-    else
-      return null;
   }
 
   bool _validateInputs() {
@@ -277,7 +249,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         ),
                                         labelText: 'Email *',
                                       ),
-                                      validator: validateEmail,
+                                      validator: RegexValidator.validateEmail,
                                       onSaved: (String value) {
                                         // This optional block of code can be used to run
                                         // code when the user saves the form.
@@ -301,7 +273,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         ),
                                         labelText: 'Username *',
                                       ),
-                                      validator: validateUserName,
+                                      validator:
+                                          RegexValidator.validateUserName,
                                       onSaved: (String value) {
                                         username = value;
                                       },
@@ -324,7 +297,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         labelText: 'Password *',
                                       ),
                                       obscureText: true,
-                                      validator: validatePassword,
+                                      validator:
+                                          RegexValidator.validatePassword,
                                       onSaved: (String value) {
                                         password = value;
                                       },

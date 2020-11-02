@@ -54,8 +54,17 @@ const KFeedbackTextStyle = TextStyle(
   fontSize: 25.0,
 );
 
-class Constants{
- static String myName = "";
+const KFeedbackScaleHint = TextStyle(
+  color: Colors.black,
+  fontSize: 22.0,
+  fontWeight: FontWeight.bold,
+);
+
+const KFeedbackSubmitTextStyle = TextStyle(
+  color: Color(0xFFf2fcfe),
+  fontSize: 25.0,
+);
+
+class Constants {
+  static String myName = "";
 }
-
-

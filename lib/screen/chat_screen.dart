@@ -44,14 +44,6 @@ class _ChatScreenState extends State<ChatScreen> {
     });
     print(url);
     print(chatRoomId);
-    //   var snapshot = await Firestore.instance.collection('users').document(myUsername)
-    //       .collection("chatRoom")
-    //       .document(chatRoomId).get();
-    // setState(() {
-    //   username =  snapshot.data()['users'][0];
-    //
-    // });
-    // print(username);
   }
 
   @override
@@ -76,9 +68,9 @@ class _ChatScreenState extends State<ChatScreen> {
   void messageStream() async {
     await for (var snapshot in _firestore
         .collection('users')
-        .document(username)
+        .doc(username)
         .collection("chatRoom")
-        .document(chatRoomId)
+        .doc(chatRoomId)
         .collection('Messages')
         .snapshots()) {
       for (var message in snapshot.docs) {

@@ -7,7 +7,7 @@ class UserProfileInformation {
   Future<bool> validatePassword(String password) async {
     var firebaseUser = await _auth.currentUser;
 
-    var authCredentials = EmailAuthProvider.getCredential(
+    var authCredentials = EmailAuthProvider.credential(
         email: firebaseUser.email, password: password);
     try {
       var authResult =

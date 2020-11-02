@@ -18,18 +18,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String userName;
   String emailId;
   String picURL;
+  String role;
   File _image;
   bool showSpinner = false;
   String url;
-
   getUserInfo() async {
     String username = await HelperFunctions.getUserNameSharedPreference();
     String email = await HelperFunctions.getUserEmailSharedPreference();
-    var Url =
-        await Firestore.instance.collection('users').document(username).get();
+    String userRole = await HelperFunctions.getUserRoleSharedPreference();
+    var Url = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(username)
+        .get();
     setState(() {
       userName = username;
       emailId = email;
+      role = userRole;
       picURL = Url.data()['profileURL'];
     });
   }
@@ -57,7 +61,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_image);
     var dowUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-
     url = dowUrl.toString();
 
     // print(url);
@@ -159,7 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   Text(
-                    '@Student',
+                    role != null ? role : '@Student',
                     style: TextStyle(
                       color: Colors.teal[100],
                       fontSize: 20.0,
@@ -257,3 +260,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
+

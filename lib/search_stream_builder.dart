@@ -143,7 +143,7 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                     height: 5.0,
                                   ),
                                   Text(
-                                    'Faculty',
+                                    "Faculty",
                                     style: TextStyle(
                                       color: Colors.grey,
                                     ),

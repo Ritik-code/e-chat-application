@@ -30,7 +30,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String email;
   String username;
   String password;
-  String role = "professor";
+  String role;
   File _image;
   String url =
       'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
@@ -82,11 +82,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     });
   }
 
-  String assignRole() {
+  assignRole() {
     if (email.contains('_')) {
-      return "student";
-    } else
-      return "professor";
+      setState(() {
+        role="student";
+      });
+    }
   }
 
   bool _validateInputs() {
@@ -324,6 +325,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                           setState(() {
                                             showSpinner = isShowSpinner;
                                           });
+                                          assignRole();
                                           try {
                                             // final newUser = await _auth
                                             //     .createUserWithEmailAndPassword(
@@ -348,6 +350,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                 HelperFunctions
                                                     .saveUserPhotoUrlSharedPreference(
                                                         url);
+                                                HelperFunctions.saveUserRoleSharedPreference(role);
 
                                                 Navigator.pushNamed(context,
                                                     ContactedPersonScreen().id);
@@ -368,7 +371,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                               type: AlertType.info,
                                               title:
                                                   "CONGRATS! YOUR ASSIGN ROLE IS",
-                                              desc: assignRole().toUpperCase(),
+                                              desc: role.toUpperCase(),
                                               buttons: [
                                                 DialogButton(
                                                   child: Text(

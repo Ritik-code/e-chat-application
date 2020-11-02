@@ -33,23 +33,27 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String userName;
   String emailId;
-  String picURL;
+  String picURL = 'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
   File _image;
   bool showSpinner = false;
-  String url;
+  String url ="";
+  String role;
 
   getUserInfo() async {
     String username = await HelperFunctions.getUserNameSharedPreference();
     String email = await HelperFunctions.getUserEmailSharedPreference();
-    var url = await FirebaseFirestore.instance
+    String myrole = await HelperFunctions.getUserRoleSharedPreference();
+    var dp = await FirebaseFirestore.instance
         .collection('users')
         .doc(username)
         .get();
     setState(() {
       userName = username;
       emailId = email;
-      picURL = url.data()['profileURL'];
+      role = myrole;
+      picURL = dp.data()['profileURL'];
     });
+    print(picURL);
   }
 
   @override
@@ -78,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     url = dowUrl.toString();
 
-    // print(url);
+    //print(url);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     setState(() {
       print("Profile Picture uploaded");
@@ -142,9 +146,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               )
                             : CircleAvatar(
                                 radius: 50.0,
-                                backgroundImage: NetworkImage((picURL != null)
-                                    ? picURL
-                                    : 'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae'),
+                                backgroundImage: (picURL != null)?
+                                NetworkImage(picURL) :
+                                AssetImage('images/default-profile.jpg'),
                               ),
                         Positioned(
                           top: -1,
@@ -173,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: KProfileUsernameTextStyle,
                   ),
                   Text(
-                    '@Professor',
+                    role!=null?"@"+role:"@role",
                     style: KProfileUserRoleTextStyle,
                   ),
 

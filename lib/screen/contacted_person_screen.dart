@@ -103,17 +103,17 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
         ),
         constraints: BoxConstraints.expand(),
         child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              // Add your onPressed code here!
-            },
-            child: AppIcons(
-              iconName: Icons.group_add,
-              iconSize: 30.0,
-              colour: Colors.white,
-            ),
-            backgroundColor: Color(0xff0d47a1),
-          ),
+          // floatingActionButton: FloatingActionButton(
+          //   onPressed: () {
+          //     // Add your onPressed code here!
+          //   },
+          //   child: AppIcons(
+          //     iconName: Icons.group_add,
+          //     iconSize: 30.0,
+          //     colour: Colors.white,
+          //   ),
+          //   backgroundColor: Color(0xff0d47a1),
+          // ),
           resizeToAvoidBottomInset: false,
           resizeToAvoidBottomPadding: false,
           backgroundColor: Colors.transparent,

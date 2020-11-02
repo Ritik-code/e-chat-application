@@ -18,7 +18,7 @@ User loggedInUser;
 String chatRoomId ="";
 String username = "";
 String url="";
-
+String myUrl = "";
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
 
@@ -39,11 +39,13 @@ class _ChatScreenState extends State<ChatScreen> {
      String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
      String myUsername = await HelperFunctions.getUserNameSharedPreference();
      var Url = await Firestore.instance.collection('users').document(chatId).get();
+     String Myurl = await HelperFunctions.getUserPhotoUrlSharedPreference();
      // String pUrl = ;
      setState(() {
        chatRoomId = chatId;
        username = myUsername;
        url = Url.data()['profileURL'];
+      myUrl = Myurl;
      });
      print(url);
      print(chatRoomId);
@@ -237,6 +239,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                 .format(DateTime.now())
                                 .toString(),
                           });
+                          Firestore.instance.collection('users').document(chatRoomId)
+                              .collection("chatRoom")
+                              .document(username).set({
+                                  "users": [chatRoomId,username],
+                                  "chatRoomId": username,
+                                  "profileUrl": myUrl,
+                          });
+
                           _firestore.collection('users').document(chatRoomId)
                               .collection("chatRoom").document(username).collection('Messages').add({
                             'message': messageText,
@@ -339,13 +349,13 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            sender,
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Colors.black54,
-            ),
-          ),
+          // Text(
+          //   sender,
+          //   style: TextStyle(
+          //     fontSize: 12.0,
+          //     color: Colors.black54,
+          //   ),
+          // ),
           (text != " ")
               ? Container(
                   constraints: BoxConstraints(
@@ -429,7 +439,7 @@ class MessageBubble extends StatelessWidget {
             dateTime,
             style: TextStyle(
               fontSize: 10.0,
-              color: Colors.black54,
+              color: Colors.black,
             ),
           ),
         ],

@@ -170,11 +170,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                             showSpinner = isShowSpinner;
                                           });
                                           try {
-                                            // final user = await _auth
-                                            //     .signInWithEmailAndPassword(
-                                            //         email: email,
-                                            //         password: password);
-
                                             await _auth
                                                 .signInWithEmailAndPassword(
                                                     email: email,

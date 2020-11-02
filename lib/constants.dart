@@ -65,6 +65,30 @@ const KFeedbackSubmitTextStyle = TextStyle(
   fontSize: 25.0,
 );
 
+const KProfileUsernameTextStyle = TextStyle(
+  fontSize: 40.0,
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
+);
+
+const KProfileUserRoleTextStyle = TextStyle(
+  color: Color(0xFFB2DFDB),
+  fontSize: 20.0,
+  letterSpacing: 2.5,
+  fontWeight: FontWeight.bold,
+);
+
+const KProfileEmailTextStyle = TextStyle(
+  color: Color(0xff004d40),
+  fontSize: 20.0,
+);
+
+const KProfileButtonTextStyle = TextStyle(
+  color: Colors.white,
+  fontSize: 18.0,
+  fontWeight: FontWeight.bold,
+);
+
 class Constants {
   static String myName = "";
 }

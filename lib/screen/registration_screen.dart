@@ -47,6 +47,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void _addToDatabase(String userName, String dpUrl) {
+    assignRole();
     print('dpurl is: $dpUrl');
     List<String> splitList = username.split(" ");
     List<String> indexList = [];
@@ -85,7 +86,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   assignRole() {
     if (email.contains('_')) {
       setState(() {
-        role="student";
+        role = "Student";
+      });
+    } else {
+      setState(() {
+        role = "Faculty";
       });
     }
   }
@@ -325,7 +330,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                           setState(() {
                                             showSpinner = isShowSpinner;
                                           });
-                                          assignRole();
                                           try {
                                             // final newUser = await _auth
                                             //     .createUserWithEmailAndPassword(
@@ -350,7 +354,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                 HelperFunctions
                                                     .saveUserPhotoUrlSharedPreference(
                                                         url);
-                                                HelperFunctions.saveUserRoleSharedPreference(role);
+                                                HelperFunctions
+                                                    .saveUserRoleSharedPreference(
+                                                        role);
 
                                                 Navigator.pushNamed(context,
                                                     ContactedPersonScreen().id);

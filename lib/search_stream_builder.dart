@@ -143,7 +143,7 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                     height: 5.0,
                                   ),
                                   Text(
-                                    "Faculty",
+                                    data.data()['role'],
                                     style: TextStyle(
                                       color: Colors.grey,
                                     ),
@@ -178,9 +178,9 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                   ),
                                 )
                               : RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.circular(30.0)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30.0)),
                                   onPressed: () {
                                     setState(() {
                                       Navigator.pushNamed(

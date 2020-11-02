@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
+import 'package:comperio/screen/welcome_screen.dart';
 import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';

@@ -12,8 +12,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
-String chatRoomId = "";
-String username = "";
+String chatRoomId = "test";
+String username ="admin";
 String url = "";
 String myUrl = "";
 
@@ -32,19 +32,20 @@ class _ChatScreenState extends State<ChatScreen> {
   getUserName() async {
     String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
     String myUsername = await HelperFunctions.getUserNameSharedPreference();
-    var url =
+    var Url =
         await FirebaseFirestore.instance.collection('users').doc(chatId).get();
     String myUrl = await HelperFunctions.getUserPhotoUrlSharedPreference();
     // String pUrl = ;
     setState(() {
       chatRoomId = chatId;
       username = myUsername;
-      url = url.data()['profileURL'];
+      url = Url.data()['profileURL'];
       myUrl = myUrl;
     });
     print(url);
     print(chatRoomId);
   }
+
 
   @override
   void initState() {

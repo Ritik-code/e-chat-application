@@ -92,15 +92,17 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
                   DocumentSnapshot data = snapshot.data.docs[index];
+                  if(data.data()['username'] == 'test' ||
+                      data.data()['username'] == 'admin') {
+                    return Container();
+                  }
                   return Card(
                     child: Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 8.0,
                           horizontal: 16.0,
                         ),
-                        child: data.data()['username'] != 'test' &&
-                                data.data()['username'] != 'admin'
-                            ? Row(
+                        child:  Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
@@ -210,10 +212,9 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                           ),
                                         ),
                                 ],
-                              )
-                            : Text(
-                                'No users found',
-                              )),
+                              ),
+
+                    ),
                   );
                 },
               );

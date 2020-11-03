@@ -78,10 +78,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                                 child: Container(
                                   child: Text(
                                     "On a scale of 1 to 5, rate the overall performance of the teacher?",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.bold),
+                                    style: KFeedbackScaleHint,
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -95,10 +92,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                                 child: Container(
                                     child: Text(
                                   myFeedbackText,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontSize: 25.0),
+                                  style: KFeedbackTextStyle,
                                   textAlign: TextAlign.center,
                                 )),
                               ),
@@ -171,10 +165,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                                 child: Container(
                                     child: Text(
                                   "Your Rating: $sliderValue",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.bold),
+                                  style: KFeedbackTextStyle,
                                   textAlign: TextAlign.center,
                                 )),
                               ),
@@ -186,10 +177,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                                     child: RaisedButton(
                                       child: Text(
                                         'Submit',
-                                        style: TextStyle(
-                                          color: Color(0xFFf2fcfe),
-                                          fontSize: 25.0,
-                                        ),
+                                        style: KFeedbackSubmitTextStyle,
                                         textAlign: TextAlign.center,
                                       ),
                                       shape: RoundedRectangleBorder(

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
@@ -12,7 +11,8 @@ import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
-
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:comperio/regexValidator.dart';
 import '../helper_functions.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -30,9 +30,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String email;
   String username;
   String password;
+  String role;
   File _image;
   String url =
-      'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
+      'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=c737b18e-9625-4b0d-8d7c-8ef5794486f3';
 
   Future getImages() async {
     PickedFile pickedFile =
@@ -46,6 +47,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void _addToDatabase(String userName, String dpUrl) {
+    assignRole();
     print('dpurl is: $dpUrl');
     List<String> splitList = username.split(" ");
     List<String> indexList = [];
@@ -61,6 +63,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       'searchKeywords': indexList,
       'profileURL': dpUrl,
       'email': email,
+      'role': role,
     });
   }
 
@@ -80,32 +83,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     });
   }
 
-  String validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Enter Valid Email';
-    else
-      return null;
-  }
-
-  String validateUserName(String value) {
-    Pattern pattern = r'^[A-Za-z0-9]+(?:[ _-][A-Za-z0-9]+)*$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Invalid username';
-    else
-      return null;
-  }
-
-  String validatePassword(String value) {
-    Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Invalid Password, include letters and numbers';
-    else
-      return null;
+  assignRole() {
+    if (email.contains('_')) {
+      setState(() {
+        role = "Student";
+      });
+    } else {
+      setState(() {
+        role = "Professor";
+      });
+    }
   }
 
   bool _validateInputs() {
@@ -267,7 +254,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         ),
                                         labelText: 'Email *',
                                       ),
-                                      validator: validateEmail,
+                                      validator: RegexValidator.validateEmail,
                                       onSaved: (String value) {
                                         // This optional block of code can be used to run
                                         // code when the user saves the form.
@@ -291,7 +278,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         ),
                                         labelText: 'Username *',
                                       ),
-                                      validator: validateUserName,
+                                      validator:
+                                          RegexValidator.validateUserName,
                                       onSaved: (String value) {
                                         username = value;
                                       },
@@ -314,7 +302,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                         labelText: 'Password *',
                                       ),
                                       obscureText: true,
-                                      validator: validatePassword,
+                                      validator:
+                                          RegexValidator.validatePassword,
                                       onSaved: (String value) {
                                         password = value;
                                       },
@@ -365,6 +354,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                 HelperFunctions
                                                     .saveUserPhotoUrlSharedPreference(
                                                         url);
+                                                HelperFunctions
+                                                    .saveUserRoleSharedPreference(
+                                                        role);
 
                                                 Navigator.pushNamed(context,
                                                     ContactedPersonScreen().id);
@@ -380,8 +372,41 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             setState(() {
                                               showSpinner = false;
                                             });
+                                            Alert(
+                                              context: context,
+                                              type: AlertType.info,
+                                              title:
+                                                  "CONGRATS! YOUR ASSIGN ROLE IS",
+                                              desc: role.toUpperCase(),
+                                              buttons: [
+                                                DialogButton(
+                                                  child: Text(
+                                                    "OK",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 20),
+                                                  ),
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  width: 120,
+                                                )
+                                              ],
+                                            ).show();
                                           } catch (e) {
                                             print(e);
+                                            //   AlertDialog(
+                                            //     title:Text('Alert'),
+                                            //     content: Text(e),
+                                            //     actions: <Widget>[
+                                            //       FlatButton(
+                                            //         child: Text('Ok'),
+                                            //         onPressed: (){
+                                            //           Navigator.of(context).pop();
+                                            //         },
+                                            //       ),
+                                            //     ],
+                                            //   );
+
                                           }
                                         },
                                         child: Text(

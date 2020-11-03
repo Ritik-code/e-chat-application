@@ -5,9 +5,11 @@ import 'package:comperio/choice.dart';
 import 'package:comperio/constants.dart';
 import 'package:comperio/contact_popup_menu.dart';
 import 'package:comperio/helper_functions.dart';
+import 'package:comperio/screen/chat_screen.dart';
 import 'package:comperio/screen/searchScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ContactedPersonScreen extends StatefulWidget {
@@ -16,37 +18,82 @@ class ContactedPersonScreen extends StatefulWidget {
   @override
   _ContactedPersonScreenState createState() => _ContactedPersonScreenState();
 }
-  List<Choice> choices = const <Choice>[
-    const Choice(title: 'Profile', icon: FontAwesomeIcons.user),
-    const Choice(title: 'Change Password', icon: FontAwesomeIcons.key),
-    const Choice(title: 'Log out', icon: FontAwesomeIcons.signOutAlt),
-  ];
-  String chatRoomId ;
+
+List<Choice> choices = const <Choice>[
+  const Choice(title: 'Profile', icon: FontAwesomeIcons.user),
+  const Choice(title: 'Change Password', icon: FontAwesomeIcons.key),
+  const Choice(title: 'Log out', icon: FontAwesomeIcons.signOutAlt),
+];
+String chatRoomId;
 
 class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
   final user = FirebaseAuth.instance.currentUser;
-  String url ;
+  String username;
+  // Stream myStream;
+  // String url ;
 
-  getUserInfo() async =>
-      Constants.myName = await HelperFunctions.getUserNameSharedPreference();
+  getUserInfo() async {
+    String name = await HelperFunctions.getUserNameSharedPreference();
+    setState(() {
+      username = name;
+    });
+  }
+
+  createChatRoom(BuildContext context, String receiver, String url) {
+    List<String> users = [username, receiver];
+    String chatRoomId = receiver;
+    HelperFunctions.saveChatRoomIdSharedPreference(chatRoomId);
+    Map<String, dynamic> chatRoom = {
+      "users": users,
+      "chatRoomId": chatRoomId,
+      "profileUrl": url,
+    };
+
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(username)
+        .collection("chatRoom")
+        .doc(chatRoomId)
+        .set(chatRoom)
+        .catchError((e) {
+      print(e);
+    });
+    Navigator.pushNamed(context, ChatScreen().id);
+  }
 
   @override
-    void initState() {
-      super.initState();
-      getUserInfo();
-    }
-    getUrl(String username) async {
-      var snapshot = await FirebaseFirestore.instance.collection('users')
-          .document(username)
-          .get();
-      setState(() {
-        url = snapshot.data()['profileURL'];
-      });
-    }
+  void initState() {
+    super.initState();
+    getUserInfo();
+  }
 
-    @override
-    Widget build(BuildContext context) {
-      return Container(
+  Future<bool> _onWillPop() {
+    return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you want to exit App'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('No'),
+              ),
+              FlatButton(
+                onPressed: () => SystemNavigator.pop(),
+                /*Navigator.of(context).pop(true)*/
+                child: Text('Yes'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Container(
         decoration: BoxDecoration(
           color: Color(0xff311b92),
           image: DecorationImage(
@@ -56,17 +103,17 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
         ),
         constraints: BoxConstraints.expand(),
         child: Scaffold(
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              // Add your onPressed code here!
-            },
-            child: AppIcons(
-              iconName: Icons.group_add,
-              iconSize: 30.0,
-              colour: Colors.white,
-            ),
-            backgroundColor: Color(0xff0d47a1),
-          ),
+          // floatingActionButton: FloatingActionButton(
+          //   onPressed: () {
+          //     // Add your onPressed code here!
+          //   },
+          //   child: AppIcons(
+          //     iconName: Icons.group_add,
+          //     iconSize: 30.0,
+          //     colour: Colors.white,
+          //   ),
+          //   backgroundColor: Color(0xff0d47a1),
+          // ),
           resizeToAvoidBottomInset: false,
           resizeToAvoidBottomPadding: false,
           backgroundColor: Colors.transparent,
@@ -118,58 +165,80 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
                       topRight: Radius.circular(20.0),
                     ),
                   ),
-                  child: StreamBuilder(
-                    stream: FirebaseFirestore.instance.collection('users')
-                        .document(Constants.myName)
-                        .collection("chatRoom")
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(username)
+                        .collection('chatRoom')
                         .snapshots(),
                     builder: (context, snapshot) {
-                      if(!snapshot.hasData)
-                      {
-                        return Text('');
-                      }
                       return (snapshot.connectionState ==
-                          ConnectionState.waiting)
-                          ? Center(child: CircularProgressIndicator()) :
-                      ListView.separated(
-                          separatorBuilder: (context, index) =>
-                              Divider(color: Colors.grey,),
-                          itemCount: snapshot.data.docs.length,
-                          itemBuilder: (context, index) {
-                            DocumentSnapshot data = snapshot.data.docs[index];
-                            return Container(
-                              padding: EdgeInsets.all(10.0),
-                              child: Row(
-                                children: [
-                                   CircleAvatar(
-                                  radius: 25.0,
-                                  child: ClipOval(
-                                    child: SizedBox(
-                                      width: 50.0,
-                                      height: 50.0,
-                                      child: Image.asset(
-                                        'images/default-profile.jpg',
-                                        width: 50,
-                                        height: 50,
-                                        fit: BoxFit.fill,
-                                      ),
+                              ConnectionState.waiting)
+                          ? Center(child: CircularProgressIndicator())
+                          : ListView.separated(
+                              separatorBuilder: (context, index) => Divider(
+                                    color: Colors.grey,
+                                  ),
+                              itemCount: snapshot.data.docs.length,
+                              itemBuilder: (context, index) {
+                                DocumentSnapshot data =
+                                    snapshot.data.docs[index];
+                                // print(data.data()['profileUrl']);
+                                // print(data.data()['users'][1]);
+                                return GestureDetector(
+                                  child: Container(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Row(
+                                      children: [
+                                        (data.data()['profileUrl'] != null)
+                                            ? CircleAvatar(
+                                                radius: 25.0,
+                                                child: ClipOval(
+                                                  child: SizedBox(
+                                                    width: 50.0,
+                                                    height: 50.0,
+                                                    child: Image.network(
+                                                      data.data()['profileUrl'],
+                                                      width: 50,
+                                                      height: 50,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : CircleAvatar(
+                                                radius: 25.0,
+                                                child: ClipOval(
+                                                  child: SizedBox(
+                                                    width: 50.0,
+                                                    height: 50.0,
+                                                    child: Image.asset(
+                                                      'images/default-profile.jpg',
+                                                      width: 50,
+                                                      height: 50,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                        SizedBox(
+                                          width: 25.0,
+                                        ),
+                                        Text(
+                                          StringUtils.capitalize(
+                                              data.data()['users'][1]),
+                                          style: KSearchDisplayNameTextStyle,
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                width: 25.0,
-                                ),
-                                  Text(
-                                    StringUtils.capitalize(
-                                        data.data()['users'][1]),
-                                    style: KSearchDisplayNameTextStyle,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-
-                      );
+                                  onTap: () {
+                                    String user = data.data()['users'][1];
+                                    String url = data.data()['profileUrl'];
+                                    createChatRoom(context, user, url);
+                                  },
+                                );
+                              });
                     },
                   ),
                 ),
@@ -177,6 +246,7 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
             ],
           ),
         ),
-      );
-    }
+      ),
+    );
   }
+}

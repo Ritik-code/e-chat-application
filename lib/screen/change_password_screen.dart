@@ -1,8 +1,10 @@
+import 'package:comperio/screen/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:comperio/constants.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'login_screen.dart';
+import 'package:comperio/regexValidator.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String id = 'ChangePasswordScreen';
@@ -16,17 +18,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool _autoValidate = false;
   String newPassword;
   String oldPassword;
-  var validateOldPassword;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-
+  //this method created to show dialogs
   void _showDialog({String text, Function onPressed}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(text),
-          //     content: Text(e),
           actions: <Widget>[
             FlatButton(
               child: Text('Ok'),
@@ -38,7 +38,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-
+  //change the password
   void changePassword(String password) async {
     var user = await _auth.currentUser;
     validateUserPassword(oldPassword).then((_) {
@@ -47,7 +47,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         _showDialog(
             text: 'Password Changed Successfully!!!',
             onPressed: () {
-              Navigator.pushNamed(context, LoginScreen().id);
+              Navigator.pushNamed(context, WelcomeScreen().id);
             });
       }).catchError((e) {
         //catching error for updatedPassword
@@ -66,9 +66,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           onPressed: () {
             Navigator.of(context).pop();
           });
+      setState(() {
+        showSpinner = false;
+      });
     });
   }
-
 
   //checking the old password
   validateUserPassword(String password) async {
@@ -80,18 +82,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return firebaseUser.reauthenticateWithCredential(authCredentials);
   }
 
-
-  String validatePassword(String value) {
-    Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Invalid Password, include letters and numbers';
-    else
-      return null;
-  }
-
-//check for current password when user wants to change password
-
+  //validating form inputs
 
   bool _validateInputs() {
     if (_formKey.currentState.validate()) {
@@ -106,7 +97,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       return false;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +119,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               children: [
                 TextFormField(
                   autofocus: false,
-                  obscureText: true,
                   cursorColor: Colors.white,
                   style: TextStyle(fontSize: 18.0, color: Colors.white),
                   decoration: InputDecoration(
@@ -145,7 +134,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       borderSide: BorderSide(color: Colors.white),
                     ),
                   ),
-                  onChanged: (value) async {
+                  onChanged: (value) {
                     oldPassword = value;
                     //check password entered is of same user with which is it is loggedIn.
                   },
@@ -155,7 +144,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 ),
                 TextFormField(
                   autofocus: false,
-                  obscureText: true,
                   cursorColor: Colors.white,
                   style: TextStyle(fontSize: 18.0, color: Colors.white),
                   decoration: InputDecoration(
@@ -171,7 +159,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       borderSide: BorderSide(color: Colors.white),
                     ),
                   ),
-                  validator: validatePassword,
+                  validator: RegexValidator.validatePassword,
                   onSaved: (value) {
                     newPassword = value;
                     //take the value in a variable so that it can be updated.
@@ -189,8 +177,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     onPressed: () {
                       bool isShowSpinner = _validateInputs();
                       setState(() {
-                        showSpinner = true;
+                        showSpinner = isShowSpinner;
                       });
+
                       if (newPassword == oldPassword) {
                         //condition if both the password are same
                         _showDialog(
@@ -198,18 +187,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             });
-                      } else {
-                        changePassword(newPassword);
                       }
-
-
-                      
+                      changePassword(newPassword);
                       setState(() {
-                        showSpinner = false;
+                        showSpinner = isShowSpinner;
                       });
                       print('password changed');
-                      //update the password with new value and navigate the user to login screen.
-                    })
+                    }),
               ],
             ),
           ),

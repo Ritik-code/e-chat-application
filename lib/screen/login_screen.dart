@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:comperio/constants.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
+import 'package:comperio/screen/welcome_screen.dart';
 import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-
+import 'package:comperio/regexValidator.dart';
 import '../helper_functions.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -24,25 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   String email;
   String password;
 
-  String validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Enter Valid Email';
-    else
-      return null;
-  }
-
-  String validatePassword(String value) {
-    Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Invalid password';
-    else
-      return null;
-  }
-
   bool _validateInputs() {
     if (_formKey.currentState.validate()) {
 //    If all data are  _autoValidate = true;correct then save data to out variables
@@ -50,9 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return true;
     } else {
 //    If all data are not valid then start auto validation.
-      setState(() {
-
-      });
+      setState(() {});
       return false;
     }
   }
@@ -145,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                         labelText: 'Email *',
                                       ),
-                                      validator: validateEmail,
+                                      validator: RegexValidator.validateEmail,
                                       onSaved: (String value) {
                                         // This optional block of code can be used to run
                                         // code when the user saves the form.
@@ -165,7 +145,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         labelText: 'Password *',
                                       ),
                                       obscureText: true,
-                                      validator: validatePassword,
+                                      validator:
+                                          RegexValidator.validatePassword,
                                       onSaved: (String value) {
                                         // This optional block of code can be used to run
                                         // code when the user saves the form.
@@ -190,11 +171,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                             showSpinner = isShowSpinner;
                                           });
                                           try {
-                                            // final user = await _auth
-                                            //     .signInWithEmailAndPassword(
-                                            //         email: email,
-                                            //         password: password);
-
                                             await _auth
                                                 .signInWithEmailAndPassword(
                                                     email: email,
@@ -207,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         .collection("users")
                                                         .where('email',
                                                             isEqualTo: email)
-                                                        .getDocuments()
+                                                        .get()
                                                         .catchError((e) {
                                                   print(e.toString());
                                                 });
@@ -217,18 +193,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         true);
                                                 HelperFunctions
                                                     .saveUserNameSharedPreference(
-                                                        userInfoSnapshot
-                                                            .documents[0]
+                                                        userInfoSnapshot.docs[0]
                                                             .get('username'));
                                                 HelperFunctions
                                                     .saveUserEmailSharedPreference(
-                                                        userInfoSnapshot
-                                                            .documents[0]
+                                                        userInfoSnapshot.docs[0]
                                                             .get('email'));
                                                 HelperFunctions
                                                     .saveUserPhotoUrlSharedPreference(
-                                                        userInfoSnapshot
-                                                            .documents[0]
+                                                        userInfoSnapshot.docs[0]
                                                             .get('profileURL'));
 
                                                 Navigator.pushNamed(context,
@@ -240,6 +213,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                             });
                                           } catch (e) {
                                             print(e);
+                                            // AlertDialog(
+                                            //     title:Text('Alert'),
+                                            //     content: Text(e),
+                                            //     actions: <Widget>[
+                                            //       FlatButton(
+                                            //         child: Text('Ok'),
+                                            //         onPressed: (){
+                                            //           Navigator.of(context).pop();
+                                            //         },
+                                            //       ),
+                                            //     ],
+                                            // );
                                           }
                                         },
                                         child: Text(

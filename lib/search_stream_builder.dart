@@ -52,6 +52,10 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
       "profileUrl": url,
       "role": role,
     };
+    print("chat room id $chatRoomId");
+    print("users are $users");
+    print("profile url is $url");
+    print("role is $role");
 
     FirebaseFirestore.instance
         .collection('users')

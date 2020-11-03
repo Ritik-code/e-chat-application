@@ -107,7 +107,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
   }
 
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,6 +202,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         changePassword(newPassword);
                       }
 
+
+                      
                       setState(() {
                         showSpinner = false;
                       });

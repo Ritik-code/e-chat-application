@@ -41,7 +41,8 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
     super.initState();
   }
 
-  createChatRoom(BuildContext context, String username, String url) {
+  createChatRoom(
+      BuildContext context, String username, String url, String role) {
     List<String> users = [isMe, username];
     String chatRoomId = username;
     HelperFunctions.saveChatRoomIdSharedPreference(chatRoomId);
@@ -49,6 +50,7 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
       "users": users,
       "chatRoomId": chatRoomId,
       "profileUrl": url,
+      "role": role,
     };
 
     FirebaseFirestore.instance
@@ -143,7 +145,7 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                     height: 5.0,
                                   ),
                                   Text(
-                                    'Faculty',
+                                    data.data()['role'],
                                     style: TextStyle(
                                       color: Colors.grey,
                                     ),
@@ -165,7 +167,8 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                     });
                                     String user = data.data()['username'];
                                     String url = data.data()['profileURL'];
-                                    createChatRoom(context, user, url);
+                                    String role = data.data()['role'];
+                                    createChatRoom(context, user, url, role);
                                     setState(() {
                                       showSpinner = false;
                                     });
@@ -178,9 +181,9 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                                   ),
                                 )
                               : RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.circular(30.0)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(30.0)),
                                   onPressed: () {
                                     setState(() {
                                       Navigator.pushNamed(

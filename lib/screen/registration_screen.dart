@@ -30,10 +30,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String email;
   String username;
   String password;
-  String role = "professor";
+  String role;
   File _image;
   String url =
-      'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
+      'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=c737b18e-9625-4b0d-8d7c-8ef5794486f3';
 
   Future getImages() async {
     PickedFile pickedFile =
@@ -47,6 +47,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void _addToDatabase(String userName, String dpUrl) {
+    assignRole();
     print('dpurl is: $dpUrl');
     List<String> splitList = username.split(" ");
     List<String> indexList = [];
@@ -82,11 +83,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     });
   }
 
-  String assignRole() {
+  assignRole() {
     if (email.contains('_')) {
-      return "student";
-    } else
-      return "professor";
+      setState(() {
+        role = "Student";
+      });
+    } else {
+      setState(() {
+        role = "Professor";
+      });
+    }
   }
 
   bool _validateInputs() {
@@ -348,6 +354,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                 HelperFunctions
                                                     .saveUserPhotoUrlSharedPreference(
                                                         url);
+                                                HelperFunctions
+                                                    .saveUserRoleSharedPreference(
+                                                        role);
 
                                                 Navigator.pushNamed(context,
                                                     ContactedPersonScreen().id);
@@ -368,7 +377,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                               type: AlertType.info,
                                               title:
                                                   "CONGRATS! YOUR ASSIGN ROLE IS",
-                                              desc: assignRole().toUpperCase(),
+                                              desc: role.toUpperCase(),
                                               buttons: [
                                                 DialogButton(
                                                   child: Text(

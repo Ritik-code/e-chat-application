@@ -37,6 +37,11 @@ class HelperFunctions {
     return await preferences.setString(
         sharedPreferenceChatRoomIdKey, chatRoomId);
   }
+  static Future<bool> saveUserRoleSharedPreference(String role) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return await preferences.setString(
+        sharedPreferenceChatRoleKey, role);
+  }
 
   /// fetching data from sharedpreference
   static Future<bool> getUserLoggedInSharedPreference() async {

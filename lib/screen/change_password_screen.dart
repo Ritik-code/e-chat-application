@@ -19,6 +19,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   var validateOldPassword;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+
   void _showDialog({String text, Function onPressed}) {
     showDialog(
       context: context,
@@ -36,6 +37,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       },
     );
   }
+
 
   void changePassword(String password) async {
     var user = await _auth.currentUser;
@@ -67,6 +69,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     });
   }
 
+
   //checking the old password
   validateUserPassword(String password) async {
     var firebaseUser = await _auth.currentUser;
@@ -76,6 +79,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
     return firebaseUser.reauthenticateWithCredential(authCredentials);
   }
+
 
   String validatePassword(String value) {
     Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
@@ -87,6 +91,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
 //check for current password when user wants to change password
+
 
   bool _validateInputs() {
     if (_formKey.currentState.validate()) {
@@ -102,11 +107,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ModalProgressHUD(
-        inAsyncCall:showSpinner,
+        inAsyncCall: showSpinner,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 30.0),
           constraints: BoxConstraints.expand(),
@@ -192,9 +198,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                             onPressed: () {
                               Navigator.of(context).pop();
                             });
+                      } else {
+                        changePassword(newPassword);
                       }
-                      else{
-                      changePassword(newPassword);}
 
                       setState(() {
                         showSpinner = false;

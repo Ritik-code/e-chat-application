@@ -199,27 +199,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         .instance
                                                         .collection("users")
                                                         .where('email',
-                                                    isEqualTo: email)
-                                                    .get()
-                                                    .catchError((e) {
+                                                            isEqualTo: email)
+                                                        .get()
+                                                        .catchError((e) {
                                                   print(e.toString());
                                                 });
 
                                                 HelperFunctions
                                                     .saveUserLoggedInSharedPreference(
-                                                    true);
+                                                        true);
                                                 HelperFunctions
                                                     .saveUserNameSharedPreference(
-                                                    userInfoSnapshot.docs[0]
-                                                        .get('username'));
+                                                        userInfoSnapshot.docs[0]
+                                                            .get('username'));
                                                 HelperFunctions
                                                     .saveUserEmailSharedPreference(
-                                                    userInfoSnapshot.docs[0]
-                                                        .get('email'));
+                                                        userInfoSnapshot.docs[0]
+                                                            .get('email'));
                                                 HelperFunctions
                                                     .saveUserPhotoUrlSharedPreference(
-                                                    userInfoSnapshot.docs[0]
-                                                        .get('profileURL'));
+                                                        userInfoSnapshot.docs[0]
+                                                            .get('profileURL'));
 
                                                 Navigator.pushNamed(context,
                                                     ContactedPersonScreen().id);

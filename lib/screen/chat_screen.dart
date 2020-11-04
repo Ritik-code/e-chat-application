@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/app_icons.dart';
 import 'package:comperio/attach_file_components.dart';
@@ -9,6 +8,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+
+import 'feedback_screen.dart';
 
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
@@ -138,6 +140,19 @@ class _ChatScreenState extends State<ChatScreen> {
                   Text(
                     chatRoomId,
                     style: KUserTextStyle,
+                  ),
+                  SizedBox(
+                    width: 100.0,
+                  ),
+                  IconButton(
+                    icon: AppIcons(
+                      iconName: Icons.feedback,
+                      iconSize: 30.0,
+                      colour: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, FeedbackScreen().id);
+                    },
                   ),
                 ],
               ),

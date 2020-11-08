@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
+import 'package:comperio/checkInternet.dart';
 import 'package:comperio/constants.dart';
+import 'package:comperio/regexValidator.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,23 +26,16 @@ class _LoginScreenState extends State<LoginScreen> {
   String email;
   String password;
 
-  String validateEmail(String value) {
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Enter Valid Email';
-    else
-      return null;
+  @override
+  void initState() {
+    super.initState();
+    CheckInternet().checkConnection(context);
   }
 
-  String validatePassword(String value) {
-    Pattern pattern = r'^(?=.*[0-9@_]+.*)(?=.*[a-zA-Z@_]+.*)[0-9a-zA-Z@_]{6,}$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Invalid password';
-    else
-      return null;
+  @override
+  void dispose() {
+    CheckInternet().listener.cancel();
+    super.dispose();
   }
 
   bool _validateInputs() {
@@ -143,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ),
                                         labelText: 'Email *',
                                       ),
-                                      validator: validateEmail,
+                                      validator: RegexValidator.validateEmail,
                                       onSaved: (String value) {
                                         // This optional block of code can be used to run
                                         // code when the user saves the form.
@@ -163,7 +158,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         labelText: 'Password *',
                                       ),
                                       obscureText: true,
-                                      validator: validatePassword,
+                                      validator:
+                                          RegexValidator.validatePassword,
                                       onSaved: (String value) {
                                         // This optional block of code can be used to run
                                         // code when the user saves the form.
@@ -182,17 +178,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                         shape: StadiumBorder(),
                                         color: Colors.lightBlueAccent,
                                         onPressed: () async {
+                                          CheckInternet()
+                                              .checkConnection(context);
                                           bool isShowSpinner =
                                               _validateInputs();
                                           setState(() {
                                             showSpinner = isShowSpinner;
                                           });
                                           try {
-                                            // final user = await _auth
-                                            //     .signInWithEmailAndPassword(
-                                            //         email: email,
-                                            //         password: password);
-
+                                            CheckInternet()
+                                                .checkConnection(context);
                                             await _auth
                                                 .signInWithEmailAndPassword(
                                                     email: email,
@@ -215,15 +210,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         true);
                                                 HelperFunctions
                                                     .saveUserNameSharedPreference(
-                                                    userInfoSnapshot.docs[0]
+                                                        userInfoSnapshot.docs[0]
                                                             .get('username'));
                                                 HelperFunctions
                                                     .saveUserEmailSharedPreference(
-                                                    userInfoSnapshot.docs[0]
+                                                        userInfoSnapshot.docs[0]
                                                             .get('email'));
                                                 HelperFunctions
                                                     .saveUserPhotoUrlSharedPreference(
-                                                    userInfoSnapshot.docs[0]
+                                                        userInfoSnapshot.docs[0]
                                                             .get('profileURL'));
 
                                                 Navigator.pushNamed(context,

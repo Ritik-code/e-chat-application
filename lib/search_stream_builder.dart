@@ -41,7 +41,8 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
     super.initState();
   }
 
-  createChatRoom(BuildContext context, String username, String url) {
+  createChatRoom(
+      BuildContext context, String username, String url, String role) {
     List<String> users = [isMe, username];
     String chatRoomId = username;
     HelperFunctions.saveChatRoomIdSharedPreference(chatRoomId);
@@ -49,7 +50,12 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
       "users": users,
       "chatRoomId": chatRoomId,
       "profileUrl": url,
+      "role": role,
     };
+    print("chat room id $chatRoomId");
+    print("users are $users");
+    print("profile url is $url");
+    print("role is $role");
 
     FirebaseFirestore.instance
         .collection('users')
@@ -86,116 +92,128 @@ class _SearchStreamBuilderState extends State<SearchStreamBuilder> {
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
                   DocumentSnapshot data = snapshot.data.docs[index];
+                  if(data.data()['username'] == 'test' ||
+                      data.data()['username'] == 'admin') {
+                    return Container();
+                  }
                   return Card(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 16.0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: <Widget>[
-                              (data.data()['profileURL'] != null)
-                                  ? CircleAvatar(
-                                      radius: 25.0,
-                                      child: ClipOval(
-                                        child: SizedBox(
-                                          width: 50.0,
-                                          height: 50.0,
-                                          child: Image.network(
-                                            data.data()['profileURL'],
-                                            width: 50,
-                                            height: 50,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : CircleAvatar(
-                                      radius: 25.0,
-                                      child: ClipOval(
-                                        child: SizedBox(
-                                          width: 50.0,
-                                          height: 50.0,
-                                          child: Image.asset(
-                                            'images/default-profile.jpg',
-                                            width: 50,
-                                            height: 50,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                              SizedBox(
-                                width: 25.0,
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 16.0,
+                        ),
+                        child:  Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    StringUtils.capitalize(
-                                        data.data()['username']),
-                                    style: KSearchDisplayNameTextStyle,
+                                  Row(
+                                    children: <Widget>[
+                                      (data.data()['profileURL'] != null)
+                                          ? CircleAvatar(
+                                              radius: 25.0,
+                                              child: ClipOval(
+                                                child: SizedBox(
+                                                  width: 50.0,
+                                                  height: 50.0,
+                                                  child: Image.network(
+                                                    data.data()['profileURL'],
+                                                    width: 50,
+                                                    height: 50,
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          : CircleAvatar(
+                                              radius: 25.0,
+                                              child: ClipOval(
+                                                child: SizedBox(
+                                                  width: 50.0,
+                                                  height: 50.0,
+                                                  child: Image.asset(
+                                                    'images/default-profile.jpg',
+                                                    width: 50,
+                                                    height: 50,
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                      SizedBox(
+                                        width: 25.0,
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            StringUtils.capitalize(
+                                                data.data()['username']),
+                                            style: KSearchDisplayNameTextStyle,
+                                          ),
+                                          SizedBox(
+                                            height: 5.0,
+                                          ),
+                                          Text(
+                                            data.data()['role'],
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  Text(
-                                    'Faculty',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
+                                  isMe != data.data()['username']
+                                      ? RaisedButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30.0)),
+                                          color: Colors.lightBlueAccent,
+                                          elevation: 5.0,
+                                          onPressed: () {
+                                            setState(() {
+                                              showSpinner = true;
+                                            });
+                                            String user =
+                                                data.data()['username'];
+                                            String url =
+                                                data.data()['profileURL'];
+                                            String role = data.data()['role'];
+                                            createChatRoom(
+                                                context, user, url, role);
+                                            setState(() {
+                                              showSpinner = false;
+                                            });
+                                          },
+                                          child: Text(
+                                            'Message',
+                                            style: TextStyle(
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                        )
+                                      : RaisedButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(30.0)),
+                                          onPressed: () {
+                                            setState(() {
+                                              Navigator.pushNamed(
+                                                  context, ProfileScreen().id);
+                                            });
+                                          },
+                                          color: Colors.cyan,
+                                          elevation: 5.0,
+                                          child: Text(
+                                            'You',
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          ),
+                                        ),
                                 ],
                               ),
-                            ],
-                          ),
-                          isMe != data.data()['username']
-                              ? RaisedButton(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(30.0)),
-                                  color: Colors.lightBlueAccent,
-                                  elevation: 5.0,
-                                  onPressed: () {
-                                    setState(() {
-                                      showSpinner = true;
-                                    });
-                                    String user = data.data()['username'];
-                                    String url = data.data()['profileURL'];
-                                    createChatRoom(context, user, url);
-                                    setState(() {
-                                      showSpinner = false;
-                                    });
-                                  },
-                                  child: Text(
-                                    'Message',
-                                    style: TextStyle(
-                                      color: Colors.black54,
-                                    ),
-                                  ),
-                                )
-                              : RaisedButton(
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.circular(30.0)),
-                                  onPressed: () {
-                                    setState(() {
-                                      Navigator.pushNamed(
-                                          context, ProfileScreen().id);
-                                    });
-                                  },
-                                  color: Colors.cyan,
-                                  elevation: 5.0,
-                                  child: Text(
-                                    'You',
-                                    style: TextStyle(color: Colors.black54),
-                                  ),
-                                ),
-                        ],
-                      ),
+
                     ),
                   );
                 },

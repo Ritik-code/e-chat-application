@@ -1,8 +1,10 @@
+import 'package:comperio/screen/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:comperio/constants.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'login_screen.dart';
+import 'package:comperio/regexValidator.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String id = 'ChangePasswordScreen';
@@ -45,7 +47,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         _showDialog(
             text: 'Password Changed Successfully!!!',
             onPressed: () {
-              Navigator.pushNamed(context, LoginScreen().id);
+              Navigator.pushNamed(context, WelcomeScreen().id);
             });
       }).catchError((e) {
         //catching error for updatedPassword
@@ -78,16 +80,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         email: firebaseUser.email, password: password);
 
     return firebaseUser.reauthenticateWithCredential(authCredentials);
-  }
-
-//validating newPassword
-  String validatePassword(String value) {
-    Pattern pattern = r'^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{6,}$';
-    RegExp regex = new RegExp(pattern);
-    if (!regex.hasMatch(value))
-      return 'Invalid Password, include letters and numbers';
-    else
-      return null;
   }
 
   //validating form inputs
@@ -167,7 +159,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       borderSide: BorderSide(color: Colors.white),
                     ),
                   ),
-                  validator: validatePassword,
+                  validator: RegexValidator.validatePassword,
                   onSaved: (value) {
                     newPassword = value;
                     //take the value in a variable so that it can be updated.

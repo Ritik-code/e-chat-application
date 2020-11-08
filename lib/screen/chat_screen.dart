@@ -10,11 +10,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
+import 'feedback_screen.dart';
+
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
-String chatRoomId = "";
-String username = "";
+String chatRoomId = "test";
+String username = "admin";
 String url = "";
+String myUrl = "";
+String role = "";
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
@@ -33,22 +37,19 @@ class _ChatScreenState extends State<ChatScreen> {
     String myUsername = await HelperFunctions.getUserNameSharedPreference();
     var Url =
         await FirebaseFirestore.instance.collection('users').doc(chatId).get();
+    String myUrl = await HelperFunctions.getUserPhotoUrlSharedPreference();
+    String userRole = await HelperFunctions.getUserRoleSharedPreference();
     // String pUrl = ;
     setState(() {
       chatRoomId = chatId;
       username = myUsername;
       url = Url.data()['profileURL'];
+      myUrl = myUrl;
+      role = userRole;
     });
     print(url);
     print(chatRoomId);
-    //   var snapshot = await Firestore.instance.collection('users').document(myUsername)
-    //       .collection("chatRoom")
-    //       .document(chatRoomId).get();
-    // setState(() {
-    //   username =  snapshot.data()['users'][0];
-    //
-    // });
-    // print(username);
+    print(role);
   }
 
   @override
@@ -140,6 +141,19 @@ class _ChatScreenState extends State<ChatScreen> {
                     chatRoomId,
                     style: KUserTextStyle,
                   ),
+                  SizedBox(
+                    width: 100.0,
+                  ),
+                  IconButton(
+                    icon: AppIcons(
+                      iconName: Icons.feedback,
+                      iconSize: 30.0,
+                      colour: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, FeedbackScreen().id);
+                    },
+                  ),
                 ],
               ),
             ),
@@ -225,9 +239,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           //Implement send functionality.
                           _firestore
                               .collection('users')
-                              .doc(username)
+                              .document(username)
                               .collection("chatRoom")
-                              .doc(chatRoomId)
+                              .document(chatRoomId)
                               .collection('Messages')
                               .add({
                             'message': messageText,
@@ -240,11 +254,22 @@ class _ChatScreenState extends State<ChatScreen> {
                                 .format(DateTime.now())
                                 .toString(),
                           });
+                          Firestore.instance
+                              .collection('users')
+                              .document(chatRoomId)
+                              .collection("chatRoom")
+                              .document(username)
+                              .set({
+                            "users": [chatRoomId, username],
+                            "chatRoomId": username,
+                            "profileUrl": myUrl,
+                          });
+
                           _firestore
                               .collection('users')
-                              .doc(chatRoomId)
+                              .document(chatRoomId)
                               .collection("chatRoom")
-                              .doc(username)
+                              .document(username)
                               .collection('Messages')
                               .add({
                             'message': messageText,
@@ -283,9 +308,9 @@ class MessagesStream extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection('users')
-          .doc(username)
+          .document(username)
           .collection("chatRoom")
-          .doc(chatRoomId)
+          .document(chatRoomId)
           .collection('Messages')
           .orderBy('orderDateFormat')
           .snapshots(),
@@ -349,13 +374,13 @@ class MessageBubble extends StatelessWidget {
         crossAxisAlignment:
             isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            sender,
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Colors.black54,
-            ),
-          ),
+          // Text(
+          //   sender,
+          //   style: TextStyle(
+          //     fontSize: 12.0,
+          //     color: Colors.black54,
+          //   ),
+          // ),
           (text != " ")
               ? Container(
                   constraints: BoxConstraints(
@@ -439,7 +464,7 @@ class MessageBubble extends StatelessWidget {
             dateTime,
             style: TextStyle(
               fontSize: 10.0,
-              color: Colors.black54,
+              color: Colors.black,
             ),
           ),
         ],

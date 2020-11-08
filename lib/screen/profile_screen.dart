@@ -1,5 +1,19 @@
-import 'dart:io';
+// To-Do:
+// -when viewing own profile:
+// fetch current user name, email and profile photo, provide edit options,  don't show send message button
+// -when viewing other person profile:
+// fetch searched result's name, email and profile photo, show send message button
 
+// -when viewing faculty profile:
+// show rating
+// -when viewing student profile:
+// don't show rating
+
+// - adding rating mechanism
+
+// - show @professor when faculty and @student when student's profile
+
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/helper_functions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
+import 'package:comperio/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String id = 'ProfileScreen';
@@ -18,23 +33,27 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String userName;
   String emailId;
-  String picURL;
+  String picURL = 'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
   File _image;
   bool showSpinner = false;
-  String url;
+  String url ="";
+  String role;
 
   getUserInfo() async {
     String username = await HelperFunctions.getUserNameSharedPreference();
     String email = await HelperFunctions.getUserEmailSharedPreference();
-    var Url = await FirebaseFirestore.instance
+    String myrole = await HelperFunctions.getUserRoleSharedPreference();
+    var dp = await FirebaseFirestore.instance
         .collection('users')
         .doc(username)
         .get();
     setState(() {
       userName = username;
       emailId = email;
-      picURL = Url.data()['profileURL'];
+      role = myrole;
+      picURL = dp.data()['profileURL'];
     });
+    print(picURL);
   }
 
   @override
@@ -63,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     url = dowUrl.toString();
 
-    // print(url);
+    //print(url);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     setState(() {
       print("Profile Picture uploaded");
@@ -127,9 +146,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               )
                             : CircleAvatar(
                                 radius: 50.0,
-                                backgroundImage: NetworkImage((picURL != null)
-                                    ? picURL
-                                    : 'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae'),
+                                backgroundImage: (picURL != null)?
+                                NetworkImage(picURL) :
+                                AssetImage('images/default-profile.jpg'),
                               ),
                         Positioned(
                           top: -1,
@@ -155,20 +174,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Text(
                     userName != null ? userName : 'abc',
-                    style: TextStyle(
-                      fontSize: 40.0,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: KProfileUsernameTextStyle,
                   ),
                   Text(
-                    '@Student',
-                    style: TextStyle(
-                      color: Colors.teal[100],
-                      fontSize: 20.0,
-                      letterSpacing: 2.5,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    role!=null?"@"+role:"@role",
+                    style: KProfileUserRoleTextStyle,
                   ),
 
                   SizedBox(
@@ -185,10 +195,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       title: Align(
                         child: Text(
                           emailId != null ? emailId : 'abc@gmail.com',
-                          style: TextStyle(
-                            color: Colors.teal[900],
-                            fontSize: 20.0,
-                          ),
+                          style: KProfileEmailTextStyle,
                         ),
                         alignment: Alignment.bottomLeft,
                       ),
@@ -232,7 +239,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             FirebaseFirestore.instance
                                 .collection('users')
                                 .doc(userName)
-                                .set({
+                                .update({
                               'profileURL': url,
                             });
                             setState(() {
@@ -242,11 +249,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Center(
                             child: Text(
                               'Save',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: KProfileButtonTextStyle,
                             ),
                           ),
                         ),

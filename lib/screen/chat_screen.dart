@@ -30,7 +30,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
-  String messageText;
+  String messageText = "";
 
   getUserName() async {
     String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
@@ -103,48 +103,55 @@ class _ChatScreenState extends State<ChatScreen> {
               padding: EdgeInsets.only(
                   top: 40.0, left: 10.0, right: 20.0, bottom: 20.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: AppIcons(
-                      iconName: Icons.arrow_back,
-                      iconSize: 30.0,
-                      colour: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, ContactedPersonScreen().id);
-                    },
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  CircleAvatar(
-                    radius: 20.0,
-                    backgroundColor: Colors.white,
-                    child: ClipOval(
-                      child: SizedBox(
-                        width: 40.0,
-                        height: 40.0,
-                        child: Image.network(
-                          url,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.fill,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: AppIcons(
+                          iconName: Icons.arrow_back,
+                          iconSize: 30.0,
+                          colour: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, ContactedPersonScreen().id);
+                        },
+                      ),
+                      SizedBox(
+                        width: 10.0,
+                      ),
+                      CircleAvatar(
+                        radius: 20.0,
+                        backgroundColor: Colors.white,
+                        child: ClipOval(
+                          child: SizedBox(
+                            width: 40.0,
+                            height: 40.0,
+                            child: Image.network(
+                              url,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Text(
-                    chatRoomId,
-                    style: KUserTextStyle,
-                  ),
-                  SizedBox(
-                    width: 100.0,
+                      SizedBox(
+                        width: 10.0,
+                      ),
+                      Text(
+                        chatRoomId,
+                        style: KUserTextStyle,
+                      ),
+                      // SizedBox(
+                      //   width: 100.0,
+                      // ),
+
+                    ],
                   ),
                   IconButton(
+                    alignment: Alignment.centerRight,
                     icon: AppIcons(
                       iconName: Icons.feedback,
                       iconSize: 30.0,
@@ -235,53 +242,65 @@ class _ChatScreenState extends State<ChatScreen> {
                         padding: EdgeInsets.all(15.0),
                         color: Color(0xFF1d2d50),
                         onPressed: () {
+                            //Implement send functionality.
                           messageTextController.clear();
-                          //Implement send functionality.
-                          _firestore
-                              .collection('users')
-                              .document(username)
-                              .collection("chatRoom")
-                              .document(chatRoomId)
-                              .collection('Messages')
-                              .add({
-                            'message': messageText,
-                            'sender': loggedInUser.email,
-                            'Date': DateFormat('dd-MMM-yy hh:mm')
-                                .format(DateTime.now())
-                                .toString(),
-                            'fileUrl': " ",
-                            'orderDateFormat': DateFormat('dd-MMM-yy hh:mm:ss')
-                                .format(DateTime.now())
-                                .toString(),
-                          });
-                          Firestore.instance
-                              .collection('users')
-                              .document(chatRoomId)
-                              .collection("chatRoom")
-                              .document(username)
-                              .set({
-                            "users": [chatRoomId, username],
-                            "chatRoomId": username,
-                            "profileUrl": myUrl,
-                          });
+                          if(messageText.isNotEmpty){
+                            _firestore
+                                .collection('users')
+                                .document(username)
+                                .collection("chatRoom")
+                                .document(chatRoomId)
+                                .collection('Messages')
+                                .add({
+                              'message': messageText,
+                              'sender': loggedInUser.email,
+                              'Date': DateFormat('dd-MMM-yy hh:mm')
+                                  .format(DateTime.now())
+                                  .toString(),
+                              'fileUrl': " ",
+                              'orderDateFormat': DateFormat(
+                                  'dd-MMM-yy hh:mm:ss')
+                                  .format(DateTime.now())
+                                  .toString(),
+                            });
+                            Firestore.instance
+                                .collection('users')
+                                .document(chatRoomId)
+                                .collection("chatRoom")
+                                .document(username)
+                                .set({
+                              "users": [chatRoomId, username],
+                              "chatRoomId": username,
+                              "profileUrl": myUrl,
+                            });
 
-                          _firestore
-                              .collection('users')
-                              .document(chatRoomId)
-                              .collection("chatRoom")
-                              .document(username)
-                              .collection('Messages')
-                              .add({
-                            'message': messageText,
-                            'sender': loggedInUser.email,
-                            'Date': DateFormat('dd-MMM-yy hh:mm')
-                                .format(DateTime.now())
-                                .toString(),
-                            'fileUrl': " ",
-                            'orderDateFormat': DateFormat('dd-MMM-yy hh:mm:ss')
-                                .format(DateTime.now())
-                                .toString(),
-                          });
+                            _firestore
+                                .collection('users')
+                                .document(chatRoomId)
+                                .collection("chatRoom")
+                                .document(username)
+                                .collection('Messages')
+                                .add({
+                              'message': messageText,
+                              'sender': loggedInUser.email,
+                              'Date': DateFormat('dd-MMM-yy hh:mm')
+                                  .format(DateTime.now())
+                                  .toString(),
+                              'fileUrl': " ",
+                              'orderDateFormat': DateFormat(
+                                  'dd-MMM-yy hh:mm:ss')
+                                  .format(DateTime.now())
+                                  .toString(),
+                            });
+                          }
+
+                                setState(() {
+                                  messageText = "";
+                                });
+
+
+
+
                         },
                         shape: CircleBorder(),
                         child: AppIcons(

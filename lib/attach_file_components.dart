@@ -11,6 +11,7 @@ import 'package:path/path.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
+
 class AttachFileBottomSheet extends StatefulWidget {
   @override
   _AttachFileBottomSheetState createState() => _AttachFileBottomSheetState();
@@ -111,6 +112,8 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
       },
     );
   }
+
+  getFileMessageBubble(){}
 
   @override
   Widget build(BuildContext context) {

@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/app_icons.dart';
 import 'package:comperio/attach_file_components.dart';
 import 'package:comperio/constants.dart';
 import 'package:comperio/helper_functions.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
+import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -115,7 +120,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           colour: Colors.white,
                         ),
                         onPressed: () {
-                          Navigator.pushNamed(context, ContactedPersonScreen().id);
+                          Navigator.pushNamed(
+                              context, ContactedPersonScreen().id);
                         },
                       ),
                       SizedBox(
@@ -147,7 +153,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       // SizedBox(
                       //   width: 100.0,
                       // ),
-
                     ],
                   ),
                   IconButton(
@@ -197,18 +202,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      IconButton(
-                        icon: Icon(FontAwesomeIcons.paperclip),
-                        color: Colors.blueGrey,
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return AttachFileBottomSheet();
-                            },
-                          );
-                        },
-                      ),
+                      AttachFileBottomSheet(),
                       Expanded(
                         child: TextField(
                           keyboardType: TextInputType.multiline,
@@ -242,9 +236,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         padding: EdgeInsets.all(15.0),
                         color: Color(0xFF1d2d50),
                         onPressed: () {
-                            //Implement send functionality.
+                          //Implement send functionality.
                           messageTextController.clear();
-                          if(messageText.isNotEmpty){
+                          if (messageText.isNotEmpty) {
                             _firestore
                                 .collection('users')
                                 .document(username)
@@ -258,10 +252,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                   .format(DateTime.now())
                                   .toString(),
                               'fileUrl': " ",
-                              'orderDateFormat': DateFormat(
-                                  'dd-MMM-yy hh:mm:ss')
-                                  .format(DateTime.now())
-                                  .toString(),
+                              'type': " ",
+                              'orderDateFormat':
+                                  DateFormat('dd-MMM-yy hh:mm:ss')
+                                      .format(DateTime.now())
+                                      .toString(),
                             });
                             Firestore.instance
                                 .collection('users')
@@ -287,20 +282,17 @@ class _ChatScreenState extends State<ChatScreen> {
                                   .format(DateTime.now())
                                   .toString(),
                               'fileUrl': " ",
-                              'orderDateFormat': DateFormat(
-                                  'dd-MMM-yy hh:mm:ss')
-                                  .format(DateTime.now())
-                                  .toString(),
+                              'type': " ",
+                              'orderDateFormat':
+                                  DateFormat('dd-MMM-yy hh:mm:ss')
+                                      .format(DateTime.now())
+                                      .toString(),
                             });
                           }
 
-                                setState(() {
-                                  messageText = "";
-                                });
-
-
-
-
+                          setState(() {
+                            messageText = "";
+                          });
                         },
                         shape: CircleBorder(),
                         child: AppIcons(
@@ -348,7 +340,7 @@ class MessagesStream extends StatelessWidget {
           final messageSender = message.data()['sender'];
           final messageDateTime = message.data()['Date'];
           final messageFile = message.data()['fileUrl'];
-
+          final messageType = message.data()['type'];
           final currentUser = loggedInUser.email;
 
           final messageBubble = MessageBubble(
@@ -381,9 +373,15 @@ class MessageBubble extends StatelessWidget {
   final bool isMe;
   final String dateTime;
   final String messageFileUrl;
+  final String messageType;
 
   MessageBubble(
-      {this.sender, this.text, this.isMe, this.dateTime, this.messageFileUrl});
+      {this.sender,
+      this.text,
+      this.isMe,
+      this.dateTime,
+      this.messageFileUrl,
+      this.messageType});
 
   @override
   Widget build(BuildContext context) {
@@ -400,7 +398,7 @@ class MessageBubble extends StatelessWidget {
           //     color: Colors.black54,
           //   ),
           // ),
-          (text != " ")
+          (messageFileUrl == " ")
               ? Container(
                   constraints: BoxConstraints(
                     maxWidth: 2 * (MediaQuery.of(context).size.width) / 3,
@@ -432,53 +430,8 @@ class MessageBubble extends StatelessWidget {
                     ),
                   ),
                 )
-              : ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: <Widget>[
-                          Container(
-                            width: 130,
-                            color: Colors.black87,
-                            height: 80,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.insert_drive_file,
-                                  color: Colors.lightBlueAccent,
-                                ),
-                                Text(
-                                  'File',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: isMe
-                                          ? Colors.lightBlueAccent
-                                          : Colors.lightBlueAccent),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        height: 40,
-                        width: 130.0,
-                        color: Colors.lightBlueAccent,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.file_download,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {},
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+              : AttachFileBottomSheet()
+                  .getImageBubble(messageFileUrl, context, isMe),
           Text(
             dateTime,
             style: TextStyle(

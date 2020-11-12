@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
+import 'package:comperio/checkInternet.dart';
 import 'package:comperio/constants.dart';
+import 'package:comperio/regexValidator.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
-import 'package:comperio/screen/welcome_screen.dart';
 import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:comperio/regexValidator.dart';
+
 import '../helper_functions.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -24,6 +25,18 @@ class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
   String email;
   String password;
+
+  @override
+  void initState() {
+    super.initState();
+    CheckInternet().checkConnection(context);
+  }
+
+  @override
+  void dispose() {
+    CheckInternet().listener.cancel();
+    super.dispose();
+  }
 
   bool _validateInputs() {
     if (_formKey.currentState.validate()) {
@@ -165,12 +178,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                         shape: StadiumBorder(),
                                         color: Colors.lightBlueAccent,
                                         onPressed: () async {
+                                          CheckInternet()
+                                              .checkConnection(context);
                                           bool isShowSpinner =
                                               _validateInputs();
                                           setState(() {
                                             showSpinner = isShowSpinner;
                                           });
                                           try {
+                                            CheckInternet()
+                                                .checkConnection(context);
                                             await _auth
                                                 .signInWithEmailAndPassword(
                                                     email: email,

@@ -1,14 +1,21 @@
-import 'package:intl/intl.dart';
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/app_icons.dart';
 import 'package:comperio/attach_file_components.dart';
 import 'package:comperio/constants.dart';
 import 'package:comperio/helper_functions.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
+import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+
+import 'feedback_screen.dart';
 
 final _firestore = FirebaseFirestore.instance;
 User loggedInUser;
@@ -28,7 +35,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
-  String messageText;
+  String messageText = "";
 
   getUserName() async {
     String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
@@ -101,43 +108,63 @@ class _ChatScreenState extends State<ChatScreen> {
               padding: EdgeInsets.only(
                   top: 40.0, left: 10.0, right: 20.0, bottom: 20.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: AppIcons(
+                          iconName: Icons.arrow_back,
+                          iconSize: 30.0,
+                          colour: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, ContactedPersonScreen().id);
+                        },
+                      ),
+                      SizedBox(
+                        width: 10.0,
+                      ),
+                      CircleAvatar(
+                        radius: 20.0,
+                        backgroundColor: Colors.white,
+                        child: ClipOval(
+                          child: SizedBox(
+                            width: 40.0,
+                            height: 40.0,
+                            child: Image.network(
+                              url,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 10.0,
+                      ),
+                      Text(
+                        chatRoomId,
+                        style: KUserTextStyle,
+                      ),
+                      // SizedBox(
+                      //   width: 100.0,
+                      // ),
+                    ],
+                  ),
                   IconButton(
+                    alignment: Alignment.centerRight,
                     icon: AppIcons(
-                      iconName: Icons.arrow_back,
+                      iconName: Icons.feedback,
                       iconSize: 30.0,
                       colour: Colors.white,
                     ),
                     onPressed: () {
-                      Navigator.pushNamed(context, ContactedPersonScreen().id);
+                      Navigator.pushNamed(context, FeedbackScreen().id);
                     },
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  CircleAvatar(
-                    radius: 20.0,
-                    backgroundColor: Colors.white,
-                    child: ClipOval(
-                      child: SizedBox(
-                        width: 40.0,
-                        height: 40.0,
-                        child: Image.network(
-                          url,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10.0,
-                  ),
-                  Text(
-                    chatRoomId,
-                    style: KUserTextStyle,
                   ),
                 ],
               ),
@@ -175,18 +202,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      IconButton(
-                        icon: Icon(FontAwesomeIcons.paperclip),
-                        color: Colors.blueGrey,
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            builder: (context) {
-                              return AttachFileBottomSheet();
-                            },
-                          );
-                        },
-                      ),
+                      AttachFileBottomSheet(),
                       Expanded(
                         child: TextField(
                           keyboardType: TextInputType.multiline,
@@ -220,52 +236,62 @@ class _ChatScreenState extends State<ChatScreen> {
                         padding: EdgeInsets.all(15.0),
                         color: Color(0xFF1d2d50),
                         onPressed: () {
-                          messageTextController.clear();
                           //Implement send functionality.
-                          _firestore
-                              .collection('users')
-                              .document(username)
-                              .collection("chatRoom")
-                              .document(chatRoomId)
-                              .collection('Messages')
-                              .add({
-                            'message': messageText,
-                            'sender': loggedInUser.email,
-                            'Date': DateFormat('dd-MMM-yy hh:mm')
-                                .format(DateTime.now())
-                                .toString(),
-                            'fileUrl': " ",
-                            'orderDateFormat': DateFormat('dd-MMM-yy hh:mm:ss')
-                                .format(DateTime.now())
-                                .toString(),
-                          });
-                          Firestore.instance
-                              .collection('users')
-                              .document(chatRoomId)
-                              .collection("chatRoom")
-                              .document(username)
-                              .set({
-                            "users": [chatRoomId, username],
-                            "chatRoomId": username,
-                            "profileUrl": myUrl,
-                          });
+                          messageTextController.clear();
+                          if (messageText.isNotEmpty) {
+                            _firestore
+                                .collection('users')
+                                .document(username)
+                                .collection("chatRoom")
+                                .document(chatRoomId)
+                                .collection('Messages')
+                                .add({
+                              'message': messageText,
+                              'sender': loggedInUser.email,
+                              'Date': DateFormat('dd-MMM-yy hh:mm')
+                                  .format(DateTime.now())
+                                  .toString(),
+                              'fileUrl': " ",
+                              'type': " ",
+                              'orderDateFormat':
+                                  DateFormat('dd-MMM-yy hh:mm:ss')
+                                      .format(DateTime.now())
+                                      .toString(),
+                            });
+                            Firestore.instance
+                                .collection('users')
+                                .document(chatRoomId)
+                                .collection("chatRoom")
+                                .document(username)
+                                .set({
+                              "users": [chatRoomId, username],
+                              "chatRoomId": username,
+                              "profileUrl": myUrl,
+                            });
 
-                          _firestore
-                              .collection('users')
-                              .document(chatRoomId)
-                              .collection("chatRoom")
-                              .document(username)
-                              .collection('Messages')
-                              .add({
-                            'message': messageText,
-                            'sender': loggedInUser.email,
-                            'Date': DateFormat('dd-MMM-yy hh:mm')
-                                .format(DateTime.now())
-                                .toString(),
-                            'fileUrl': " ",
-                            'orderDateFormat': DateFormat('dd-MMM-yy hh:mm:ss')
-                                .format(DateTime.now())
-                                .toString(),
+                            _firestore
+                                .collection('users')
+                                .document(chatRoomId)
+                                .collection("chatRoom")
+                                .document(username)
+                                .collection('Messages')
+                                .add({
+                              'message': messageText,
+                              'sender': loggedInUser.email,
+                              'Date': DateFormat('dd-MMM-yy hh:mm')
+                                  .format(DateTime.now())
+                                  .toString(),
+                              'fileUrl': " ",
+                              'type': " ",
+                              'orderDateFormat':
+                                  DateFormat('dd-MMM-yy hh:mm:ss')
+                                      .format(DateTime.now())
+                                      .toString(),
+                            });
+                          }
+
+                          setState(() {
+                            messageText = "";
                           });
                         },
                         shape: CircleBorder(),
@@ -314,7 +340,7 @@ class MessagesStream extends StatelessWidget {
           final messageSender = message.data()['sender'];
           final messageDateTime = message.data()['Date'];
           final messageFile = message.data()['fileUrl'];
-
+          final messageType = message.data()['type'];
           final currentUser = loggedInUser.email;
 
           final messageBubble = MessageBubble(
@@ -347,9 +373,15 @@ class MessageBubble extends StatelessWidget {
   final bool isMe;
   final String dateTime;
   final String messageFileUrl;
+  final String messageType;
 
   MessageBubble(
-      {this.sender, this.text, this.isMe, this.dateTime, this.messageFileUrl});
+      {this.sender,
+      this.text,
+      this.isMe,
+      this.dateTime,
+      this.messageFileUrl,
+      this.messageType});
 
   @override
   Widget build(BuildContext context) {
@@ -366,7 +398,7 @@ class MessageBubble extends StatelessWidget {
           //     color: Colors.black54,
           //   ),
           // ),
-          (text != " ")
+          (messageFileUrl == " ")
               ? Container(
                   constraints: BoxConstraints(
                     maxWidth: 2 * (MediaQuery.of(context).size.width) / 3,
@@ -398,53 +430,8 @@ class MessageBubble extends StatelessWidget {
                     ),
                   ),
                 )
-              : ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Stack(
-                        alignment: AlignmentDirectional.center,
-                        children: <Widget>[
-                          Container(
-                            width: 130,
-                            color: Colors.black87,
-                            height: 80,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.insert_drive_file,
-                                  color: Colors.lightBlueAccent,
-                                ),
-                                Text(
-                                  'File',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: isMe
-                                          ? Colors.lightBlueAccent
-                                          : Colors.lightBlueAccent),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        height: 40,
-                        width: 130.0,
-                        color: Colors.lightBlueAccent,
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.file_download,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {},
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+              : AttachFileBottomSheet()
+                  .getImageBubble(messageFileUrl, context, isMe),
           Text(
             dateTime,
             style: TextStyle(

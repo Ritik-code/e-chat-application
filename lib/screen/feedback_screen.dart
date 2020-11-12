@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,6 +7,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import '../constants.dart';
 import '../screen_app_logo.dart';
+import 'chat_screen.dart';
 
 class FeedbackScreen extends StatefulWidget {
   final String id = 'FeedbackScreen';
@@ -19,6 +22,33 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   IconData myFeedback = FontAwesomeIcons.sadTear;
   Color myFeedbackColor = Colors.white;
   bool showSpinner = false;
+
+  addFeedbackToDatabase(double sliderValue, String user) async {
+    var fd =
+        await FirebaseFirestore.instance.collection('users').doc(user).get();
+    double fdValue = fd.data()['feedbackValue'];
+    // double fdValueDouble = double.parse(fdValue);
+    sliderValue = sliderValue + fdValue;
+
+    double fdRate = fd.data()['feedbackRate'];
+    // double fdRateDouble;
+    // fdRateDouble = double.parse(fdRate);
+    fdRate = fdRate + 1.0;
+
+    // fdValue = sliderValue.toString();
+    // fdRate = fdRateDouble.toString();
+
+    double overallFeedbackDouble = sliderValue / fdRate;
+    // String overallFeedback = overallFeedbackDouble.toStringAsFixed(2);
+
+    setState(() {
+      FirebaseFirestore.instance.collection('users').doc(user).update({
+        'feedbackValue': sliderValue,
+        'feedbackRate': fdRate,
+        'overallFeedback': overallFeedbackDouble,
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,15 +73,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                       top: 60.0, left: 30.0, right: 30.0, bottom: 30.0),
                   child: Container(
                       child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      ScreenAppLogo(),
-                      Text(
-                        'Comperio',
-                        style: KAppNameTextStyle,
-                      ),
-                    ],
-                  )),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          ScreenAppLogo(),
+                          Text(
+                            'Comperio',
+                            style: KAppNameTextStyle,
+                          ),
+                        ],
+                      )),
                 ),
                 Flexible(
                   //fit: FlexFit.tight,
@@ -91,20 +121,20 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                                     bottom: 5.0),
                                 child: Container(
                                     child: Text(
-                                  myFeedbackText,
-                                  style: KFeedbackTextStyle,
-                                  textAlign: TextAlign.center,
-                                )),
+                                      myFeedbackText,
+                                      style: KFeedbackTextStyle,
+                                      textAlign: TextAlign.center,
+                                    )),
                               ),
                               Flexible(
                                 child: Padding(
                                   padding: EdgeInsets.all(10.0),
                                   child: Container(
                                       child: Icon(
-                                    myFeedback,
-                                    color: myFeedbackColor,
-                                    size: 120.0,
-                                  )),
+                                        myFeedback,
+                                        color: myFeedbackColor,
+                                        size: 120.0,
+                                      )),
                                 ),
                               ),
                               Padding(
@@ -164,10 +194,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                                 padding: EdgeInsets.all(14.0),
                                 child: Container(
                                     child: Text(
-                                  "Your Rating: $sliderValue",
-                                  style: KFeedbackTextStyle,
-                                  textAlign: TextAlign.center,
-                                )),
+                                      "Your Rating: $sliderValue",
+                                      style: KFeedbackTextStyle,
+                                      textAlign: TextAlign.center,
+                                    )),
                               ),
                               Padding(
                                 padding: EdgeInsets.all(5.0),
@@ -182,10 +212,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                                       ),
                                       shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(10.0),
+                                        BorderRadius.circular(10.0),
                                       ),
                                       color: Color(0xFF005C97),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        setState(() {
+                                          addFeedbackToDatabase(
+                                              sliderValue, chatRoomId);
+                                        });
+                                      },
                                     )),
                               ),
                             ],

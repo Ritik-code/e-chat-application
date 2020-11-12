@@ -5,6 +5,7 @@ import 'package:comperio/constants.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'login_screen.dart';
 import 'package:comperio/regexValidator.dart';
+import 'package:commons/commons.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String id = 'ChangePasswordScreen';
@@ -21,20 +22,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   //this method created to show dialogs
-  void _showDialog({String text, Function onPressed}) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(text),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: onPressed,
-            ),
-          ],
-        );
-      },
+  void _showDialog({String text}) {
+    warningDialog(
+      context,
+      text,
+      neutralText: "Okay",
     );
   }
 
@@ -44,28 +36,34 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     validateUserPassword(oldPassword).then((_) {
       user.updatePassword(password).then((_) {
         //this method updating the password
-        _showDialog(
-            text: 'Password Changed Successfully!!!',
-            onPressed: () {
-              Navigator.pushNamed(context, WelcomeScreen().id);
-            });
+        // _showDialog(
+        //   text: 'Password Changed Successfully!!!',
+        // );
+        successDialog(context, 'Password Changed Successfully!!!',
+            neutralText: 'Okay');
       }).catchError((e) {
         //catching error for updatedPassword
         print(e);
-        _showDialog(
-            text: 'Password Not Changed!!!',
-            onPressed: () {
-              Navigator.of(context).pop();
-            });
+        // _showDialog(
+        //   text: 'Password Not Changed!!!',
+        // );
+        warningDialog(
+          context,
+          'Password Not Changed!!!',
+          neutralText: "Okay",
+        );
       });
     }).catchError((onError) {
       //catching error for validateUserPassword
       print(onError);
-      _showDialog(
-          text: 'Wrong Password!!!',
-          onPressed: () {
-            Navigator.of(context).pop();
-          });
+      // _showDialog(
+      //   text: 'Wrong Password!!!',
+      // );
+      warningDialog(
+        context,
+        'Wrong Password!!!',
+        neutralText: "Okay",
+      );
       setState(() {
         showSpinner = false;
       });
@@ -182,16 +180,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
                       if (newPassword == oldPassword) {
                         //condition if both the password are same
-                        _showDialog(
-                            text: 'Password is same as old password!!!',
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            });
+                        // _showDialog(
+                        //   text: 'Password is same as old password!!!',
+                        // );
+                        warningDialog(
+                          context,
+                          'Password is same as old password!!!',
+                          neutralText: "Okay",
+                        );
+                        setState(() {
+                          showSpinner = false;
+                        });
+                      } else {
+                        changePassword(newPassword);
+                        setState(() {
+                          showSpinner = isShowSpinner;
+                        });
                       }
-                      changePassword(newPassword);
-                      setState(() {
-                        showSpinner = isShowSpinner;
-                      });
+
                       print('password changed');
                     }),
               ],

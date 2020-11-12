@@ -22,7 +22,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
 import 'package:comperio/constants.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:commons/commons.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String id = 'ProfileScreen';
@@ -247,22 +247,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             setState(() {
                               showSpinner = false;
                             });
-                            Alert(
-                              context: context,
-                              type: AlertType.info,
-                              title: "Profile Pic Updated!",
-                              buttons: [
-                                DialogButton(
-                                  child: Text(
-                                    "OK",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                  ),
-                                  onPressed: () => Navigator.pop(context),
-                                  width: 120,
-                                )
-                              ],
-                            ).show();
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text("Successful!"),
+                                    content: Text("Profile Pic Updated."),
+                                    actions: [
+                                      FlatButton(
+                                        child: Text("OK"),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
                           },
                           child: Center(
                             child: Text(

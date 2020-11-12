@@ -14,7 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
+import 'package:rich_alert/rich_alert.dart';
 import '../helper_functions.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -380,26 +380,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             setState(() {
                                               showSpinner = false;
                                             });
-                                            Alert(
-                                              context: context,
-                                              type: AlertType.info,
-                                              title:
-                                                  "CONGRATS! YOUR ASSIGN ROLE IS",
-                                              desc: role.toUpperCase(),
-                                              buttons: [
-                                                DialogButton(
-                                                  child: Text(
-                                                    "OK",
-                                                    style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 20),
-                                                  ),
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                  width: 120,
-                                                )
-                                              ],
-                                            ).show();
+                                            // Alert(
+                                            //   context: context,
+                                            //   type: AlertType.info,
+                                            //   title:
+                                            //       "CONGRATS! YOUR ASSIGN ROLE IS",
+                                            //   desc: role.toUpperCase(),
+                                            //   buttons: [
+                                            //     DialogButton(
+                                            //       child: Text(
+                                            //         "OK",
+                                            //         style: TextStyle(
+                                            //             color: Colors.white,
+                                            //             fontSize: 20),
+                                            //       ),
+                                            //       onPressed: () =>
+                                            //           Navigator.pop(context),
+                                            //       width: 120,
+                                            //     )
+                                            //   ],
+                                            // ).show();
+                                            showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return RichAlertDialog(
+                                                    //uses the custom alert dialog
+                                                    alertTitle:
+                                                        richTitle("CONGRATS!"),
+                                                    alertSubtitle: richSubtitle(
+                                                        "Your assign role is ${role.toUpperCase()}"),
+                                                    alertType:
+                                                        RichAlertType.SUCCESS,
+                                                  );
+                                                });
                                           } catch (e) {
                                             print(e);
                                             //   AlertDialog(

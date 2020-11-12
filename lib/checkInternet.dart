@@ -32,7 +32,8 @@ class CheckInternet {
         case DataConnectionStatus.connected:
           internetStatus = "Connected to the Internet";
           contentmessage = "Connected to the Internet";
-          _showDialog(internetStatus, contentmessage, context);
+          //_showDialog(internetStatus, contentmessage, context);
+          print("connected");
           break;
         case DataConnectionStatus.disconnected:
           internetStatus = "You are disconnected to the Internet. ";

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
+import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -8,10 +9,86 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
+import 'package:comperio/constants.dart';
+import 'helper_functions.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class AttachFileBottomSheet extends StatefulWidget {
+
+  Widget getImageBubble(String FileUrl, BuildContext context, bool isMe){
+    return GestureDetector(
+        child: Material(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+          elevation: 10.0,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Container(
+              width: (MediaQuery.of(context).size.width) / 2,
+              decoration: BoxDecoration(
+                border: Border.all(width: 5.0, color: isMe ? Color(0xff81d4fa) : Colors.white,),
+              ),
+              child: Image.network(FileUrl, fit: BoxFit.contain,),
+            ),
+          ),
+        ),
+        onTap:(){
+          print("tapped");
+          Navigator.push(context, MaterialPageRoute(builder: (_){
+            return  FullScreenImage(FileUrl);
+          }));
+
+        }
+    );
+  }
+
+  // Widget getVideoBubble(String FileUrl, BuildContext context, bool isMe){
+  //   return ClipRRect(
+  //     borderRadius: BorderRadius.circular(8.0),
+  //     child: Column(
+  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //       children: <Widget>[
+  //         Stack(
+  //           alignment: AlignmentDirectional.center,
+  //           children: <Widget>[
+  //             Container(
+  //               padding: EdgeInsets.all(3.0),
+  //               width: 130,
+  //               color: Colors.black87,
+  //               height: 80,
+  //               child: Column(
+  //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //                 children: <Widget>[
+  //                   IconButton(
+  //                     icon: Icon(
+  //                       Icons.play_arrow,
+  //                       color: Colors.lightBlueAccent,
+  //                     ),
+  //                     onPressed: (){
+  //
+  //                     },
+  //                   ),
+  //                   Text(
+  //                     'Video',
+  //                     style: TextStyle(
+  //                         fontSize: 20,
+  //                         color: isMe
+  //                             ? Colors.lightBlueAccent
+  //                             : Colors.lightBlueAccent),
+  //                   ),
+  //
+  //                 ],
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //
+  //       ],
+  //     ),
+  //   );
+  // }
+
+
   @override
   _AttachFileBottomSheetState createState() => _AttachFileBottomSheetState();
 }
@@ -21,6 +98,15 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
   String url;
   String user;
   String email;
+  String username;
+  String chatRoomId;
+
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+    getUserName();
+  }
 
   getCurrentUser() async {
     final User user = await _auth.currentUser;
@@ -30,14 +116,29 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
     print('user is $email');
   }
 
-  Future getFiles(FileType fileType, BuildContext context) async {
+  getUserName() async {
+    String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
+    String myUsername = await HelperFunctions.getUserNameSharedPreference();
+    setState(() {
+      chatRoomId = chatId;
+      username = myUsername;
+    });
+    print(url);
+    print(chatRoomId);
+  }
+
+
+  Future getFiles(BuildContext context) async {
     getCurrentUser();
     File pickedFile;
     var file;
-    pickedFile = await FilePicker.getFile(type: fileType).whenComplete(() {
+    pickedFile =
+    await FilePicker.getFile(type: FileType.image).whenComplete(() {
       setState(() {
         _showMyDialog(context);
       });
+    }).catchError((e){
+      print(e);
     });
     file = File(pickedFile.path);
     setState(() {
@@ -53,11 +154,12 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
       borderRadius: 8,
       message: "Sending file...",
       duration: Duration(seconds: 3),
-    )..show(context);
+    )
+      ..show(context);
     print('Uploading file.......');
     String fileName = basename(_file.path);
     StorageReference firebaseStorageRef =
-        FirebaseStorage.instance.ref().child(fileName);
+    FirebaseStorage.instance.ref().child(fileName);
     StorageUploadTask uploadTask = firebaseStorageRef.putFile(_file);
     var dowUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
     url = dowUrl.toString();
@@ -69,14 +171,31 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
   void _addToDatabase(String fileUrl, String emailID, BuildContext context) {
     // print(indexList);
     print('adding to database......');
-    FirebaseFirestore.instance.collection('Messages').doc().set({
+    FirebaseFirestore.instance.collection('users')
+        .document(username)
+        .collection("chatRoom")
+        .document(chatRoomId)
+        .collection('Messages').doc().set({
       'sender': emailID,
       'fileUrl': fileUrl,
       'Date':
-          DateFormat('dd-MMM-yy hh:mm:ss').format(DateTime.now()).toString(),
+      DateFormat('dd-MMM-yy hh:mm:ss').format(DateTime.now()).toString(),
       'message': " ",
       'orderDateFormat':
-          DateFormat('dd-MMM-yy hh:mm:ss').format(DateTime.now()).toString(),
+      DateFormat('dd-MMM-yy hh:mm:ss').format(DateTime.now()).toString(),
+    });
+    FirebaseFirestore.instance.collection('users')
+        .document(chatRoomId)
+        .collection("chatRoom")
+        .document(username)
+        .collection('Messages').doc().set({
+      'sender': emailID,
+      'fileUrl': fileUrl,
+      'Date':
+      DateFormat('dd-MMM-yy hh:mm:ss').format(DateTime.now()).toString(),
+      'message': " ",
+      'orderDateFormat':
+      DateFormat('dd-MMM-yy hh:mm:ss').format(DateTime.now()).toString(),
     });
     print('added to database');
   }
@@ -99,7 +218,7 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
             FlatButton(
               child: Text('Send'),
               onPressed: () {
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
 
                 setState(() {
                   uploadFile(context);
@@ -112,69 +231,36 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 5.0, bottom: 8.0),
-      height: 100.0,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          AttachFileIcon(
-              icon: Icons.image,
-              color: Colors.deepOrange,
-              text: 'Image',
-              onPressed: () {
-                getFiles(FileType.image, context);
-              }),
-          AttachFileIcon(
-              icon: Icons.videocam,
-              color: Colors.blue,
-              text: 'Video',
-              onPressed: () {
-                getFiles(FileType.video, context);
-              }),
-          AttachFileIcon(
-              icon: Icons.insert_drive_file,
-              color: Colors.yellow,
-              text: 'File',
-              onPressed: () {
-                getFiles(FileType.any, context);
-              }),
-        ],
-      ),
+    return IconButton(
+      icon: Icon(Icons.image),
+      onPressed: () {
+        getFiles(context);
+      },
+      color: Colors.deepOrange,
+      iconSize: 30.0,
     );
   }
 }
 
-class AttachFileIcon extends StatelessWidget {
-  AttachFileIcon(
-      {@required this.icon,
-      @required this.color,
-      @required this.text,
-      @required this.onPressed});
 
-  final IconData icon;
-  final Color color;
-  final String text;
-  final Function onPressed;
 
+
+class FullScreenImage extends StatelessWidget {
+  final String FileUrl;
+  FullScreenImage(this.FileUrl);
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        IconButton(
-          icon: Icon(icon),
-          onPressed: onPressed,
-          color: color,
-          iconSize: 30.0,
-        ),
-        Text(
-          text,
-          style: TextStyle(color: Colors.blueGrey, fontSize: 16.0),
-        ),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+      ),
+      body: Container(
+        color: Colors.black87,
+        child: Center(child: Image.network(FileUrl, fit: BoxFit.contain)),
+      ),
     );
   }
 }

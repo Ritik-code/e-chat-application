@@ -29,6 +29,7 @@ String chatRoomId;
 class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
   final user = FirebaseAuth.instance.currentUser;
   String username;
+
   // Stream myStream;
   // String url ;
 
@@ -39,7 +40,8 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
     });
   }
 
-  createChatRoom(BuildContext context, String receiver, String url) {
+  createChatRoom(
+      BuildContext context, String receiver, String url, String role) {
     List<String> users = [username, receiver];
     String chatRoomId = receiver;
     HelperFunctions.saveChatRoomIdSharedPreference(chatRoomId);
@@ -47,6 +49,7 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
       "users": users,
       "chatRoomId": chatRoomId,
       "profileUrl": url,
+      "role": role,
     };
 
     FirebaseFirestore.instance
@@ -235,7 +238,8 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
                                   onTap: () {
                                     String user = data.data()['users'][1];
                                     String url = data.data()['profileUrl'];
-                                    createChatRoom(context, user, url);
+                                    String role = data.data()['role'];
+                                    createChatRoom(context, user, url, role);
                                   },
                                 );
                               });

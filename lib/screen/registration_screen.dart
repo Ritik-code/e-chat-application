@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
 import 'package:comperio/constants.dart';
+import 'package:comperio/regexValidator.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:comperio/screen_app_logo.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,7 +14,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:comperio/regexValidator.dart';
+
 import '../helper_functions.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -32,6 +34,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String password;
   String role;
   File _image;
+  double feedbackValue;
+  double feedbackRate;
+
+  // String feedback = "0";
   String url =
       'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=c737b18e-9625-4b0d-8d7c-8ef5794486f3';
 
@@ -64,6 +70,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       'profileURL': dpUrl,
       'email': email,
       'role': role,
+      'feedbackValue': 0.0,
+      'feedbackRate': 0.0,
     });
   }
 

@@ -247,22 +247,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             setState(() {
                               showSpinner = false;
                             });
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text("Successful!"),
-                                    content: Text("Profile Pic Updated."),
-                                    actions: [
-                                      FlatButton(
-                                        child: Text("OK"),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      )
-                                    ],
-                                  );
-                                });
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (BuildContext context) {
+                            //       return AlertDialog(
+                            //         title: Text("Successful!"),
+                            //         content: Text("Profile Pic Updated."),
+                            //         actions: [
+                            //           FlatButton(
+                            //             child: Text("OK"),
+                            //             onPressed: () {
+                            //               Navigator.of(context).pop();
+                            //             },
+                            //           )
+                            //         ],
+                            //       );
+                            //     });
+                            successDialog(
+                              context,
+                              "Profile Pic Updated",
+                              neutralText: "Okay",
+                            );
                           },
                           child: Center(
                             child: Text(

@@ -26,7 +26,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     controller.forward();
     controller.addListener(() {
       setState(() {});
-
     });
   }
 
@@ -35,28 +34,28 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     controller.dispose();
     super.dispose();
   }
+
   Future<bool> _onWillPop() {
     return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Are you sure?'),
-        content: Text('Do you want to exit App'),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text('No'),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you want to exit App'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('No'),
+              ),
+              FlatButton(
+                onPressed: () => SystemNavigator.pop(),
+                /*Navigator.of(context).pop(true)*/
+                child: Text('Yes'),
+              ),
+            ],
           ),
-          FlatButton(
-            onPressed: () => SystemNavigator.pop(),
-            /*Navigator.of(context).pop(true)*/
-            child: Text('Yes'),
-          ),
-        ],
-      ),
-    ) ??
+        ) ??
         false;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +63,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       onWillPop: _onWillPop,
       child: Container(
         decoration: BoxDecoration(
-//        color: Color(0xFF11CBD6),
-        color:Colors.white,
+          color: Colors.white,
           image: DecorationImage(
-
             image: AssetImage('images/WelcomeScreen3.jpg'),
             fit: BoxFit.cover,
           ),
@@ -87,7 +84,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         tag: 'logo',
                         child: Container(
                           height: controller.value * 100,
-
                           child: Image(
                             image: AssetImage(
                               'images/comperio-logo.png',
@@ -131,7 +127,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           redirectionScreen: RegistrationScreen().id,
                           colour: Color(0xff311b92)
 //                     colour: Color(0xFF016FC4).withOpacity(controller.value),
-                      ),
+                          ),
                     ],
                   ),
                 ),
@@ -143,9 +139,3 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     );
   }
 }
-
-
-
-
-
-

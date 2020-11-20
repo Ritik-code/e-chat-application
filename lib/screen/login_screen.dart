@@ -222,6 +222,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         userInfoSnapshot.docs[0]
                                                             .get('profileURL'));
 
+                                                HelperFunctions
+                                                    .saveUserRoleSharedPreference(
+                                                    userInfoSnapshot.docs[0]
+                                                        .get('role'));
+
                                                 Navigator.pushNamed(context,
                                                     ContactedPersonScreen().id);
                                               }

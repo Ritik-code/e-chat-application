@@ -41,6 +41,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         // );
         successDialog(context, 'Password Changed Successfully!!!',
             neutralText: 'Okay');
+        setState(() {
+          showSpinner = false;
+        });
       }).catchError((e) {
         //catching error for updatedPassword
         print(e);

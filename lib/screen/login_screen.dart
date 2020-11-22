@@ -263,10 +263,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                             style: TextStyle(),
                                                           ),
                                                           onPressed: () {
-                                                            Navigator.pushNamed(
-                                                                context,
-                                                                LoginScreen()
-                                                                    .id);
+                                                            Navigator.pop(
+                                                                context);
                                                           },
                                                         ),
                                                       ],

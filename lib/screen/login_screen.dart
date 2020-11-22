@@ -224,8 +224,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                                                 HelperFunctions
                                                     .saveUserRoleSharedPreference(
-                                                    userInfoSnapshot.docs[0]
-                                                        .get('role'));
+                                                        userInfoSnapshot.docs[0]
+                                                            .get('role'));
 
                                                 Navigator.pushNamed(context,
                                                     ContactedPersonScreen().id);
@@ -240,6 +240,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     "The password is invalid or the user does not have a password." ||
                                                 e.message ==
                                                     "There is no user record corresponding to this identifier. The user may have been deleted.") {
+                                              setState(() {
+                                                showSpinner = false;
+                                              });
                                               showDialog(
                                                   context: context,
                                                   builder:

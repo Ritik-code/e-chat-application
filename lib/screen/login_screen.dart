@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:rich_alert/rich_alert.dart';
 
 import '../helper_functions.dart';
 
@@ -221,6 +222,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                                         userInfoSnapshot.docs[0]
                                                             .get('profileURL'));
 
+                                                HelperFunctions
+                                                    .saveUserRoleSharedPreference(
+                                                    userInfoSnapshot.docs[0]
+                                                        .get('role'));
+
                                                 Navigator.pushNamed(context,
                                                     ContactedPersonScreen().id);
                                               }
@@ -229,18 +235,52 @@ class _LoginScreenState extends State<LoginScreen> {
                                               showSpinner = false;
                                             });
                                           } catch (e) {
-                                            print(e);
+                                            print(e.message);
+                                            if (e.message ==
+                                                    "The password is invalid or the user does not have a password." ||
+                                                e.message ==
+                                                    "There is no user record corresponding to this identifier. The user may have been deleted.") {
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return RichAlertDialog(
+                                                      //uses the custom alert dialog
+                                                      alertTitle: richTitle(
+                                                          "Try Again"),
+                                                      alertSubtitle: richSubtitle(
+                                                          "Wrong email address or password."),
+                                                      alertType:
+                                                          RichAlertType.WARNING,
+                                                      actions: <Widget>[
+                                                        RaisedButton(
+                                                          color: Colors.red,
+                                                          child: Text(
+                                                            "OK",
+                                                            style: TextStyle(),
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pushNamed(
+                                                                context,
+                                                                LoginScreen()
+                                                                    .id);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  });
+                                            }
                                             // AlertDialog(
-                                            //     title:Text('Alert'),
-                                            //     content: Text(e),
-                                            //     actions: <Widget>[
-                                            //       FlatButton(
-                                            //         child: Text('Ok'),
-                                            //         onPressed: (){
-                                            //           Navigator.of(context).pop();
-                                            //         },
-                                            //       ),
-                                            //     ],
+                                            //   title: Text('Alert'),
+                                            //   content: Text(e),
+                                            //   actions: <Widget>[
+                                            //     FlatButton(
+                                            //       child: Text('Ok'),
+                                            //       onPressed: () {
+                                            //         Navigator.of(context).pop();
+                                            //       },
+                                            //     ),
+                                            //   ],
                                             // );
                                           }
                                         },

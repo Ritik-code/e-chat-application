@@ -53,7 +53,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void _addToDatabase(String userName, String dpUrl) {
-    assignRole();
+
     print('dpurl is: $dpUrl');
     List<String> splitList = username.split(" ");
     List<String> indexList = [];
@@ -343,6 +343,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             //     .createUserWithEmailAndPassword(
                                             //         email: email,
                                             //         password: password);
+                                            assignRole();
 
                                             await _auth
                                                 .createUserWithEmailAndPassword(

@@ -271,18 +271,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     );
                                                   });
                                             }
-                                            // AlertDialog(
-                                            //   title: Text('Alert'),
-                                            //   content: Text(e),
-                                            //   actions: <Widget>[
-                                            //     FlatButton(
-                                            //       child: Text('Ok'),
-                                            //       onPressed: () {
-                                            //         Navigator.of(context).pop();
-                                            //       },
-                                            //     ),
-                                            //   ],
-                                            // );
                                           }
                                         },
                                         child: Text(

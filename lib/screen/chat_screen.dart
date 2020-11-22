@@ -23,7 +23,8 @@ String chatRoomId = "test";
 String username = "admin";
 String url = "";
 String myUrl = "";
-String role = "";
+String myrole = "";
+String receiverRole = "";
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
@@ -40,21 +41,23 @@ class _ChatScreenState extends State<ChatScreen> {
   getUserName() async {
     String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
     String myUsername = await HelperFunctions.getUserNameSharedPreference();
-    var Url =
-        await FirebaseFirestore.instance.collection('users').doc(chatId).get();
+    var receiverInfo =
+    await FirebaseFirestore.instance.collection('users').doc(chatId).get();
     String myUrl = await HelperFunctions.getUserPhotoUrlSharedPreference();
-    String userRole = await HelperFunctions.getUserRoleSharedPreference();
+    String MyRole = await HelperFunctions.getUserRoleSharedPreference();
+
     // String pUrl = ;
     setState(() {
       chatRoomId = chatId;
       username = myUsername;
-      url = Url.data()['profileURL'];
+      url = receiverInfo.data()['profileURL'];
+      receiverRole = receiverInfo.data()['role'];
       myUrl = myUrl;
-      role = userRole;
+      myrole = MyRole;
     });
     print(url);
     print(chatRoomId);
-    print(role);
+    print(myrole);
   }
 
   @override
@@ -155,6 +158,8 @@ class _ChatScreenState extends State<ChatScreen> {
                       // ),
                     ],
                   ),
+                  (myrole == "Student")?
+                  (receiverRole == "Professor")?
                   IconButton(
                     alignment: Alignment.centerRight,
                     icon: AppIcons(
@@ -165,7 +170,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     onPressed: () {
                       Navigator.pushNamed(context, FeedbackScreen().id);
                     },
-                  ),
+                  ):
+                  Container():
+                  Container(),
+
+
                 ],
               ),
             ),
@@ -218,16 +227,16 @@ class _ChatScreenState extends State<ChatScreen> {
                             hintText: 'Type your message here...',
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(12.0)),
+                              BorderRadius.all(Radius.circular(12.0)),
                               borderSide: BorderSide(
                                 color: Colors.grey,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(10.0)),
+                              BorderRadius.all(Radius.circular(10.0)),
                               borderSide:
-                                  BorderSide(color: Colors.lightBlueAccent),
+                              BorderSide(color: Colors.lightBlueAccent),
                             ),
                           ),
                         ),
@@ -254,9 +263,9 @@ class _ChatScreenState extends State<ChatScreen> {
                               'fileUrl': " ",
                               'type': " ",
                               'orderDateFormat':
-                                  DateFormat('dd-MMM-yy hh:mm:ss')
-                                      .format(DateTime.now())
-                                      .toString(),
+                              DateFormat('dd-MMM-yy hh:mm:ss')
+                                  .format(DateTime.now())
+                                  .toString(),
                             });
                             Firestore.instance
                                 .collection('users')
@@ -284,9 +293,9 @@ class _ChatScreenState extends State<ChatScreen> {
                               'fileUrl': " ",
                               'type': " ",
                               'orderDateFormat':
-                                  DateFormat('dd-MMM-yy hh:mm:ss')
-                                      .format(DateTime.now())
-                                      .toString(),
+                              DateFormat('dd-MMM-yy hh:mm:ss')
+                                  .format(DateTime.now())
+                                  .toString(),
                             });
                           }
 
@@ -377,11 +386,11 @@ class MessageBubble extends StatelessWidget {
 
   MessageBubble(
       {this.sender,
-      this.text,
-      this.isMe,
-      this.dateTime,
-      this.messageFileUrl,
-      this.messageType});
+        this.text,
+        this.isMe,
+        this.dateTime,
+        this.messageFileUrl,
+        this.messageType});
 
   @override
   Widget build(BuildContext context) {
@@ -389,7 +398,7 @@ class MessageBubble extends StatelessWidget {
       padding: EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment:
-            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
           // Text(
           //   sender,
@@ -400,38 +409,38 @@ class MessageBubble extends StatelessWidget {
           // ),
           (messageFileUrl == " ")
               ? Container(
-                  constraints: BoxConstraints(
-                    maxWidth: 2 * (MediaQuery.of(context).size.width) / 3,
+            constraints: BoxConstraints(
+              maxWidth: 2 * (MediaQuery.of(context).size.width) / 3,
+            ),
+            child: Material(
+              borderRadius: isMe
+                  ? BorderRadius.only(
+                topLeft: Radius.circular(30.0),
+                bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0),
+              )
+                  : BorderRadius.only(
+                topRight: Radius.circular(30.0),
+                bottomLeft: Radius.circular(30.0),
+                bottomRight: Radius.circular(30.0),
+              ),
+              elevation: 10.0,
+              color: isMe ? Color(0xff81d4fa) : Colors.white,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: 12.0, horizontal: 20.0),
+                child: Text(
+                  text,
+                  style: TextStyle(
+                    fontSize: 15.0,
+                    color: Colors.black,
                   ),
-                  child: Material(
-                    borderRadius: isMe
-                        ? BorderRadius.only(
-                            topLeft: Radius.circular(30.0),
-                            bottomLeft: Radius.circular(30.0),
-                            bottomRight: Radius.circular(30.0),
-                          )
-                        : BorderRadius.only(
-                            topRight: Radius.circular(30.0),
-                            bottomLeft: Radius.circular(30.0),
-                            bottomRight: Radius.circular(30.0),
-                          ),
-                    elevation: 10.0,
-                    color: isMe ? Color(0xff81d4fa) : Colors.white,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: 12.0, horizontal: 20.0),
-                      child: Text(
-                        text,
-                        style: TextStyle(
-                          fontSize: 15.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
+                ),
+              ),
+            ),
+          )
               : AttachFileBottomSheet()
-                  .getImageBubble(messageFileUrl, context, isMe),
+              .getImageBubble(messageFileUrl, context, isMe),
           Text(
             dateTime,
             style: TextStyle(

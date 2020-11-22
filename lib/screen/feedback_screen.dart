@@ -226,7 +226,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                                               return RichAlertDialog(
                                                 //uses the custom alert dialog
                                                 alertTitle:
-                                                    richTitle("CONGRATS!"),
+                                                    richTitle("Success!"),
                                                 alertSubtitle: richSubtitle(
                                                     "Thanks for your valuable feedback."),
                                                 alertType:

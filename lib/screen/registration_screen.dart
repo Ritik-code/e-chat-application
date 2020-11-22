@@ -53,7 +53,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   void _addToDatabase(String userName, String dpUrl) {
-
     print('dpurl is: $dpUrl');
     List<String> splitList = username.split(" ");
     List<String> indexList = [];
@@ -381,26 +380,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                             setState(() {
                                               showSpinner = false;
                                             });
-                                            // Alert(
-                                            //   context: context,
-                                            //   type: AlertType.info,
-                                            //   title:
-                                            //       "CONGRATS! YOUR ASSIGN ROLE IS",
-                                            //   desc: role.toUpperCase(),
-                                            //   buttons: [
-                                            //     DialogButton(
-                                            //       child: Text(
-                                            //         "OK",
-                                            //         style: TextStyle(
-                                            //             color: Colors.white,
-                                            //             fontSize: 20),
-                                            //       ),
-                                            //       onPressed: () =>
-                                            //           Navigator.pop(context),
-                                            //       width: 120,
-                                            //     )
-                                            //   ],
-                                            // ).show();
                                             showDialog(
                                                 context: context,
                                                 builder:
@@ -416,20 +395,40 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                                   );
                                                 });
                                           } catch (e) {
-                                            print(e);
-                                            //   AlertDialog(
-                                            //     title:Text('Alert'),
-                                            //     content: Text(e),
-                                            //     actions: <Widget>[
-                                            //       FlatButton(
-                                            //         child: Text('Ok'),
-                                            //         onPressed: (){
-                                            //           Navigator.of(context).pop();
-                                            //         },
-                                            //       ),
-                                            //     ],
-                                            //   );
-
+                                            print(e.message);
+                                            if (e.message ==
+                                                "The email address is already in use by another account.") {
+                                              setState(() {
+                                                showSpinner = false;
+                                              });
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return RichAlertDialog(
+                                                      //uses the custom alert dialog
+                                                      alertTitle: richTitle(
+                                                          "Try Again"),
+                                                      alertSubtitle: richSubtitle(
+                                                          "Already registered with this email id."),
+                                                      alertType:
+                                                          RichAlertType.WARNING,
+                                                      actions: <Widget>[
+                                                        RaisedButton(
+                                                          color: Colors.red,
+                                                          child: Text(
+                                                            "OK",
+                                                            style: TextStyle(),
+                                                          ),
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  });
+                                            }
                                           }
                                         },
                                         child: Text(

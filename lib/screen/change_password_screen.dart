@@ -161,7 +161,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     ),
                   ),
                   validator: RegexValidator.validatePassword,
-                  onSaved: (value) {
+                  onChanged: (value) {
                     newPassword = value;
                     //take the value in a variable so that it can be updated.
                   },

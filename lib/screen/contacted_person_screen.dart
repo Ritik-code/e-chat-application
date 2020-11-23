@@ -143,15 +143,18 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        IconButton(
-                          icon: AppIcons(
+                      IconButton(
+                        icon: Hero(
+                          tag:"logo1",
+                          child: AppIcons(
                               iconName: Icons.search,
                               colour: Colors.white,
                               iconSize: 35.0),
-                          onPressed: () {
-                            Navigator.pushNamed(context, SearchScreen().id);
-                          },
                         ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, SearchScreen().id);
+                        },
+                      ),
                         ContactPopupMenu(choices: choices),
                       ],
                     ),
@@ -188,12 +191,14 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
                                     snapshot.data.docs[index];
                                 // print(data.data()['profileUrl']);
                                 // print(data.data()['users'][1]);
-                                return GestureDetector(
-                                  child: Container(
-                                    padding: EdgeInsets.all(10.0),
-                                    child: Row(
-                                      children: [
-                                        (data.data()['profileUrl'] != null)
+                                return Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: ListTile(
+                                    // padding: EdgeInsets.all(10.0),
+                                    // child: Row(
+                                    //   children:
+
+                                        leading:(data.data()['profileUrl'] != null)
                                             ? CircleAvatar(
                                                 radius: 25.0,
                                                 child: ClipOval(
@@ -224,23 +229,24 @@ class _ContactedPersonScreenState extends State<ContactedPersonScreen> {
                                                   ),
                                                 ),
                                               ),
-                                        SizedBox(
-                                          width: 25.0,
-                                        ),
-                                        Text(
+                                        // SizedBox(
+                                        //   width: 25.0,
+                                        // ),
+                                        title:Text(
                                           StringUtils.capitalize(
                                               data.data()['users'][1]),
                                           style: KSearchDisplayNameTextStyle,
                                         ),
-                                      ],
-                                    ),
+                                    hoverColor: Colors.blueAccent,
+                                    onTap: () {
+                                      String user = data.data()['users'][1];
+                                      String url = data.data()['profileUrl'];
+                                      String role = data.data()['role'];
+                                      createChatRoom(context, user, url, role);
+                                    },
+                                    //   ],
+                                    // ),
                                   ),
-                                  onTap: () {
-                                    String user = data.data()['users'][1];
-                                    String url = data.data()['profileUrl'];
-                                    String role = data.data()['role'];
-                                    createChatRoom(context, user, url, role);
-                                  },
                                 );
                               });
                     },

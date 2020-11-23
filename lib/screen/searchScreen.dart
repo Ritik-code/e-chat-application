@@ -46,7 +46,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       decoration: InputDecoration(
                         prefixIcon:
-                            Icon(FontAwesomeIcons.search, color: Colors.indigo),
+                        Hero(
+                            tag:'logo1',
+                            child: Icon(FontAwesomeIcons.search, color: Colors.indigo)),
                         suffixIcon: name.length > 0
                             ? IconButton(
                                 icon: Icon(

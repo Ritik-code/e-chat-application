@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/app_icons.dart';
 import 'package:comperio/attach_file_components.dart';
@@ -246,9 +244,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           if (messageText.isNotEmpty) {
                             _firestore
                                 .collection('users')
-                                .document(username)
+                                .doc(username)
                                 .collection("chatRoom")
-                                .document(chatRoomId)
+                                .doc(chatRoomId)
                                 .collection('Messages')
                                 .add({
                               'message': messageText,
@@ -263,11 +261,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                       .format(DateTime.now())
                                       .toString(),
                             });
-                            Firestore.instance
+                            FirebaseFirestore.instance
                                 .collection('users')
-                                .document(chatRoomId)
+                                .doc(chatRoomId)
                                 .collection("chatRoom")
-                                .document(username)
+                                .doc(username)
                                 .set({
                               "users": [chatRoomId, username],
                               "chatRoomId": username,
@@ -276,9 +274,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
                             _firestore
                                 .collection('users')
-                                .document(chatRoomId)
+                                .doc(chatRoomId)
                                 .collection("chatRoom")
-                                .document(username)
+                                .doc(username)
                                 .collection('Messages')
                                 .add({
                               'message': messageText,
@@ -324,9 +322,9 @@ class MessagesStream extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection('users')
-          .document(username)
+          .doc(username)
           .collection("chatRoom")
-          .document(chatRoomId)
+          .doc(chatRoomId)
           .collection('Messages')
           .orderBy('orderDateFormat')
           .snapshots(),

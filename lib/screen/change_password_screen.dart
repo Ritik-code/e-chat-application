@@ -1,14 +1,13 @@
-import 'package:comperio/screen/welcome_screen.dart';
+import 'package:commons/commons.dart';
+import 'package:comperio/constants.dart';
+import 'package:comperio/regexValidator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:comperio/constants.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'login_screen.dart';
-import 'package:comperio/regexValidator.dart';
-import 'package:commons/commons.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   final String id = 'ChangePasswordScreen';
+
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
 }

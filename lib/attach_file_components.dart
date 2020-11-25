@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart' show FirebaseFirestore;
-import 'package:comperio/screen/contacted_person_screen.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,14 +8,13 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
-import 'package:comperio/constants.dart';
+
 import 'helper_functions.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class AttachFileBottomSheet extends StatefulWidget {
-
-  Widget getImageBubble(String FileUrl, BuildContext context, bool isMe){
+  Widget getImageBubble(String FileUrl, BuildContext context, bool isMe) {
     return GestureDetector(
         child: Material(
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
@@ -26,20 +24,24 @@ class AttachFileBottomSheet extends StatefulWidget {
             child: Container(
               width: (MediaQuery.of(context).size.width) / 2,
               decoration: BoxDecoration(
-                border: Border.all(width: 5.0, color: isMe ? Color(0xff81d4fa) : Colors.white,),
+                border: Border.all(
+                  width: 5.0,
+                  color: isMe ? Color(0xff81d4fa) : Colors.white,
+                ),
               ),
-              child: Image.network(FileUrl, fit: BoxFit.contain,),
+              child: Image.network(
+                FileUrl,
+                fit: BoxFit.contain,
+              ),
             ),
           ),
         ),
-        onTap:(){
+        onTap: () {
           print("tapped");
-          Navigator.push(context, MaterialPageRoute(builder: (_){
-            return  FullScreenImage(FileUrl);
+          Navigator.push(context, MaterialPageRoute(builder: (_) {
+            return FullScreenImage(FileUrl);
           }));
-
-        }
-    );
+        });
   }
 
   // Widget getVideoBubble(String FileUrl, BuildContext context, bool isMe){
@@ -88,7 +90,6 @@ class AttachFileBottomSheet extends StatefulWidget {
   //   );
   // }
 
-
   @override
   _AttachFileBottomSheetState createState() => _AttachFileBottomSheetState();
 }
@@ -127,7 +128,6 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
     print(chatRoomId);
   }
 
-
   Future getFiles(BuildContext context) async {
     getCurrentUser();
     File pickedFile;
@@ -137,7 +137,7 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
       setState(() {
         _showMyDialog(context);
       });
-    }).catchError((e){
+    }).catchError((e) {
       print(e);
     });
     file = File(pickedFile.path);
@@ -171,11 +171,14 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
   void _addToDatabase(String fileUrl, String emailID, BuildContext context) {
     // print(indexList);
     print('adding to database......');
-    FirebaseFirestore.instance.collection('users')
-        .document(username)
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(username)
         .collection("chatRoom")
-        .document(chatRoomId)
-        .collection('Messages').doc().set({
+        .doc(chatRoomId)
+        .collection('Messages')
+        .doc()
+        .set({
       'sender': emailID,
       'fileUrl': fileUrl,
       'Date':
@@ -184,11 +187,14 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
       'orderDateFormat':
       DateFormat('dd-MMM-yy hh:mm:ss').format(DateTime.now()).toString(),
     });
-    FirebaseFirestore.instance.collection('users')
-        .document(chatRoomId)
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(chatRoomId)
         .collection("chatRoom")
-        .document(username)
-        .collection('Messages').doc().set({
+        .doc(username)
+        .collection('Messages')
+        .doc()
+        .set({
       'sender': emailID,
       'fileUrl': fileUrl,
       'Date':
@@ -231,7 +237,6 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return IconButton(
@@ -244,9 +249,6 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
     );
   }
 }
-
-
-
 
 class FullScreenImage extends StatelessWidget {
   final String FileUrl;

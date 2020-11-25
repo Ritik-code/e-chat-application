@@ -1,18 +1,13 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comperio/app_icons.dart';
 import 'package:comperio/attach_file_components.dart';
 import 'package:comperio/constants.dart';
 import 'package:comperio/helper_functions.dart';
 import 'package:comperio/screen/contacted_person_screen.dart';
-import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 import 'feedback_screen.dart';
@@ -23,7 +18,8 @@ String chatRoomId = "test";
 String username = "admin";
 String url = "";
 String myUrl = "";
-String role = "";
+String myrole = "";
+String receiverRole = "";
 
 class ChatScreen extends StatefulWidget {
   final String id = 'ChatScreen';
@@ -40,21 +36,23 @@ class _ChatScreenState extends State<ChatScreen> {
   getUserName() async {
     String chatId = await HelperFunctions.getChatRoomIdSharedPreference();
     String myUsername = await HelperFunctions.getUserNameSharedPreference();
-    var Url =
+    var receiverInfo =
         await FirebaseFirestore.instance.collection('users').doc(chatId).get();
     String myUrl = await HelperFunctions.getUserPhotoUrlSharedPreference();
-    String userRole = await HelperFunctions.getUserRoleSharedPreference();
+    String MyRole = await HelperFunctions.getUserRoleSharedPreference();
+
     // String pUrl = ;
     setState(() {
       chatRoomId = chatId;
       username = myUsername;
-      url = Url.data()['profileURL'];
+      url = receiverInfo.data()['profileURL'];
+      receiverRole = receiverInfo.data()['role'];
       myUrl = myUrl;
-      role = userRole;
+      myrole = MyRole;
     });
     print(url);
     print(chatRoomId);
-    print(role);
+    print(myrole);
   }
 
   @override
@@ -155,17 +153,22 @@ class _ChatScreenState extends State<ChatScreen> {
                       // ),
                     ],
                   ),
-                  IconButton(
-                    alignment: Alignment.centerRight,
-                    icon: AppIcons(
-                      iconName: Icons.feedback,
-                      iconSize: 30.0,
-                      colour: Colors.white,
-                    ),
-                    onPressed: () {
-                      Navigator.pushNamed(context, FeedbackScreen().id);
-                    },
-                  ),
+                  (myrole == "Student")
+                      ? (receiverRole == "Professor")
+                          ? IconButton(
+                              alignment: Alignment.centerRight,
+                              icon: AppIcons(
+                                iconName: Icons.feedback,
+                                iconSize: 30.0,
+                                colour: Colors.white,
+                              ),
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, FeedbackScreen().id);
+                              },
+                            )
+                          : Container()
+                      : Container(),
                 ],
               ),
             ),
@@ -241,9 +244,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           if (messageText.isNotEmpty) {
                             _firestore
                                 .collection('users')
-                                .document(username)
+                                .doc(username)
                                 .collection("chatRoom")
-                                .document(chatRoomId)
+                                .doc(chatRoomId)
                                 .collection('Messages')
                                 .add({
                               'message': messageText,
@@ -258,11 +261,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                       .format(DateTime.now())
                                       .toString(),
                             });
-                            Firestore.instance
+                            FirebaseFirestore.instance
                                 .collection('users')
-                                .document(chatRoomId)
+                                .doc(chatRoomId)
                                 .collection("chatRoom")
-                                .document(username)
+                                .doc(username)
                                 .set({
                               "users": [chatRoomId, username],
                               "chatRoomId": username,
@@ -271,9 +274,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
                             _firestore
                                 .collection('users')
-                                .document(chatRoomId)
+                                .doc(chatRoomId)
                                 .collection("chatRoom")
-                                .document(username)
+                                .doc(username)
                                 .collection('Messages')
                                 .add({
                               'message': messageText,
@@ -319,9 +322,9 @@ class MessagesStream extends StatelessWidget {
     return StreamBuilder<QuerySnapshot>(
       stream: _firestore
           .collection('users')
-          .document(username)
+          .doc(username)
           .collection("chatRoom")
-          .document(chatRoomId)
+          .doc(chatRoomId)
           .collection('Messages')
           .orderBy('orderDateFormat')
           .snapshots(),

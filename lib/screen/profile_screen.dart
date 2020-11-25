@@ -22,6 +22,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:path/path.dart';
 import 'package:comperio/constants.dart';
+import 'package:commons/commons.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String id = 'ProfileScreen';
@@ -33,10 +34,11 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String userName;
   String emailId;
-  String picURL = 'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
+  String picURL =
+      'https://firebasestorage.googleapis.com/v0/b/comperio-1071d.appspot.com/o/default-profile.webp?alt=media&token=52b10457-a10a-417e-b5af-3d84e5833fae';
   File _image;
   bool showSpinner = false;
-  String url ="";
+  String url = "";
   String role;
 
   getUserInfo() async {
@@ -146,9 +148,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               )
                             : CircleAvatar(
                                 radius: 50.0,
-                                backgroundImage: (picURL != null)?
-                                NetworkImage(picURL) :
-                                AssetImage('images/default-profile.jpg'),
+                                backgroundImage: (picURL != null)
+                                    ? NetworkImage(picURL)
+                                    : AssetImage('images/default-profile.jpg'),
                               ),
                         Positioned(
                           top: -1,
@@ -177,7 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: KProfileUsernameTextStyle,
                   ),
                   Text(
-                    role!=null?"@"+role:"@role",
+                    role != null ? "@" + role : "@role",
                     style: KProfileUserRoleTextStyle,
                   ),
 
@@ -245,6 +247,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             setState(() {
                               showSpinner = false;
                             });
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (BuildContext context) {
+                            //       return AlertDialog(
+                            //         title: Text("Successful!"),
+                            //         content: Text("Profile Pic Updated."),
+                            //         actions: [
+                            //           FlatButton(
+                            //             child: Text("OK"),
+                            //             onPressed: () {
+                            //               Navigator.of(context).pop();
+                            //             },
+                            //           )
+                            //         ],
+                            //       );
+                            //     });
+                            successDialog(
+                              context,
+                              "Profile Pic Updated",
+                              neutralText: "Okay",
+                            );
                           },
                           child: Center(
                             child: Text(

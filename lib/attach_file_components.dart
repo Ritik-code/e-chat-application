@@ -133,7 +133,7 @@ class _AttachFileBottomSheetState extends State<AttachFileBottomSheet> {
     File pickedFile;
     var file;
     pickedFile =
-    await FilePicker.getFile(type: FileType.image).whenComplete(() {
+        await FilePicker.getFile(type: FileType.image).whenComplete(() {
       setState(() {
         _showMyDialog(context);
       });
